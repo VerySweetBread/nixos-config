@@ -9,7 +9,7 @@
 
         modules-left = ["hyprland/workspaces" "hyprland/language" "keyboard-state" "hyprland/submap"];
         modules-center = ["clock" "custom/weather"];
-        modules-right = ["pulseaudio" "custom/mem" "cpu" "backlight" "battery" "tray"];
+        modules-right = ["pulseaudio" "backlight" "network" "battery" "tray"];
 
         "hyprland/workspaces" = {
           disable-scroll = true;
@@ -35,14 +35,14 @@
     "clock" = {
         # timezone = "America/New_York";
         tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-        format = "{:%a; %d %b, %I:%M %p}";
+        format = "{:%a; %d %b, %R}";
     };
 
     "custom/weather" = {
         format = "{}";
         tooltip = true;
         interval = 1800;
-        exec = "$HOME/.config/waybar/scripts/wttr.py";
+        exec = "python3 $HOME/.config/waybar/scripts/wttr.py";
         return-type = "json";
     };
 
@@ -89,6 +89,20 @@
         format = "{temperatureC}°C {icon}";
         format-icons = ["" "" "" "" ""];
         tooltip = false;
+    };
+
+    "network" = {
+      interface = "wlo1";
+      format = "{ifname}";
+      format-wifi = "{essid} ({signalStrength}%) ";
+      format-ethernet = "{ifname} ";
+      format-disconnected = "";
+      tooltip-format = "{ifname}";
+      tooltip-format-wifi = "{essid} ({signalStrength}%) ";
+      tooltip-format-ethernet = "{ifname} ";
+      tooltip-format-disconnected = "Disconnected";
+      max-length = 50;
+      on-click = "alacritty -e sh -c nmtui";
     };
 
     "backlight" = {
@@ -223,6 +237,16 @@ window#waybar.hidden {
     padding-left: 16px;
     padding-right: 16px;
     border-radius: 10px 0px 0px 10px;
+    transition: none;
+    color: #ffffff;
+    background: #383c4a;
+}
+
+#network {
+    margin-right: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 10px;
     transition: none;
     color: #ffffff;
     background: #383c4a;
