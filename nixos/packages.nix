@@ -14,11 +14,14 @@
     wofi
     mpv
     kdenlive
-    discord
     gparted
     obsidian
     zoom-us
     pcmanfm-qt
+    vscode
+    jetbrains.pycharm-community
+    jetbrains.idea-community
+    android-studio
 
     # Coding stuff
     gnumake
@@ -42,7 +45,7 @@
     light
     lux
     mediainfo
-    ranger
+    yazi
     zram-generator
     cava
     zip
@@ -85,6 +88,9 @@
     xdg-desktop-portal-hyprland
     polybar
     waybar
+    waypaper
+    mako
+    vesktop
 
     # Sound
     pipewire
