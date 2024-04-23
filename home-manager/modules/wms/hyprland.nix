@@ -193,10 +193,10 @@
         ", XF86MonBrightnessUp, exec, brightnessctl set +5% "
 
         # Configuration files
-        ''$mainMod SHIFT, N, exec, alacritty -e sh -c "rb"''
-        ''$mainMod SHIFT, C, exec, alacritty -e sh -c "conf"''
-        ''$mainMod SHIFT, H, exec, alacritty -e sh -c "nvim ~/nix/home-manager/modules/wms/hyprland.nix"''
-        ''$mainMod SHIFT, W, exec, alacritty -e sh -c "nvim ~/nix/home-manager/modules/wms/waybar.nix"''
+        ''$mainMod ALT, N, exec, alacritty -e sh -c "rb"''
+        ''$mainMod ALT, C, exec, alacritty -e sh -c "conf"''
+        ''$mainMod ALT, H, exec, alacritty -e sh -c "nvim ~/nix/home-manager/modules/wms/hyprland.nix"''
+        ''$mainMod ALT, W, exec, alacritty -e sh -c "nvim ~/nix/home-manager/modules/wms/waybar.nix"''
         '', Print, exec, grim -g "$(slurp)" - | swappy -f -''
 
         # Waybar
