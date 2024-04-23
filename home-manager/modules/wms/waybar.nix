@@ -28,7 +28,7 @@
         format = "{icon} ";
         format-icons = {
             locked = " ";
-            unlocked = "";
+            unlocked = " ";
         };
     };
 
