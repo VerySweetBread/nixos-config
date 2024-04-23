@@ -22,6 +22,7 @@
     jetbrains.pycharm-community
     jetbrains.idea-community
     android-studio
+    swayimg
 
     # Coding stuff
     gnumake
@@ -63,6 +64,7 @@
     jq
     tldr
     bat
+    xdg-utils
 
     # GUI utils
     feh
@@ -81,6 +83,7 @@
     xwayland
     wl-clipboard
     cliphist
+    ueberzugpp
 
     # WMs and stuff
     herbstluftwm
@@ -90,7 +93,6 @@
     polybar
     waybar
     waypaper
-    mako
     vesktop
 
     # Sound
