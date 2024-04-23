@@ -23,6 +23,7 @@
       v = "nvim";
       se = "sudoedit";
       ff = "fastfetch";
+      cat = "bat";
     };
 
     initExtra = ''
