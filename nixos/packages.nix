@@ -62,6 +62,7 @@
     hexyl
     jq
     tldr
+    bat
 
     # GUI utils
     feh
