@@ -9,5 +9,7 @@
 
     ./wms/hyprland.nix
     ./wms/waybar.nix
+    ./wms/wofi.nix
+    ./wms/mako.nix
   ];
 }
