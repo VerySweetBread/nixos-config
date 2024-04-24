@@ -1,6 +1,13 @@
-{
+{ pkgs, ...}: {
+  xdg.configFile."waybar/scripts/wttr.py".source = pkgs.requireFile {
+    name = "waybar-wttr.py";
+    url = "https://gist.githubusercontent.com/bjesus/f8db49e1434433f78e5200dc403d58a3/raw/47f9ffd573dc8e8edce0ea6708601b8e685a70ab/waybar-wttr.py";
+    sha256 = "15j2cqg405q37wrrlm70mhp7rx6xnrn92rfm1ix6g3nl98ksh45g";
+  };
+
   programs.waybar = {
     enable = true;
+
     settings = {
       mainBar = {
         layer = "top";
