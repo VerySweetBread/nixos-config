@@ -15,8 +15,8 @@
         margin = "9 13 -10 18";
 
         modules-left = ["hyprland/workspaces" "hyprland/language" "keyboard-state" "hyprland/submap"];
-        modules-center = ["clock" "custom/weather"];
-        modules-right = ["pulseaudio" "backlight" "network" "battery" "tray"];
+        modules-center = ["mpris"];
+        modules-right = ["backlight" "network" "battery" "pulseaudio" "clock" "tray"];
 
         "hyprland/workspaces" = {
           disable-scroll = true;
@@ -42,7 +42,7 @@
     "clock" = {
         # timezone = "America/New_York";
         tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-        format = "{:%a; %d %b, %R}";
+        format = "{:%R}";
     };
 
     "custom/weather" = {
@@ -241,9 +241,10 @@ window#waybar.hidden {
 }
 
 #clock {
+    margin-right: 8px;
     padding-left: 16px;
     padding-right: 16px;
-    border-radius: 10px 0px 0px 10px;
+    border-radius: 10px;
     transition: none;
     color: #ffffff;
     background: #383c4a;
