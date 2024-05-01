@@ -1,7 +1,7 @@
 { pkgs, ... }: {
   nixpkgs.config = {
     allowUnfree = true;
-    permittedInsecurePackages = ["python-2.7.18.8" "electron-25.9.0"];
+    permittedInsecurePackages = ["python-2.7.18.8" "electron-25.9.0" "freeimage-unstable-2021-11-01"];
   };
 
   environment.systemPackages = with pkgs; [
@@ -22,23 +22,27 @@
     jetbrains.pycharm-community
     jetbrains.idea-community
     android-studio
-    swayimg
+    thunderbird
 
     # Coding stuff
     gnumake
     gcc
     nodejs
     python
-    (python3.withPackages (ps: with ps; [ requests ]))
-
+    (python3.withPackages (ps: with ps; [ requests bpython ]))
+    python311Packages.pip
+    rocmPackages.llvm.clang-tools-extra
+    rocmPackages.llvm.clang
+    ncurses
+    
     # CLI utils
-    neofetch
+    uwufetch
     file
     tree
     wget
     git
     fastfetch
-    htop
+    btop 
     nix-index
     unzip
     scrot
@@ -48,7 +52,6 @@
     mediainfo
     yazi
     zram-generator
-    cava
     zip
     ntfs3g
     yt-dlp
@@ -66,6 +69,7 @@
     bat
     xdg-utils
     helix
+    playerctl
 
     # GUI utils
     feh
@@ -95,6 +99,8 @@
     waybar
     waypaper
     vesktop
+    lxqt.lxqt-policykit
+    hyprcursor
 
     # Sound
     pipewire
