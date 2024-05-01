@@ -13,7 +13,7 @@
 
   time.timeZone = "Europe/Moscow"; # Set your time zone.
 
-  i18n.defaultLocale = "en_US.UTF-8"; # Select internationalisation properties.
+  i18n.defaultLocale = "ru_RU.UTF-8"; # Select internationalisation properties.
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ]; # Enabling flakes
 
