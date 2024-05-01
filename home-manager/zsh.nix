@@ -16,11 +16,10 @@
 
       hms = "home-manager switch --flake ${flakeDir}";
 
-      conf = "nvim ${flakeDir}/nixos/configuration.nix";
-      pkgs = "nvim ${flakeDir}/nixos/packages.nix";
+      conf = "$EDITOR ${flakeDir}/nixos/configuration.nix";
+      pkgs = "$EDITOR ${flakeDir}/nixos/packages.nix";
 
       ll = "ls -l";
-      v = "nvim";
       se = "sudoedit";
       ff = "fastfetch";
       cat = "bat";

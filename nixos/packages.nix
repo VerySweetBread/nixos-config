@@ -65,7 +65,7 @@
     tldr
     bat
     xdg-utils
-    neovim
+    helix
 
     # GUI utils
     feh

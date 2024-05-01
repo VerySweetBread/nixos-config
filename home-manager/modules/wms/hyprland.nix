@@ -200,8 +200,8 @@
         # Configuration files
         ''$mainMod ALT, N, exec, alacritty -e sh -c "rb"''
         ''$mainMod ALT, C, exec, alacritty -e sh -c "conf"''
-        ''$mainMod ALT, H, exec, alacritty -e sh -c "nvim ~/nix/home-manager/modules/wms/hyprland.nix"''
-        ''$mainMod ALT, W, exec, alacritty -e sh -c "nvim ~/nix/home-manager/modules/wms/waybar.nix"''
+        ''$mainMod ALT, H, exec, alacritty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/hyprland.nix"''
+        ''$mainMod ALT, W, exec, alacritty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/waybar.nix"''
         '', Print, exec, grim -g "$(slurp)" - | swappy -f -''
 
         # Waybar
