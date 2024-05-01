@@ -87,7 +87,8 @@
 
       dwindle = {
         pseudotile = true; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-        preserve_split = true; # you probably want this
+        smart_split = true;
+        no_gaps_when_only = 1;
       };
 
       master = {
@@ -97,7 +98,7 @@
       gestures = {
         workspace_swipe = true;
         workspace_swipe_fingers = 3;
-        workspace_swipe_invert = false;
+        workspace_swipe_invert = true;
         workspace_swipe_distance = 200;
         workspace_swipe_forever = true;
       };
@@ -107,11 +108,12 @@
         animate_mouse_windowdragging = true;
         enable_swallow = true;
         render_ahead_of_time = false;
-        disable_hyprland_logo = true;
+        disable_hyprland_logo = false;
       };
 
       windowrule = [
         "float, ^(imv)$"
+        "float, ^(feh)$"
         "float, ^(mpv)$"
       ];
 
