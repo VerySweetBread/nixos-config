@@ -1,7 +1,7 @@
 { pkgs, ... }: {
   nixpkgs.config = {
     allowUnfree = true;
-    permittedInsecurePackages = ["python-2.7.18.8" "electron-25.9.0" "freeimage-unstable-2021-11-01"];
+    permittedInsecurePackages = ["python-2.7.18.8" "electron-25.9.0" "freeimage-unstable-2021-11-01" "obsidian-1.5.12"];
   };
 
   environment.systemPackages = with pkgs; [
@@ -23,6 +23,7 @@
     jetbrains.idea-community
     android-studio
     thunderbird
+    obsidian
 
     # Coding stuff
     gnumake
