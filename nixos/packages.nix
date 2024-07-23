@@ -6,7 +6,7 @@
 
   environment.systemPackages = with pkgs; [
     # Desktop apps
-    firefox
+    google-chrome
     telegram-desktop
     alacritty
     obs-studio
