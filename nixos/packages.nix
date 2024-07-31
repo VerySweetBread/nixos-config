@@ -8,22 +8,18 @@
     # Desktop apps
     google-chrome
     telegram-desktop
+    vesktop
     alacritty
     obs-studio
-    rofi
-    wofi
     mpv
-    kdenlive
-    gparted
+    kdenlive  # Video editor
+    gparted   # Needs in autj agent
     obsidian
-    zoom-us
-    pcmanfm-qt
     vscode
     jetbrains.pycharm-community
     jetbrains.idea-community
     android-studio
     thunderbird
-    obsidian
 
     # Coding stuff
     gnumake
@@ -49,8 +45,6 @@
     scrot
     ffmpeg
     light
-    lux
-    mediainfo
     yazi
     zram-generator
     zip
@@ -71,12 +65,12 @@
     xdg-utils
     helix
     playerctl
+    duf
 
     # GUI utils
     feh
     imv
-    dmenu
-    screenkey
+    wofi
     mako
     gromit-mpx
 
@@ -92,14 +86,11 @@
     ueberzugpp
 
     # WMs and stuff
-    herbstluftwm
     hyprland
     seatd
     xdg-desktop-portal-hyprland
-    polybar
     waybar
     waypaper
-    vesktop
     lxqt.lxqt-policykit
     hyprcursor
 
@@ -135,6 +126,8 @@
     font-awesome
     powerline-fonts
     powerline-symbols
+    ubuntu_font_family
+    unifont
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 }
