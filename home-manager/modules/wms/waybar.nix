@@ -1,5 +1,11 @@
-{ pkgs, ...}: {
-  xdg.configFile."waybar/scripts/wttr.py".source = pkgs.requireFile {
+{ pkgs, config, ...}: {
+  home.packages = [ pkgs.pulsemixer ];
+  wayland.windowManager.hyprland.settings.windowrule = [
+    "float, ^(pulsemixer)"
+    "float, ^(nmtui)"
+  ];
+
+  xdg.configFile."waybar/scripts/wttr.py".source = pkgs.fetchurl {
     name = "waybar-wttr.py";
     url = "https://gist.githubusercontent.com/bjesus/f8db49e1434433f78e5200dc403d58a3/raw/47f9ffd573dc8e8edce0ea6708601b8e685a70ab/waybar-wttr.py";
     sha256 = "15j2cqg405q37wrrlm70mhp7rx6xnrn92rfm1ix6g3nl98ksh45g";
@@ -30,19 +36,17 @@
     };
 
     "keyboard-state" = {
-        #numlock = true;
         capslock = true;
-        format = "{icon} ";
+        format = "{icon}";
         format-icons = {
-            locked = " ";
-            unlocked = " ";
+            locked = "CUPS";
+            unlocked = "";
         };
     };
 
     "clock" = {
-        # timezone = "America/New_York";
-        tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-        format = "{:%R}";
+        tooltip = false;
+        format = "{:%a, %d %b %R}";
     };
 
     "custom/weather" = {
@@ -71,7 +75,7 @@
             car = "";
             default = ["" "" ""];
         };
-        on-click = "pavucontrol";
+        on-click = "alacritty --class pulsemixer -e pulsemixer";
         min-length = 13;
     };
 
@@ -99,7 +103,6 @@
     };
 
     "network" = {
-      interface = "wlo1";
       format = "{ifname}";
       format-wifi = "{essid} ({signalStrength}%) ";
       format-ethernet = "{ifname} ";
@@ -109,7 +112,7 @@
       tooltip-format-ethernet = "{ifname} ";
       tooltip-format-disconnected = "Disconnected";
       max-length = 50;
-      on-click = "alacritty -e sh -c nmtui";
+      on-click = "alacritty --class nmtui -e sh -c nmtui";
     };
 
     "backlight" = {
@@ -124,12 +127,16 @@
             warning = 30;
             critical = 15;
         };
-        format = "{capacity}% {icon}";
-        format-charging = "{capacity}% ";
-        format-plugged = "{capacity}% ";
-        format-alt = "{time} {icon}";
-        format-icons = ["" "" "" "" "" "" "" "" "" ""];
-	on-update = "$HOME/.config/waybar/scripts/check_battery.sh";
+        format = "{capacity}%";
+        format-charging = "{capacity}% {time}";
+        format-plugged = "{capacity}%";
+        format-alt = "{time}";
+        format-time = "{H}:{m}";
+    };
+
+    mpris = {
+        format = "{title}";
+        format-len = "20";
     };
 
     tray = {
@@ -196,8 +203,7 @@ window#waybar.hidden {
 }
 
 #language {
-    padding-left: 16px;
-    padding-right: 8px;
+    padding: 8px 0px 8px 8px;
     border-radius: 10px 0px 0px 10px;
     transition: none;
     color: #ffffff;
@@ -206,7 +212,7 @@ window#waybar.hidden {
 
 #keyboard-state {
     margin-right: 8px;
-    padding-right: 16px;
+    padding: 8px 8px 8px 0px;
     border-radius: 0px 10px 10px 0px;
     transition: none;
     color: #ffffff;
@@ -364,6 +370,14 @@ window#waybar.hidden {
     transition: none;
     color: #ffffff;
     background: #383c4a;
+}
+
+#mpris{
+    background: #383c4a;
+    border-radius: 10px;
+    color: white;
+    padding: 0px 8px;
+    margin: 0px 8px;
 }
 
 @keyframes blink {
