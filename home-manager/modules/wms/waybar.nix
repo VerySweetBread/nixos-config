@@ -99,7 +99,6 @@
     };
 
     "network" = {
-      interface = "wlo1";
       format = "{ifname}";
       format-wifi = "{essid} ({signalStrength}%) ";
       format-ethernet = "{ifname} ";
@@ -109,7 +108,7 @@
       tooltip-format-ethernet = "{ifname} ";
       tooltip-format-disconnected = "Disconnected";
       max-length = 50;
-      on-click = "alacritty -e sh -c nmtui";
+      on-click = "alacritty --class nmtui -e sh -c nmtui";
     };
 
     "backlight" = {
@@ -124,12 +123,16 @@
             warning = 30;
             critical = 15;
         };
-        format = "{capacity}% {icon}";
-        format-charging = "{capacity}% ";
-        format-plugged = "{capacity}% ";
-        format-alt = "{time} {icon}";
-        format-icons = ["" "" "" "" "" "" "" "" "" ""];
-	on-update = "$HOME/.config/waybar/scripts/check_battery.sh";
+        format = "{capacity}%";
+        format-charging = "{capacity}% {time}";
+        format-plugged = "{capacity}%";
+        format-alt = "{time}";
+        format-time = "{H}:{m}";
+    };
+
+    mpris = {
+        format = "{title}";
+        format-len = "20";
     };
 
     tray = {
@@ -364,6 +367,14 @@ window#waybar.hidden {
     transition: none;
     color: #ffffff;
     background: #383c4a;
+}
+
+#mpris{
+    background: #383c4a;
+    border-radius: 10px;
+    color: white;
+    padding: 0px 8px;
+    margin: 0px 8px;
 }
 
 @keyframes blink {
