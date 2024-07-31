@@ -88,7 +88,6 @@
       dwindle = {
         pseudotile = true; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
         smart_split = true;
-        no_gaps_when_only = 1;
       };
 
       master = {
@@ -115,6 +114,7 @@
         "float, ^(imv)$"
         "float, ^(feh)$"
         "float, ^(mpv)$"
+        "float, ^(nmtui)$"
       ];
 
       exec-once = [
