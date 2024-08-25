@@ -3,6 +3,7 @@
     ./hardware-configuration.nix
     ../../packages.nix
     ../../modules/bundle.nix
+    ../../modules/gamemode.nix
   ];
 
   networking.hostName = "Rias";
