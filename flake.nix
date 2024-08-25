@@ -18,8 +18,7 @@
       system = "x86_64-linux";
     in {
 
-    # nixos - system hostname
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.Rias = nixpkgs.lib.nixosSystem {
       specialArgs = {
         pkgs-stable = import nixpkgs-stable {
           inherit system;
@@ -28,7 +27,7 @@
         inherit inputs system;
       };
       modules = [
-        ./nixos/configuration.nix
+        ./nixos/hosts/Rias/configuration.nix
       ];
     };
 
