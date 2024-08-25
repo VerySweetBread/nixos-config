@@ -1,28 +1,30 @@
-{ config, ...}: {
+{ config, pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
-    ./packages.nix
-    ./modules/bundle.nix
+    ../../packages.nix
+    ../../modules/bundle.nix
   ];
 
   disabledModules = [
     ./modules/xserver.nix
   ];
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "Rias";
 
-  time.timeZone = "Europe/Moscow"; # Set your time zone.
+  time.timeZone = "Europe/Moscow";
 
-  i18n.defaultLocale = "ru_RU.UTF-8"; # Select internationalisation properties.
+  i18n.defaultLocale = "ru_RU.UTF-8";
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ]; # Enabling flakes
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  system.stateVersion = "23.05"; # Don't change it bro
+  system.stateVersion = "23.05";
 
   hardware.opengl = {
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
+    extraPackages = with pkgs; [nvidia-vaapi-driver intel-media-driver];
+    extraPackages32 = with pkgs.pkgsi686Linux; [nvidia-vaapi-driver intel-media-driver];
   };
 
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -34,11 +36,5 @@
     open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
-
-    prime = {
-      sync.enable = true;
-		  intelBusId = "PCI:0:2:0";
-		  nvidiaBusId = "PCI:1:0:0";
-	  };
   };
 }
