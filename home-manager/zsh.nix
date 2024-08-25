@@ -1,4 +1,5 @@
 { config, ... }: {
+  programs.zoxide.enable = true;
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -23,12 +24,14 @@
       se = "sudoedit";
       ff = "fastfetch";
       cat = "bat";
+      cd = "z";
     };
 
     initExtra = ''
       if [ -z "''${WAYLAND_DISPLAY}" ] && [ "''${XDG_VTNR}" -eq 1 ]; then
         dbus-run-session Hyprland
       fi
+      eval "$(zoxide init zsh)"
     '';
 
     history.size = 10000;
