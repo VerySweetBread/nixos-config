@@ -16,7 +16,7 @@
 
       hms = "home-manager switch --flake ${flakeDir}";
 
-      conf = "$EDITOR ${flakeDir}/nixos/configuration.nix";
+      conf = "$EDITOR ${flakeDir}/nixos/hosts/$(hostname)/configuration.nix";
       pkgs = "$EDITOR ${flakeDir}/nixos/packages.nix";
 
       ll = "ls -l";
