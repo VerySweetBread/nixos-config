@@ -5,10 +5,6 @@
     ../../modules/bundle.nix
   ];
 
-  disabledModules = [
-    ./modules/xserver.nix
-  ];
-
   networking.hostName = "Rias";
 
   time.timeZone = "Europe/Moscow";
