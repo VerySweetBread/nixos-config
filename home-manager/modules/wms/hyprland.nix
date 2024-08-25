@@ -115,6 +115,7 @@
         "float, ^(feh)$"
         "float, ^(mpv)$"
         "float, ^(nmtui)$"
+        "float, title:^(Список друзей)"
       ];
 
       exec-once = [
