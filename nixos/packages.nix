@@ -74,6 +74,7 @@
     wofi
     mako
     gromit-mpx
+    notify-desktop
 
     # Xorg stuff
     #xterm

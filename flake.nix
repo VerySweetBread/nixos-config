@@ -5,6 +5,7 @@
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    sops-nix.url = "github:Mic92/sops-nix";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -33,7 +34,10 @@
 
     homeConfigurations.sweetbread = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.${system};
-      modules = [ ./home-manager/home.nix ];
+      modules = [
+        ./home-manager/home.nix
+        inputs.sops-nix.homeManagerModules.sops
+      ];
     };
   };
 }
