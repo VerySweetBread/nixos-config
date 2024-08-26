@@ -10,5 +10,6 @@
     ./hyprland.nix
     ./trim.nix
     ./bluetooth.nix
+    ./vpn.nix
   ];
 }

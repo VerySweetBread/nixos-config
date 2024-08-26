@@ -66,6 +66,7 @@
     helix
     playerctl
     duf
+    v2raya
 
     # GUI utils
     feh
