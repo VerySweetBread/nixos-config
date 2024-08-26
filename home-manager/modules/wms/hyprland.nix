@@ -49,8 +49,6 @@
         "col.inactive_border" = "rgba(595959aa)";
 
         layout = "dwindle";
-
-        no_cursor_warps = false;
       };
 
       decoration = {
@@ -91,7 +89,7 @@
       };
 
       master = {
-        new_is_master = true;
+        new_status = "master";
       };
 
       gestures = {
@@ -119,6 +117,7 @@
       ];
 
       exec-once = [
+        "systemctl --user start plasma-polkit-agent"
         "swww init"
         "swww img ~/Downloads/nixos-chan.png"
         "waybar"
