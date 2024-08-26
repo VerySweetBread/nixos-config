@@ -5,6 +5,7 @@
     ./htop.nix
     ./alacritty.nix
     ./qt.nix
+    ./sops.nix
 
     ./wms/hyprland.nix
     ./wms/waybar.nix

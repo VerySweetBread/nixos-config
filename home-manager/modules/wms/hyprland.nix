@@ -1,5 +1,52 @@
-{
-  wayland.windowManager.hyprland = {
+{ pkgs, lib, config, ... }: {
+  wayland.windowManager.hyprland =
+  let
+    wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
+      flakeIgnore = [ "E501" "E111" "E701" "E241" "E731" ];
+    } /*py*/ ''
+      import requests as requests
+      from random import choice
+      from os import system, mkdir, listdir
+      from os.path import exists
+
+      notify = lambda s: system(f"notify-desktop Wallpaper '{s}'")
+      folder = "/home/sweetbread/Wallpapers"
+      url = "https://wallhaven.cc/api/v1/collections/sweetbread/1764377"
+      with open("${config.sops.secrets."tokens/apis/wallhaven".path}") as f:
+        token = f.read()
+
+      notify("Updating wallpaper!")
+
+      try:
+        json = requests.get(url, params={'apikey': token}).json()
+
+        wallpaper = choice(json['data'])
+        link = wallpaper['path']
+        format = wallpaper['file_type']
+        id = wallpaper['id']
+
+        if format == "image/jpeg": ext = "jpg"
+        else:                      ext = "png"
+
+        filename = f"{id}.{ext}"
+
+        if not exists(f"{folder}/{filename}"):
+          if not exists(folder):
+            mkdir(f"{folder}")
+
+          notify("Downloading...")
+          with open(f"{folder}/{filename}", 'wb') as f:
+            r = requests.get(link)
+            f.write(r.content)
+
+      except requests.exceptions.ConnectionError:
+        notify("Offline mode")
+        filename = choice(listdir(folder))
+
+      finally:
+        system(f"swww img {folder}/{filename} --transition-type center")
+    '';
+  in {
     enable = true;
     xwayland.enable = true;
 
@@ -117,13 +164,13 @@
       ];
 
       exec-once = [
-        "systemctl --user start plasma-polkit-agent"
-        "swww init"
-        "swww img ~/Downloads/nixos-chan.png"
-        "waybar"
-        "wl-paste --type text --watch cliphist store"
-        "wl-paste --type image --watch cliphist store"
-      ];
+          "systemctl --user start plasma-polkit-agent"
+          "swww init"
+          "python3 ${lib.getExe wallpaper_changer}"
+          "waybar"
+          "wl-paste --type text --watch cliphist store"
+          "wl-paste --type image --watch cliphist store"
+        ];
 
       bind = [
         "$mainMod, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
@@ -208,7 +255,9 @@
 
         # Waybar
         "$mainMod, B, exec, pkill -SIGUSR1 waybar"
-        "$mainMod, W, exec, pkill -SIGUSR2 waybar"
+        #"$mainMod, W, exec, pkill -SIGUSR2 waybar"
+
+        "$mainMod, W, exec, python3 ${lib.getExe wallpaper_changer}"
 
         # Disable all effects
         "$mainMod Shift, G, exec, ~/.config/hypr/gamemode.sh "
