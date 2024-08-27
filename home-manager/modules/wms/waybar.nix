@@ -11,7 +11,10 @@
     sha256 = "15j2cqg405q37wrrlm70mhp7rx6xnrn92rfm1ix6g3nl98ksh45g";
   };
 
-  programs.waybar = {
+  programs.waybar =
+  let
+    colors = config.lib.stylix.colors;
+  in {
     enable = true;
 
     settings = {
@@ -170,19 +173,18 @@ window#waybar.hidden {
     margin-right: 8px;
     border-radius: 10px;
     transition: none;
-    background: #383c4a;
+    background: #${colors.base00};
 }
 
 #workspaces button {
     transition: none;
-    color: #7c818c;
+    color: #${colors.base04};
     background: transparent;
     padding: 5px;
     font-size: 18px;
 }
 
 #workspaces button.persistent {
-    color: #7c818c;
     font-size: 12px;
 }
 
@@ -192,13 +194,12 @@ window#waybar.hidden {
     box-shadow: inherit;
     text-shadow: inherit;
     border-radius: inherit;
-    color: #383c4a;
-    background: #7c818c;
+    color: #${colors.base05};
 }
 
 #workspaces button.active {
-    background: #4e5263;
-    color: white;
+    background: #${colors.base02};
+    color: #${colors.base05};
     border-radius: inherit;
 }
 
@@ -206,8 +207,8 @@ window#waybar.hidden {
     padding: 8px 0px 8px 8px;
     border-radius: 10px 0px 0px 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #keyboard-state {
@@ -215,8 +216,8 @@ window#waybar.hidden {
     padding: 8px 8px 8px 0px;
     border-radius: 0px 10px 10px 0px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #custom-pacman {
@@ -224,8 +225,8 @@ window#waybar.hidden {
     padding-right: 8px;
     border-radius: 10px 0px 0px 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #custom-mail {
@@ -233,8 +234,8 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 0px 10px 10px 0px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #submap {
@@ -242,8 +243,8 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #clock {
@@ -252,8 +253,8 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #network {
@@ -262,16 +263,21 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
+}
+
+#network.disconnected {
+    color: #${colors.base00};
+    background-color: #${colors.base08};
 }
 
 #custom-weather {
     padding-right: 16px;
     border-radius: 0px 10px 10px 0px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #pulseaudio {
@@ -280,13 +286,13 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #pulseaudio.muted {
-    background-color: #90b1b1;
-    color: #2a5c45;
+    background-color: #${colors.base08};
+    color: #${colors.base01};
 }
 
 #custom-mem {
@@ -295,8 +301,8 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #cpu {
@@ -305,8 +311,8 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #temperature {
@@ -315,12 +321,12 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #temperature.critical {
-    background-color: #eb4d4b;
+    background-color: #${colors.base08};
 }
 
 #backlight {
@@ -329,8 +335,8 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #battery {
@@ -339,23 +345,23 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #battery.charging {
-    color: #ffffff;
-    background-color: #26A65B;
+    color: #${colors.base05};
+    background-color: #${colors.base0B};
 }
 
 #battery.warning:not(.charging) {
-    background-color: #ffbe61;
+    background-color: #${colors.base09};
     color: black;
 }
 
 #battery.critical:not(.charging) {
-    background-color: #f53c3c;
-    color: #ffffff;
+    background-color: #${colors.base08};
+    color: #${colors.base05};
     animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: linear;
@@ -368,22 +374,32 @@ window#waybar.hidden {
     padding-right: 16px;
     border-radius: 10px;
     transition: none;
-    color: #ffffff;
-    background: #383c4a;
+    color: #${colors.base05};
+    background: #${colors.base00};
 }
 
 #mpris{
-    background: #383c4a;
+    background: #${colors.base00};
     border-radius: 10px;
-    color: white;
+    color: #${colors.base05};
     padding: 0px 8px;
     margin: 0px 8px;
 }
 
+#mpris.playing {
+    background-color: #${colors.base0B};
+    color: #${colors.base01};
+}
+
+#mpris.paused {
+    background-color: #${colors.base0A};
+    color: #${colors.base01};
+}
+
 @keyframes blink {
     to {
-        background-color: #ffffff;
-        color: #000000;
+        background-color: #${colors.base05};
+        color: #${colors.base00};
     }
 }
       '';

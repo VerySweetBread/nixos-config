@@ -1,6 +1,8 @@
 { pkgs, lib, config, ... }: {
   wayland.windowManager.hyprland =
   let
+    colors = config.lib.stylix.colors;
+    
     wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
       flakeIgnore = [ "E501" "E111" "E701" "E241" "E731" ];
     } /*py*/ ''
@@ -92,8 +94,8 @@
         gaps_in = 5;
         gaps_out = 20;
         border_size = 3;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
+        "col.active_border" = "rgba(${colors.base0C}ee) rgba(${colors.base0B}ee) 45deg";
+        "col.inactive_border" = "rgba(${colors.base05}aa)";
 
         layout = "dwindle";
       };
