@@ -11,5 +11,6 @@
     ./trim.nix
     ./bluetooth.nix
     ./vpn.nix
+    ./printing.nix
   ];
 }
