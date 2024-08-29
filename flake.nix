@@ -21,26 +21,52 @@
       system = "x86_64-linux";
     in {
 
-    nixosConfigurations.Rias = nixpkgs.lib.nixosSystem {
-      specialArgs = {
-        pkgs-stable = import nixpkgs-stable {
-          inherit system;
-          config.allowUnfree = true;
+    nixosConfigurations = {
+      Rias = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          pkgs-stable = import nixpkgs-stable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          inherit inputs system;
         };
-        inherit inputs system;
+        modules = [
+          ./nixos/hosts/Rias/configuration.nix
+        ];
       };
-      modules = [
-        ./nixos/hosts/Rias/configuration.nix
-      ];
+
+      popka = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          pkgs-stable = import nixpkgs-stable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          inherit inputs system;
+        };
+        modules = [
+          ./nixos/hosts/popka/configuration.nix
+        ];
+      };
     };
 
-    homeConfigurations.sweetbread = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.${system};
-      modules = [
-        ./home-manager/home.nix
-        inputs.sops-nix.homeManagerModules.sops
-        inputs.stylix.homeManagerModules.stylix
-      ];
+    homeConfigurations = {
+      sweetbread = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        modules = [
+          ./home-manager/users/sweetbread/home.nix
+          inputs.sops-nix.homeManagerModules.sops
+          inputs.stylix.homeManagerModules.stylix
+        ];
+      };
+      
+      chest = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        modules = [
+          ./home-manager/users/chest/home.nix
+          inputs.sops-nix.homeManagerModules.sops
+          inputs.stylix.homeManagerModules.stylix
+        ];
+      };
     };
   };
 }

@@ -4,10 +4,10 @@
     ../../packages.nix
     ../../modules/bundle.nix
     ../../modules/gamemode.nix
-    ../../modules/users/sweetbread.nix
+    ../../modules/users/chest.nix
   ];
 
-  networking.hostName = "Rias";
+  networking.hostName = "popka";
 
   time.timeZone = "Europe/Moscow";
 

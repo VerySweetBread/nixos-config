@@ -6,12 +6,11 @@
 
     users.sweetbread = {
       isNormalUser = true;
-      description = "Sweet Bread";
+      description = "Chest";
       extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" ];
       packages = with pkgs; [];
     };
   };
 
-  # Enable automatic login for the user.
-  services.getty.autologinUser = "sweetbread";
+  services.getty.autologinUser = "chest";
 }
