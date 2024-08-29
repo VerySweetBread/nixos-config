@@ -24,12 +24,34 @@
         margin = "9 13 -10 18";
 
         modules-left = ["hyprland/workspaces" "hyprland/language" "keyboard-state" "hyprland/submap"];
-        modules-center = ["mpris"];
-        modules-right = ["backlight" "network" "battery" "pulseaudio" "clock" "tray"];
+        modules-center = ["mpris" "wlr/taskbar"];
+        modules-right = ["group/system" "battery" "pulseaudio" "clock" "tray"];
 
         "hyprland/workspaces" = {
           disable-scroll = true;
         };
+
+        "wlr/taskbar" = {
+            on-click = "activate";
+            on-click-middle = "close";
+            on-click-right = "minimize";
+        };
+
+        "group/system" = {
+            orientation = "inherit";
+            drawer = {
+                transition-duration = 500;
+                transition-left-to-right = false;
+            };
+            modules = [
+                "network"
+                "custom/mem"
+                "cpu"
+                "temperature"
+                "backlight"
+            ];
+        };
+
 
     "hyprland/language" = {
         format-en = "US";
@@ -150,7 +172,7 @@
       };
     };
   
-    style = 
+    style = /*css*/
       ''
 * {
     border: none;
@@ -201,6 +223,32 @@ window#waybar.hidden {
     background: #${colors.base02};
     color: #${colors.base05};
     border-radius: inherit;
+}
+
+#taskbar {
+    border-radius: 10px;
+    color: #${colors.base05};
+    background: #${colors.base00};
+}
+
+#taskbar button {
+    transition: none;
+    background: transparent;
+    border-radius: 10px;
+    padding: 8px;
+    margin: 0px;
+}
+
+#taskbar button:hover {
+    transition: none;
+    box-shadow: inherit;
+    text-shadow: inherit;
+    border-radius: inherit;
+    background: #${colors.base02};
+}
+
+#taskbar button.active {
+    background: #${colors.base0B};
 }
 
 #language {
