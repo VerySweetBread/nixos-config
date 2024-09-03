@@ -12,5 +12,6 @@
     ./bluetooth.nix
     ./vpn.nix
     ./printing.nix
+    ./adb.nix
   ];
 }
