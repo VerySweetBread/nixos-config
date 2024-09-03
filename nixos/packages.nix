@@ -33,7 +33,7 @@
     ncurses
     
     # CLI utils
-    uwufetch
+    neofetch
     file
     tree
     wget
