@@ -13,5 +13,6 @@
     ./vpn.nix
     ./printing.nix
     ./adb.nix
+    ./shutdown-on-lan.nix
   ];
 }
