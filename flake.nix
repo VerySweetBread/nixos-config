@@ -35,6 +35,19 @@
         ];
       };
 
+      Senko = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          pkgs-stable = import nixpkgs-stable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          inherit inputs system;
+        };
+        modules = [
+          ./nixos/hosts/Senko/configuration.nix
+        ];
+      };
+
       popka = nixpkgs.lib.nixosSystem {
         specialArgs = {
           pkgs-stable = import nixpkgs-stable {
