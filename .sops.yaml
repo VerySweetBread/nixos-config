@@ -1,7 +1,7 @@
 keys:
   - &primary age1j3uuyax673fvl5x4dveupq3dylngnrq0e5uy7fmclsexkfd25vysk646wk
 creation_rules:
-  - path_regex: home-manager/secrets.yaml$
+  - path_regex: home-manager/users/sweetbread/secrets.yaml$
     key_groups:
       - age:
           - *primary
