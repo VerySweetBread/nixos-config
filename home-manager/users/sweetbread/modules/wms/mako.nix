@@ -1,12 +1,20 @@
-{
-  xdg.configFile."mako/config".text = ''
-    background-color=#303446
-    text-color=#c6d0f5
-    border-color=#8caaee
-    progress-color=over #414559
-    default-timeout=5000
+{ config, ... }:
+  let
+    colors = config.lib.stylix.colors;
+  in {
+    xdg.configFile."mako/config".text = ''
+      background-color=#${colors.base00}
+      text-color=#${colors.base05}
+      border-color=#${colors.base0B}
+      border-radius=10
+      margin=16
+      progress-color=over #${colors.base0A}
+      default-timeout=5000
 
-    [urgency=high]
-    border-color=#ef9f76
-  '';
-}
+      [urgency=high]
+      border-color=#${colors.base09}
+      
+      [urgency=low]
+      border-color=#${colors.base04}
+    '';
+  }
