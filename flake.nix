@@ -7,6 +7,7 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
+    ayugram-desktop.url = "github:kaeeraa/ayugram-desktop/release?submodules=1";
 
     home-manager = {
       url = "github:nix-community/home-manager";

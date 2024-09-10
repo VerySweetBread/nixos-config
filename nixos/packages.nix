@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, inputs, ... }: {
   nixpkgs.config = {
     allowUnfree = true;
     permittedInsecurePackages = ["python-2.7.18.8" "electron-25.9.0" "freeimage-unstable-2021-11-01" "obsidian-1.5.12"];
@@ -7,7 +7,7 @@
   environment.systemPackages = with pkgs; [
     # Desktop apps
     google-chrome
-    telegram-desktop
+    inputs.ayugram-desktop.packages.${pkgs.system}.default
     vesktop
     alacritty
     obs-studio
