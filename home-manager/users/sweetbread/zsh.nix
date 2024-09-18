@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, pkgs, ... }: {
+  home.packages = [ pkgs.nh ];
   programs.zoxide.enable = true;
   programs.zsh = {
     enable = true;
@@ -11,11 +12,11 @@
       let
         flakeDir = "~/nix";
       in {
-      rb = "sudo nixos-rebuild switch --flake ${flakeDir}";
+      rb = "nh os switch ${flakeDir}";
       upd = "nix flake update ${flakeDir}";
       upg = "sudo nixos-rebuild switch --upgrade --flake ${flakeDir}";
 
-      hms = "home-manager switch --flake ${flakeDir}";
+      hms = "nh home switch ${flakeDir}";
 
       conf = "$EDITOR ${flakeDir}/nixos/hosts/$(hostname)/configuration.nix";
       pkgs = "$EDITOR ${flakeDir}/nixos/packages.nix";
@@ -32,6 +33,7 @@
         dbus-run-session Hyprland
       fi
       eval "$(zoxide init zsh)"
+      eval "$(nh completions --shell zsh)"
     '';
 
     history.size = 10000;
