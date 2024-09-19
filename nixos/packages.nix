@@ -33,7 +33,6 @@
     ncurses
     
     # CLI utils
-    neofetch
     file
     tree
     wget
