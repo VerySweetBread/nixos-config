@@ -6,6 +6,7 @@
     ./qt.nix
     ./sops.nix
     ./style.nix
+    ./neofetch.nix
 
     ./wms/hyprland.nix
     ./wms/waybar.nix
