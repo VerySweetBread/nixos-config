@@ -55,7 +55,12 @@
     settings = {
       "$mainMod" = "SUPER";
 
-      monitor = ",preferred,auto,1";
+      monitor = [
+        "DP-3, 3440x1440@165.00Hz, auto-right, 1"
+        # "HDMI-A-1, 3840x2160@60.00Hz, auto-left, 2"
+        "HDMI-A-1, disabled"
+        ",preferred,auto,1"
+      ];
 
       env = [
         "LIBVA_DRIVER_NAME,nvidia"
