@@ -1,7 +1,8 @@
-{ config, ... }:
+{ config, pkgs, ... }:
   let
     colors = config.lib.stylix.colors;
   in {
+    home.packages = [ pkgs.mako ];
     xdg.configFile."mako/config".text = ''
       background-color=#${colors.base00}
       text-color=#${colors.base05}

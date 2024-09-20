@@ -1,4 +1,12 @@
 { pkgs, lib, config, ... }: {
+  home.packages = with pkgs; [
+    swww
+    alacritty
+    waybar
+    pamixer
+    wofi
+  ];
+
   wayland.windowManager.hyprland =
   let
     colors = config.lib.stylix.colors;
