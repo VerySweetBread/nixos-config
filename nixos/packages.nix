@@ -9,7 +9,6 @@
     google-chrome
     inputs.ayugram-desktop.packages.${pkgs.system}.default
     vesktop
-    alacritty
     obs-studio
     mpv
     kdenlive  # Video editor
@@ -37,7 +36,6 @@
     tree
     wget
     git
-    fastfetch
     btop 
     nix-index
     unzip
@@ -50,7 +48,6 @@
     ntfs3g
     yt-dlp
     brightnessctl
-    swww
     openssl
     lazygit
     bluez
@@ -70,8 +67,6 @@
     # GUI utils
     feh
     imv
-    wofi
-    mako
     gromit-mpx
     notify-desktop
 
