@@ -5,6 +5,7 @@
     waybar
     pamixer
     wofi
+    clipse
   ];
 
   wayland.windowManager.hyprland =
@@ -178,17 +179,21 @@
         "float, title:^(Список друзей)"
       ];
 
+      windowrulev2 = [
+        "float, class:(clipse)"
+        "size 622 652, class:(clipse)"
+      ];
+
       exec-once = [
           "systemctl --user start plasma-polkit-agent"
           "swww init"
           "python3 ${lib.getExe wallpaper_changer}"
           "waybar"
-          "wl-paste --type text --watch cliphist store"
-          "wl-paste --type image --watch cliphist store"
+          "clipse -listen"
         ];
 
       bind = [
-        "$mainMod, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
+        "$mainMod, V, exec, alacritty --class clipse -e clipse  "
 
         "$mainMod, Return, exec, alacritty"
         "$mainMod, Q, killactive,"
