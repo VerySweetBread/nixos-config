@@ -65,6 +65,7 @@
     homeConfigurations = {
       sweetbread = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
+        extraSpecialArgs = { inherit inputs; };
         modules = [
           ./home-manager/users/sweetbread/home.nix
           inputs.sops-nix.homeManagerModules.sops

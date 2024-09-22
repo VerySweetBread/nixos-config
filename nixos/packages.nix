@@ -5,32 +5,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    # Desktop apps
-    google-chrome
-    inputs.ayugram-desktop.packages.${pkgs.system}.default
-    vesktop
-    obs-studio
-    mpv
-    kdenlive  # Video editor
-    gparted   # Needs in autj agent
-    obsidian
-    vscode
-    jetbrains.pycharm-community
-    jetbrains.idea-community
-    android-studio
-    thunderbird
-
-    # Coding stuff
-    gnumake
-    gcc
-    nodejs
-    python
-    (python3.withPackages (ps: with ps; [ requests bpython ]))
-    python311Packages.pip
-    rocmPackages.llvm.clang-tools-extra
-    rocmPackages.llvm.clang
-    ncurses
-    
     # CLI utils
     file
     tree
@@ -39,15 +13,10 @@
     btop 
     nix-index
     unzip
-    scrot
-    ffmpeg
-    light
     yazi
     zram-generator
     zip
     ntfs3g
-    yt-dlp
-    brightnessctl
     openssl
     lazygit
     bluez
@@ -57,7 +26,6 @@
     hexyl
     jq
     tldr
-    bat
     xdg-utils
     helix
     playerctl
@@ -69,11 +37,6 @@
     imv
     gromit-mpx
     notify-desktop
-
-    # Xorg stuff
-    #xterm
-    #xclip
-    #xorg.xbacklight
 
     # Wayland stuff
     xwayland
@@ -98,13 +61,6 @@
     # GPU stuff 
     rocm-opencl-icd
     glaxnimate
-
-    # Screenshotting
-    grim
-    grimblast
-    slurp
-    flameshot
-    swappy
 
     # Other
     home-manager
