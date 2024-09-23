@@ -61,6 +61,10 @@
     enable = true;
     xwayland.enable = true;
 
+    plugins = with pkgs.hyprlandPlugins; [
+      hyprbars
+    ];
+
     settings = {
       "$mainMod" = "SUPER";
 
