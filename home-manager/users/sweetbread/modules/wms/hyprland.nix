@@ -6,6 +6,7 @@
     pamixer
     wofi
     clipse
+    grimblast
   ];
 
   wayland.windowManager.hyprland =
@@ -275,7 +276,10 @@
         ''$mainMod ALT, C, exec, alacritty -e sh -c "conf"''
         ''$mainMod ALT, H, exec, alacritty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/hyprland.nix"''
         ''$mainMod ALT, W, exec, alacritty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/waybar.nix"''
-        '', Print, exec, grim -g "$(slurp)" - | swappy -f -''
+
+        "    , Print, exec, grimblast --notify copy output"
+        "CTRL, Print, exec, grimblast --notify copy area"
+        "ALT , Print, exec, grimblast --notify copy active"
 
         # Waybar
         "$mainMod, B, exec, pkill -SIGUSR1 waybar"
