@@ -1,48 +1,86 @@
 { config, pkgs, ... }: {
   home.packages = [ pkgs.nh ];
-  programs.zoxide.enable = true;
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    # enableAutosuggestions = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
+  programs = {
+    zoxide.enable = true;
 
-    shellAliases =
-      let
-        flakeDir = "~/nix";
-      in {
-      rb = "nh os switch ${flakeDir}";
-      upd = "nix flake update ${flakeDir}";
-      upg = "sudo nixos-rebuild switch --upgrade --flake ${flakeDir}";
+    starship = {
+      enable = true;
+      enableZshIntegration = true;
 
-      hms = "nh home switch ${flakeDir}";
+      settings = {
+        add_newline = true;
+        format = ''
+          $os$directory$git_branch$git_status
+          $status$character
+        '';
+        right_format = "$all";
 
-      conf = "$EDITOR ${flakeDir}/nixos/hosts/$(hostname)/configuration.nix";
-      pkgs = "$EDITOR ${flakeDir}/nixos/packages.nix";
-
-      ll = "ls -l";
-      se = "sudoedit";
-      ff = "fastfetch";
-      cat = "bat";
-      cd = "z";
+        cmake.disabled = true;
+        cmd_duration = {
+          format = "";
+          show_notifications = true;
+          notification_timeout = 10000;
+        };
+        git_branch.format = "on [$branch(:$remote_branch)]($style) ";
+        git_metrics.disabled = false;
+        git_status = {
+          conflicted = "!";
+          up_to_date = "ok";
+          stashed = "S";
+          modified = "M";
+        };
+        directory = {
+          truncation_length = 3;
+          fish_style_pwd_dir_length = 1;
+          read_only = " RO";
+        };
+        os.disabled = false;
+        python = {
+          symbol = "py ";
+          python_binary = ["python3" "python"];
+        };
+        status.disabled = false;
+      };
     };
 
-    initExtra = ''
-      if [ -z "''${WAYLAND_DISPLAY}" ] && [ "''${XDG_VTNR}" -eq 1 ]; then
-        dbus-run-session Hyprland
-      fi
-      eval "$(zoxide init zsh)"
-      eval "$(nh completions --shell zsh)"
-    '';
-
-    history.size = 10000;
-    history.path = "${config.xdg.dataHome}/zsh/history";
-
-    oh-my-zsh = {
+    zsh = {
       enable = true;
-      plugins = [ "git" "sudo" ];
-      theme = "agnoster"; # blinks is also really nice
+      enableCompletion = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
+
+      shellAliases =
+        let
+          flakeDir = "~/nix";
+        in {
+        rb = "nh os switch ${flakeDir}";
+        upd = "nix flake update ${flakeDir}";
+        upg = "sudo nixos-rebuild switch --upgrade --flake ${flakeDir}";
+
+        hms = "nh home switch ${flakeDir}";
+
+        conf = "$EDITOR ${flakeDir}/nixos/hosts/$(hostname)/configuration.nix";
+        pkgs = "$EDITOR ${flakeDir}/nixos/packages.nix";
+
+        ll = "ls -l";
+        se = "sudoedit";
+        ff = "fastfetch";
+        cat = "bat";
+        cd = "z";
+      };
+
+      initExtra = ''
+        if [ -z "''${WAYLAND_DISPLAY}" ] && [ "''${XDG_VTNR}" -eq 1 ]; then
+          dbus-run-session Hyprland
+        fi
+        eval "$(zoxide init zsh)"
+        eval "$(nh completions --shell zsh)"
+      '';
+
+      history.size = 10000;
+      history.path = "${config.xdg.dataHome}/zsh/history";
+
+      oh-my-zsh.enable = true;
     };
   };
 }
