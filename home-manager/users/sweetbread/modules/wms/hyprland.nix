@@ -7,6 +7,8 @@
     wofi
     clipse
     grimblast
+    xclip
+    clipnotify
   ];
 
   wayland.windowManager.hyprland =
@@ -57,6 +59,15 @@
 
       finally:
         system(f"swww img {folder}/{filename} --transition-type center")
+    '';
+
+    clipsync = pkgs.writers.writeBash "clipsync" ''
+      while clipnotify; do
+        xclip -q -sel clip -t image/png -o > /dev/null && \
+          xclip -sel clip -t image/png -o | wl-copy
+        xclip -q -sel clip -o > /dev/null && \
+          xclip -sel clip -o | wl-copy
+      done
     '';
   in {
     enable = true;
@@ -194,6 +205,7 @@
           "swww init"
           "python3 ${lib.getExe wallpaper_changer}"
           "waybar"
+          "${clipsync}"
           "clipse -listen"
         ];
 
