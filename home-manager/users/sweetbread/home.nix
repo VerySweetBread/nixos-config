@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, ... }: {
   imports = [
     ./zsh.nix
     ./modules/bundle.nix
@@ -14,7 +14,6 @@
     packages = with pkgs; [
       # Desktop apps
       google-chrome
-      # inputs.ayugram-desktop.packages.${pkgs.system}.default
       telegram-desktop
       vesktop
       obs-studio
@@ -41,6 +40,7 @@
       ffmpeg
       yt-dlp
       bat
+      fd
 
       # GUI utils
       feh
@@ -49,4 +49,6 @@
       notify-desktop
     ];
   };
+
+  services.syncthing.enable = true;
 }
