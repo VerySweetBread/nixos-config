@@ -7,6 +7,7 @@
     ./style.nix
     ./neofetch.nix
     ./syncthing.nix
+    ./yazi.nix
 
     ./wms/hyprland.nix
     ./wms/waybar.nix
