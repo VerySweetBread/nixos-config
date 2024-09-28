@@ -5,6 +5,7 @@
     ../../modules/bundle.nix
     ../../modules/gamemode.nix
     ../../modules/users/sweetbread.nix
+    ../../modules/laptop.nix
   ];
 
   networking.hostName = "Senko";
