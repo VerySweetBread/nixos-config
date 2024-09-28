@@ -8,6 +8,7 @@
     ./neofetch.nix
     ./syncthing.nix
     ./yazi.nix
+    ./ags.nix
 
     ./wms/hyprland.nix
     ./wms/waybar.nix

@@ -7,7 +7,7 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
-    ayugram-desktop.url = "github:kaeeraa/ayugram-desktop/release?submodules=1";
+    ags.url = "github:Aylur/ags";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -70,6 +70,7 @@
           ./home-manager/users/sweetbread/home.nix
           inputs.sops-nix.homeManagerModules.sops
           inputs.stylix.homeManagerModules.stylix
+          inputs.ags.homeManagerModules.default
         ];
       };
       
