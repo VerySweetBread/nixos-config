@@ -2,6 +2,7 @@
   home.packages = [ pkgs.nh ];
   programs = {
     zoxide.enable = true;
+    fzf.enable = true;
 
     starship = {
       enable = true;
@@ -75,6 +76,8 @@
         fi
         eval "$(zoxide init zsh)"
         eval "$(nh completions --shell zsh)"
+        source "$(fzf-share)/key-bindings.zsh"
+        source "$(fzf-share)/completion.zsh"
       '';
 
       history.size = 10000;
