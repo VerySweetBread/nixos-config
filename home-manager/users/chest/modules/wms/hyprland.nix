@@ -13,9 +13,8 @@
 
       notify = lambda s: system(f"notify-desktop Wallpaper '{s}'")
       folder = "/home/chest/Wallpapers"
-      url = "https://wallhaven.cc/api/v1/collections/sweetbread/1764377"
-      with open("${config.sops.secrets."tokens/apis/wallhaven".path}") as f:
-        token = f.read()
+      url = "https://wallhaven.cc/api/v1/collections/cheeeest/1767552"
+      token = "8KkNcm3jS0hbjt0MPQXCi9EW0rMsqw5r"
 
       notify("Updating wallpaper!")
 
@@ -46,7 +45,7 @@
         filename = choice(listdir(folder))
 
       finally:
-        system(f"swww img {folder}/{filename} --transition-type center")
+        system(f"swww img {folder}/{filename}")
     '';
   in {
     enable = true;
@@ -165,6 +164,10 @@
         "float, title:^(Список друзей)"
       ];
 
+      windowrulev2 = [
+        "opacity 0.75, class:vesktop"
+      ];
+
       exec-once = [
           "systemctl --user start plasma-polkit-agent"
           "swww init"
@@ -253,7 +256,7 @@
         ''$mainMod ALT, C, exec, alacritty -e sh -c "conf"''
         ''$mainMod ALT, H, exec, alacritty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/hyprland.nix"''
         ''$mainMod ALT, W, exec, alacritty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/waybar.nix"''
-        '', Print, exec, grim -g "$(slurp)" - | swappy -f -''
+        ''$mainMod Shift, S, exec, grim -g "$(slurp)" - | swappy -f -''
 
         # Waybar
         "$mainMod, B, exec, pkill -SIGUSR1 waybar"

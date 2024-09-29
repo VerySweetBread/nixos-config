@@ -248,7 +248,7 @@ window#waybar.hidden {
 }
 
 #taskbar button.active {
-    background: #${colors.base0B};
+    background: #d197d9;
 }
 
 #language {

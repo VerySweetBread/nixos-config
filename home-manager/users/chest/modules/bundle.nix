@@ -1,11 +1,11 @@
 {
   imports = [
     ./git.nix
-    ./htop.nix
     ./alacritty.nix
     ./qt.nix
-    ./sops.nix
+    # ./sops.nix
     ./style.nix
+    ./aagl.nix
 
     ./wms/hyprland.nix
     ./wms/waybar.nix
