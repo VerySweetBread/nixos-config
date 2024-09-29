@@ -4,7 +4,7 @@
   users = {
     defaultUserShell = pkgs.zsh;
 
-    users.sweetbread = {
+    users.chest = {
       isNormalUser = true;
       description = "Chest";
       extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" ];

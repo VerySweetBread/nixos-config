@@ -34,7 +34,7 @@
         ];
       };
 
-      popka = nixpkgs.lib.nixosSystem {
+      Eclipse = nixpkgs.lib.nixosSystem {
         specialArgs = {
           pkgs-stable = import nixpkgs-stable {
             inherit system;
@@ -43,7 +43,7 @@
           inherit inputs system;
         };
         modules = [
-          ./nixos/hosts/popka/configuration.nix
+          ./nixos/hosts/Eclipse/configuration.nix
         ];
       };
     };
