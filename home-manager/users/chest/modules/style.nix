@@ -6,7 +6,7 @@
       waybar.enable = false;
     };
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/eris.yaml";
     polarity = "dark";
 
     image = pkgs.fetchurl {
