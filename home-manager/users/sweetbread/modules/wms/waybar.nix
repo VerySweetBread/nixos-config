@@ -100,7 +100,7 @@
             car = "";
             default = ["" "" ""];
         };
-        on-click = "alacritty --class pulsemixer -e pulsemixer";
+        on-click = "kitty --class pulsemixer -e pulsemixer";
         min-length = 13;
     };
 
@@ -137,7 +137,7 @@
       tooltip-format-ethernet = "{ifname} ";
       tooltip-format-disconnected = "Disconnected";
       max-length = 50;
-      on-click = "alacritty --class nmtui -e sh -c nmtui";
+      on-click = "kitty --class nmtui -e sh -c nmtui";
     };
 
     "backlight" = {
