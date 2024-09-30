@@ -1,7 +1,7 @@
 {
   imports = [
     ./git.nix
-    ./alacritty.nix
+    ./kitty.nix
     ./qt.nix
     ./sops.nix
     ./style.nix
