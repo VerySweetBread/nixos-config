@@ -1,4 +1,10 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }: let
+  icon = pkgs.fetchurl {
+    url = "https://preview.redd.it/a2nga4jvjy291.png?width=640&crop=smart&auto=webp&s=7d1458b41101c960bc13c28a6b92c5a6ddc20210";
+    name = "nixos-chan.png";
+    sha256 = "sha256-9pleL+PiiylT8/aWw0iGve1iY3h0XohSQ7MVILzabHY=";
+  };
+in {
   home.packages = [ pkgs.neofetch ];
   xdg.configFile."neofetch/config.conf".text = ''
 print_info() {
@@ -87,7 +93,7 @@ color_blocks="on"
 block_width=3
 block_height=1
 col_offset="auto"
-bar_char_elapsed="*"
+bar_char_elapsed="="
 bar_char_total="."
 bar_border="on"
 bar_length=15
@@ -96,8 +102,8 @@ bar_color_total="distro"
 memory_display="infobar"
 battery_display="off"
 disk_display="infobar"
-image_backend="ueberzug"
-image_source=/home/sweetbread/Downloads/a2nga4jvjy291.png
+image_backend="kitty"
+image_source=${icon}
 ascii_distro="auto"
 ascii_colors=(distro)
 ascii_bold="on"

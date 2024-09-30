@@ -1,7 +1,7 @@
 { pkgs, lib, config, ... }: {
   home.packages = with pkgs; [
     swww
-    alacritty
+    kitty
     waybar
     pamixer
     wofi
@@ -210,12 +210,12 @@
         ];
 
       bind = [
-        "$mainMod, V, exec, alacritty --class clipse -e clipse  "
+        "$mainMod, V, exec, kitty --class clipse -e clipse  "
 
-        "$mainMod, Return, exec, alacritty"
+        "$mainMod, Return, exec, kitty"
         "$mainMod, Q, killactive,"
         "$mainMod, M, exit,"
-        "$mainMod, E, exec, alacritty -e sh -c yazi"
+        "$mainMod, E, exec, kitty -e sh -c yazi"
         "$mainMod, F, togglefloating,"
         "$mainMod, D, exec, wofi --show drun"
         "$mainMod, P, pseudo, # dwindle"
@@ -284,10 +284,10 @@
         ", XF86MonBrightnessUp, exec, brightnessctl set +5% "
 
         # Configuration files
-        ''$mainMod ALT, N, exec, alacritty -e sh -c "rb"''
-        ''$mainMod ALT, C, exec, alacritty -e sh -c "conf"''
-        ''$mainMod ALT, H, exec, alacritty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/hyprland.nix"''
-        ''$mainMod ALT, W, exec, alacritty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/waybar.nix"''
+        ''$mainMod ALT, N, exec, kitty -e sh -c "rb"''
+        ''$mainMod ALT, C, exec, kitty -e sh -c "conf"''
+        ''$mainMod ALT, H, exec, kitty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/hyprland.nix"''
+        ''$mainMod ALT, W, exec, kitty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/waybar.nix"''
 
         "    , Print, exec, grimblast --notify copy output"
         "CTRL, Print, exec, grimblast --notify copy area"
