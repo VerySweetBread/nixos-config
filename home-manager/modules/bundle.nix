@@ -1,17 +1,14 @@
 {
   imports = [
-    ./git.nix
     ./kitty.nix
     ./qt.nix
     ./sops.nix
-    ./style.nix
     ./neofetch.nix
     ./syncthing.nix
     ./yazi.nix
     ./ags.nix
+    ./zsh.nix
 
-    ./wms/hyprland.nix
-    ./wms/waybar.nix
     ./wms/wofi.nix
     ./wms/mako.nix
   ];
