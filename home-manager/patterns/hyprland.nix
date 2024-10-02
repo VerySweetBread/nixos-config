@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, config, collection, swww_flags }: {
   home.packages = with pkgs; [
     swww
     kitty
@@ -24,8 +24,8 @@
       from os.path import exists
 
       notify = lambda s: system(f"notify-desktop Wallpaper '{s}'")
-      folder = "/home/sweetbread/Wallpapers"
-      url = "https://wallhaven.cc/api/v1/collections/sweetbread/1764377"
+      folder = "${config.home.homeDirectory}/Wallpapers"
+      url = "https://wallhaven.cc/api/v1/collections/${collection}"
       with open("${config.sops.secrets."tokens/apis/wallhaven".path}") as f:
         token = f.read()
 
@@ -58,7 +58,7 @@
         filename = choice(listdir(folder))
 
       finally:
-        system(f"swww img {folder}/{filename} --transition-type center")
+        system(f"swww img {folder}/{filename} ${swww_flags}")
     '';
 
     clipsync = pkgs.writers.writeBash "clipsync" ''
@@ -79,13 +79,6 @@
 
     settings = {
       "$mainMod" = "SUPER";
-
-      monitor = [
-        "DP-3, 3440x1440@165.00Hz, auto-right, 1"
-        # "HDMI-A-1, 3840x2160@60.00Hz, auto-left, 2"
-        "HDMI-A-1, disabled"
-        ",preferred,auto,1"
-      ];
 
       env = [
         "LIBVA_DRIVER_NAME,nvidia"
@@ -120,73 +113,6 @@
         sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
       };
 
-      general = {
-        gaps_in = 5;
-        gaps_out = 20;
-        border_size = 3;
-        "col.active_border" = "rgba(${colors.base0C}ee) rgba(${colors.base0B}ee) 45deg";
-        "col.inactive_border" = "rgba(${colors.base05}aa)";
-
-        layout = "dwindle";
-      };
-
-      decoration = {
-        rounding = 10;
-
-        blur = {
-          enabled = true;
-          size = 16;
-          passes = 2;
-          new_optimizations = true;
-        };
-
-        drop_shadow = true;
-        shadow_range = 4;
-        shadow_render_power = 3;
-        "col.shadow" = "rgba(1a1a1aee)";
-      };
-
-      animations = {
-        enabled = true;
-
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-        # bezier = "myBezier, 0.33, 0.82, 0.9, -0.08";
-
-        animation = [
-          "windows,     1, 7,  myBezier"
-          "windowsOut,  1, 7,  default, popin 80%"
-          "border,      1, 10, default"
-          "borderangle, 1, 8,  default"
-          "fade,        1, 7,  default"
-          "workspaces,  1, 6,  default"
-        ];
-      };
-
-      dwindle = {
-        pseudotile = true; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-        smart_split = true;
-      };
-
-      master = {
-        new_status = "master";
-      };
-
-      gestures = {
-        workspace_swipe = true;
-        workspace_swipe_fingers = 3;
-        workspace_swipe_invert = true;
-        workspace_swipe_distance = 200;
-        workspace_swipe_forever = true;
-      };
-
-      misc = {
-        animate_manual_resizes = true;
-        animate_mouse_windowdragging = true;
-        enable_swallow = true;
-        render_ahead_of_time = false;
-        disable_hyprland_logo = false;
-      };
-
       windowrule = [
         "float, ^(imv)$"
         "float, ^(feh)$"
@@ -201,16 +127,16 @@
       ];
 
       exec-once = [
-          "systemctl --user start plasma-polkit-agent"
-          "swww init"
-          "python3 ${lib.getExe wallpaper_changer}"
-          "waybar"
-          "${clipsync}"
-          "clipse -listen"
-        ];
+        "systemctl --user start plasma-polkit-agent"
+        "swww init"
+        "python3 ${lib.getExe wallpaper_changer}"
+        "waybar"
+        "${clipsync}"
+        "clipse -listen"
+      ];
 
       bind = [
-        "$mainMod, V, exec, kitty --class clipse -e clipse  "
+        "$mainMod, V, exec, kitty --class clipse -e clipse"
 
         "$mainMod, Return, exec, kitty"
         "$mainMod, Q, killactive,"
@@ -283,24 +209,11 @@
         ", XF86MonBrightnessDown, exec, brightnessctl set 5%- "
         ", XF86MonBrightnessUp, exec, brightnessctl set +5% "
 
-        # Configuration files
-        ''$mainMod ALT, N, exec, kitty -e sh -c "rb"''
-        ''$mainMod ALT, C, exec, kitty -e sh -c "conf"''
-        ''$mainMod ALT, H, exec, kitty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/hyprland.nix"''
-        ''$mainMod ALT, W, exec, kitty -e sh -c "$EDITOR ~/nix/home-manager/modules/wms/waybar.nix"''
-
-        "    , Print, exec, grimblast --notify copy output"
-        "CTRL, Print, exec, grimblast --notify copy area"
-        "ALT , Print, exec, grimblast --notify copy active"
-
         # Waybar
         "$mainMod, B, exec, pkill -SIGUSR1 waybar"
         #"$mainMod, W, exec, pkill -SIGUSR2 waybar"
 
         "$mainMod, W, exec, python3 ${lib.getExe wallpaper_changer}"
-
-        # Disable all effects
-        "$mainMod Shift, G, exec, ~/.config/hypr/gamemode.sh "
       ];
 
       # Move/resize windows with mainMod + LMB/RMB and dragging

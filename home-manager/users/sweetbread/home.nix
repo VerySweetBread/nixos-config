@@ -1,7 +1,15 @@
 { pkgs, ... }: {
   imports = [
-    ./zsh.nix
-    ./modules/bundle.nix
+    ../../modules/bundle.nix
+
+    ../../packages/coding.nix
+    ../../packages/desktop.nix
+    ../../packages/utils.nix
+
+    ./modules/git.nix
+    ./modules/hyprland.nix
+    ./modules/style.nix
+    ./modules/waybar.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -10,44 +18,6 @@
     username = "sweetbread";
     homeDirectory = "/home/sweetbread";
     stateVersion = "23.11";
-
-    packages = with pkgs; [
-      # Desktop apps
-      google-chrome
-      telegram-desktop
-      vesktop
-      obs-studio
-      mpv
-      obsidian
-      vscode
-      jetbrains.pycharm-community
-      jetbrains.idea-community
-      android-studio
-      thunderbird
-    
-      # Coding stuff
-      cmake
-      gnumake
-      nodejs
-      (python3.withPackages (ps: with ps; [ requests bpython ]))
-      python311Packages.pip
-      rocmPackages.llvm.clang-tools-extra
-      rocmPackages.llvm.clang
-      ncurses
-
-      # CLI utils
-      scrot
-      ffmpeg
-      yt-dlp
-      bat
-      fd
-
-      # GUI utils
-      feh
-      imv
-      gromit-mpx
-      notify-desktop
-    ];
   };
 
   services.syncthing.enable = true;

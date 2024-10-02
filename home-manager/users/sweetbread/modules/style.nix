@@ -4,6 +4,7 @@
     targets = {
       hyprland.enable = false;
       waybar.enable = false;
+      kitty.variant256Colors = true;
     };
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
