@@ -1,11 +1,11 @@
-{ pkgs, config, ...}: {
+{ pkgs, config, active_color }: {
   home.packages = [ pkgs.pulsemixer ];
   wayland.windowManager.hyprland.settings.windowrule = [
     "float, ^(pulsemixer)"
     "float, ^(nmtui)"
   ];
 
-  xdg.configFile."waybar/scripts/wttr.py".source = pkgs.fetchurl {
+  xdg.configFile."waybar/scripts/wttr.py".source = pkgs.requireFile {
     name = "waybar-wttr.py";
     url = "https://gist.githubusercontent.com/bjesus/f8db49e1434433f78e5200dc403d58a3/raw/47f9ffd573dc8e8edce0ea6708601b8e685a70ab/waybar-wttr.py";
     sha256 = "15j2cqg405q37wrrlm70mhp7rx6xnrn92rfm1ix6g3nl98ksh45g";
@@ -100,7 +100,7 @@
             car = "";
             default = ["" "" ""];
         };
-        on-click = "alacritty --class pulsemixer -e pulsemixer";
+        on-click = "kitty --class pulsemixer -e pulsemixer";
         min-length = 13;
     };
 
@@ -137,7 +137,7 @@
       tooltip-format-ethernet = "{ifname} ";
       tooltip-format-disconnected = "Disconnected";
       max-length = 50;
-      on-click = "alacritty --class nmtui -e sh -c nmtui";
+      on-click = "kitty --class nmtui -e sh -c nmtui";
     };
 
     "backlight" = {
@@ -248,7 +248,7 @@ window#waybar.hidden {
 }
 
 #taskbar button.active {
-    background: #d197d9;
+    background: ${active_color};
 }
 
 #language {

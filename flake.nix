@@ -80,6 +80,7 @@
           ./home-manager/users/chest/home.nix
           inputs.sops-nix.homeManagerModules.sops
           inputs.stylix.homeManagerModules.stylix
+          inputs.ags.homeManagerModules.default
         ];
       };
     };
