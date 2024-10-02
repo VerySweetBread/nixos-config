@@ -3,6 +3,7 @@
     ./hardware-configuration.nix
     ../../packages.nix
     ../../modules/bundle.nix
+    ../../modules/adb.nix
     ../../modules/gamemode.nix
     ../../modules/users/sweetbread.nix
   ];
