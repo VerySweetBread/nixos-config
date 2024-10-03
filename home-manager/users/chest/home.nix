@@ -4,6 +4,7 @@
     
     ../../packages/desktop.nix
 
+    ./modules/aagl.nix
     ./modules/git.nix
     ./modules/hyprland.nix
     ./modules/style.nix
