@@ -8,6 +8,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
     ags.url = "github:Aylur/ags";
+    kaizen.url = "github:thericecold/kaizen";
 
     home-manager = {
       url = "github:nix-community/home-manager";

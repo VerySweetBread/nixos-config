@@ -6,7 +6,8 @@
     ./neofetch.nix
     ./syncthing.nix
     ./yazi.nix
-    ./ags.nix
+    # ./ags.nix
+    ./kaizen.nix
     ./zsh.nix
 
     ./wms/wofi.nix
