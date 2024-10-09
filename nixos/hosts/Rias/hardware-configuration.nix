@@ -12,20 +12,20 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/c32a41f3-f084-44ea-ac52-179a3bc44bbf";
+    device = "/dev/disk/by-label/NixOS";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/F3A3-D76B";
+    device = "/dev/disk/by-uuid/0BE3-FC0E";
     fsType = "vfat";
-    options = [ "fmask=0022" "dmask=0022" ];
+    options = [ "fmask=0022" "dmask=0022" "nofail" ];
   };
 
   fileSystems."/mnt/D" = {
-    device = "/dev/disk/by-uuid/EC7C275B7C272036";
+    device = "/dev/disk/by-label/Data";
     fsType = "ntfs";
-    options = ["umask=0022" "gid=100" "uid=1001"];
+    options = ["umask=0022" "gid=100" "uid=1000" "nofail" ];
   };
 
   swapDevices = [ ];
