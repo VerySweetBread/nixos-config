@@ -5,6 +5,7 @@
     ../../packages/coding.nix
     ../../packages/desktop.nix
     ../../packages/utils.nix
+    ../../packages/art.nix
 
     ./modules/git.nix
     ./modules/hyprland.nix

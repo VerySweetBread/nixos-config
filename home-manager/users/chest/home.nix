@@ -3,6 +3,7 @@
     ../../modules/bundle.nix
     
     ../../packages/desktop.nix
+    ../../packages/art.nix
 
     ./modules/aagl.nix
     ./modules/git.nix
