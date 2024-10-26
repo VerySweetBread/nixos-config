@@ -12,5 +12,6 @@
     ./vpn.nix
     ./printing.nix
     ./shutdown-on-lan.nix
+    ./zapret/zapret.nix
   ];
 }
