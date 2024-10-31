@@ -57,7 +57,7 @@
           flakeDir = "~/nix";
         in {
         rb = "nh os switch ${flakeDir}";
-        upd = "nix flake update ${flakeDir}";
+        upd = "nix flake update --flake ${flakeDir}";
         upg = "sudo nixos-rebuild switch --upgrade --flake ${flakeDir}";
 
         hms = "nh home switch ${flakeDir}";
