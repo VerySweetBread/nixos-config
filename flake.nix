@@ -3,7 +3,7 @@
 
   inputs = {
 
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
@@ -66,7 +66,13 @@
     homeConfigurations = {
       sweetbread = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
-        extraSpecialArgs = { inherit inputs; };
+        extraSpecialArgs = {
+          inherit inputs;
+          pkgs-stable = import nixpkgs-stable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        };
         modules = [
           ./home-manager/users/sweetbread/home.nix
           inputs.sops-nix.homeManagerModules.sops
@@ -77,6 +83,13 @@
       
       chest = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
+        extraSpecialArgs = {
+          inherit inputs;
+          pkgs-stable = import nixpkgs-stable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        };
         modules = [
           ./home-manager/users/chest/home.nix
           inputs.sops-nix.homeManagerModules.sops

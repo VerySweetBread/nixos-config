@@ -59,7 +59,6 @@
     pamixer
 
     # GPU stuff 
-    rocm-opencl-icd
     glaxnimate
 
     # Other
