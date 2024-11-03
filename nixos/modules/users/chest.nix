@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
   programs.zsh.enable = true;
 
   users = {
@@ -12,5 +12,21 @@
     };
   };
 
-  services.getty.autologinUser = "chest";
+  services.greetd = let
+    tuigreet = pkgs.lib.getExe pkgs.greetd.tuigreet;
+    session = lib.getExe pkgs.hyprland;
+    username = "chest";
+  in {
+    enable = true;
+    settings = {
+      initial_session = {
+        command = "${session}";
+        user = "${username}";
+      };
+      default_session = {
+        command = "${tuigreet} --greeting 'Welcome to NixOS!' --asterisks --remember --remember-user-session --time -cmd ${session}";
+        user = "greeter";
+      };
+    };
+  };
 }
