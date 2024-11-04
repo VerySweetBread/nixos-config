@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   imports = [
     ../../modules/bundle.nix
+    ../../modules/hyprlock.nix
 
     ../../packages/coding.nix
     ../../packages/desktop.nix
