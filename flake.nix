@@ -33,6 +33,7 @@
         };
         modules = [
           ./nixos/hosts/Rias/configuration.nix
+          inputs.sops-nix.nixosModules.sops
         ];
       };
 
@@ -46,6 +47,7 @@
         };
         modules = [
           ./nixos/hosts/Senko/configuration.nix
+          inputs.sops-nix.nixosModules.sops
         ];
       };
 
@@ -59,6 +61,7 @@
         };
         modules = [
           ./nixos/hosts/Eclipse/configuration.nix
+          inputs.sops-nix.nixosModules.sops
         ];
       };
     };
