@@ -5,3 +5,7 @@ creation_rules:
     key_groups:
       - age:
           - *primary
+  - path_regex: nixos/hosts/(Rias|Senko|Eclipse)/secrets/.+$
+    key_groups:
+      - age:
+          - *primary

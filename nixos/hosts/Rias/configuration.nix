@@ -1,6 +1,7 @@
-{ config, pkgs, ...}: {
+{ config, pkgs, inputs, ...}: {
   imports = [
     ./hardware-configuration.nix
+    ./secrets/secrets.nix
     ../../packages.nix
     ../../modules/bundle.nix
     ../../modules/adb.nix
