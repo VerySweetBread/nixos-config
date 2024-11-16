@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, inputs, ... }: {
   home.packages = with pkgs; [
     scrot
     ffmpeg
@@ -9,5 +9,6 @@
     imv
     gromit-mpx
     notify-desktop
+    inputs.tlock.packages.${system}.default
   ];
 }
