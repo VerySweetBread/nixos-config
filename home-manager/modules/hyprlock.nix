@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
   wayland.windowManager.hyprland.settings.exec-once = [ "hyprlock" ];
 
   programs.hyprlock = let
@@ -12,7 +12,7 @@
 
     settings = {
       background = {
-        path = "${image}";
+        path = lib.mkForce "${image}";
         color = "rgba(25, 20, 20, 1.0)";
         blur_passes = 0;
         blur_size = 7;
@@ -58,17 +58,17 @@
         dots_center = false;
         dots_rounding = -1;
         dots_fade_time = 200;
-        outer_color = "rgb(151515)";
-        inner_color = "rgb(200, 200, 200)";
-        font_color = "rgb(10, 10, 10)";
+        # outer_color = "rgb(151515)";
+        # inner_color = "rgb(200, 200, 200)";
+        # font_color = "rgb(10, 10, 10)";
         font_family = "Noto Sans";
         fade_on_empty = true;
         fade_timeout = 1000;
         placeholder_text = "<i>Input Password...</i>";
         hide_input = false;
         rounding = -1;
-        check_color = "rgb(204, 136, 34)";
-        fail_color = "rgb(204, 34, 34)";
+        # check_color = "rgb(204, 136, 34)";
+        # fail_color = "rgb(204, 34, 34)";
         fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
         fail_timeout = 2000;
         fail_transition = 300;
