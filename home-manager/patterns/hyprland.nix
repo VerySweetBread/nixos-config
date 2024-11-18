@@ -1,4 +1,4 @@
-{ pkgs, lib, config, collection, swww_flags }: {
+{ pkgs, lib, config, collection, swww_flags, inputs }: {
   home.packages = with pkgs; [
     swww
     kitty
@@ -72,8 +72,9 @@
   in {
     enable = true;
     xwayland.enable = true;
-
-    plugins = with pkgs.hyprlandPlugins; [
+    
+    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
       hyprbars
     ];
 
