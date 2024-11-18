@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, inputs, ... }: {
   programs.zsh.enable = true;
 
   users = {
@@ -14,7 +14,7 @@
 
   services.greetd = let
     tuigreet = pkgs.lib.getExe pkgs.greetd.tuigreet;
-    session = lib.getExe pkgs.hyprland;
+    session = lib.getExe inputs.hyprland.packages.${pkgs.system}.default;
     username = "chest";
   in {
     enable = true;

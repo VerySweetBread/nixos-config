@@ -45,9 +45,7 @@
     ueberzugpp
 
     # WMs and stuff
-    hyprland
     seatd
-    xdg-desktop-portal-hyprland
     waybar
     waypaper
     lxqt.lxqt-policykit
