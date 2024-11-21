@@ -88,9 +88,9 @@
       };
 
       bind = [
-        "    , Print, exec, grimblast --notify copy output"
-        "CTRL, Print, exec, grimblast --notify copy area"
-        "ALT , Print, exec, grimblast --notify copy active"
+        "    , Print, exec, grimblast --notify --freeze copy output"
+        "CTRL, Print, exec, grimblast --notify --freeze copy area"
+        "ALT , Print, exec, grimblast --notify --freeze copy active"
       ];
     };
   };
