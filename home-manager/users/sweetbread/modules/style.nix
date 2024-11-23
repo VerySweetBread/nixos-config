@@ -21,6 +21,11 @@
         package = pkgs.jetbrains-mono;
       };
 
+      serif = {
+        name = "Gabriela";
+        package = (pkgs.google-fonts.override { fonts = [ "Gabriela" ]; });
+      };
+
       sizes = {
         applications = 13;
         desktop = 12;
