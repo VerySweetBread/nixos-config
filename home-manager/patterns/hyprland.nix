@@ -2,7 +2,6 @@
   home.packages = with pkgs; [
     swww
     kitty
-    waybar
     pamixer
     wofi
     clipse
@@ -133,7 +132,7 @@
         "systemctl --user start plasma-polkit-agent"
         "swww init"
         "python3 ${lib.getExe wallpaper_changer}"
-        "waybar"
+        "${lib.getExe pkgs.hyprpanel}"
         "${clipsync}"
         "clipse -listen"
       ];
