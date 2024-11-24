@@ -37,6 +37,4 @@
       terminal = .5;
     };
   };
-
-  xdg.configFile."helix/config.toml".text = ''theme = "catppuccin_mocha"'';
 }
