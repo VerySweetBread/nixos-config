@@ -61,6 +61,7 @@
         upg = "sudo nixos-rebuild switch --upgrade --flake ${flakeDir}";
 
         hms = "nh home switch ${flakeDir}";
+        rhms = ''${pkgs.bash} $(home-manager generations | fzf | awk -F '-> ' '{print $2 "/activate"}')'';  #https://github.com/nix-community/home-manager/issues/1114#issuecomment-2067785129
 
         conf = "$EDITOR ${flakeDir}/nixos/hosts/$(hostname)/configuration.nix";
         pkgs = "$EDITOR ${flakeDir}/nixos/packages.nix";
