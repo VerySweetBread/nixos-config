@@ -62,5 +62,8 @@
       "pc.crashsight.wetest.net"
     ];
   };
+
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
 }
 
