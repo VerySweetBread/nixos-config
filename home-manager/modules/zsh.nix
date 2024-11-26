@@ -69,7 +69,7 @@
         ll = "ls -l";
         se = "sudoedit";
         ff = "fastfetch";
-        cat = "bat";
+        cat = "${pkgs.lib.getExe pkgs.bat}";
         cd = "z";
       };
 

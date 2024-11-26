@@ -15,6 +15,7 @@
     colors = config.lib.stylix.colors;
     
     wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
+      libraries = [ pkgs.python3Packages.requests ];
       flakeIgnore = [ "E501" "E111" "E701" "E241" "E731" ];
     } /*py*/ ''
       import requests as requests
@@ -131,7 +132,7 @@
       exec-once = [
         "systemctl --user start plasma-polkit-agent"
         "swww init"
-        "python3 ${lib.getExe wallpaper_changer}"
+        "${lib.getExe wallpaper_changer}"
         "${lib.getExe pkgs.hyprpanel}"
         "${clipsync}"
         "clipse -listen"
@@ -215,7 +216,7 @@
         "$mainMod, B, exec, pkill -SIGUSR1 waybar"
         #"$mainMod, W, exec, pkill -SIGUSR2 waybar"
 
-        "$mainMod, W, exec, python3 ${lib.getExe wallpaper_changer}"
+        "$mainMod, W, exec, ${lib.getExe wallpaper_changer}"
       ];
 
       # Move/resize windows with mainMod + LMB/RMB and dragging
