@@ -7,6 +7,7 @@
     mangohud
     protonup
     bottles
+    heroic
   ];
 
   environment.sessionVariables = {
