@@ -2,6 +2,7 @@
   imports = [
     ./hardware-configuration.nix
     ./secrets/secrets.nix
+    ./modules/grub.nix
     ../../packages.nix
     ../../modules/bundle.nix
     ../../modules/gamemode.nix
