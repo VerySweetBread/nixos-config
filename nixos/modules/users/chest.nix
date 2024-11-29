@@ -29,4 +29,6 @@
       };
     };
   };
+
+  nix.settings.trusted-users = [ "chest" ];
 }
