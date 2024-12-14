@@ -79,5 +79,6 @@
     ubuntu_font_family
     unifont
     nerd-fonts.symbols-only
+    corefonts
   ];
 }

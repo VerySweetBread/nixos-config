@@ -7,5 +7,6 @@
     mpv
     obsidian
     thunderbird
+    libreoffice
   ];
 }
