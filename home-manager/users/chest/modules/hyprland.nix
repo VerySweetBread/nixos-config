@@ -15,7 +15,7 @@
   in {
     settings = {
       monitor = ",preferred,auto,1";
-
+      exec-once =["${lib.getExe pkgs.linux-wallpaperengine} /mnt/D/SteamLibrary/steamapps/workshop/content/431960/816353979 --assets-dir /mnt/D/SteamLibrary/steamapps/common/wallpaper_engine/assets --screen-root DP-1 --noautomute"];
       general = {
         gaps_in = 5;
         gaps_out = 20;
@@ -81,10 +81,6 @@
         render_ahead_of_time = false;
         disable_hyprland_logo = false;
       };
-
-      windowrulev2 = [
-        "opacity 0.75, class:vesktop"
-      ];
 
       bind = [
         ''$mainMod Shift, S, exec, ${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" - | ${lib.getExe pkgs.swappy} -f -''
