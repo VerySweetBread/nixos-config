@@ -5,15 +5,17 @@
     extra-substituters = [
       "https://cache.garnix.io"
       "https://hyprland.cachix.org"
+      "https://ezkea.cachix.org"
     ];
     extra-trusted-public-keys = [
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
     ];
   };
 
   inputs = {
-
+    aagl.url = "github:ezKEa/aagl-gtk-on-nix";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     sops-nix.url = "github:Mic92/sops-nix";
