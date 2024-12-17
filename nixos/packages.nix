@@ -78,6 +78,6 @@
     powerline-symbols
     ubuntu_font_family
     unifont
-    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+    nerd-fonts.symbols-only
   ];
 }
