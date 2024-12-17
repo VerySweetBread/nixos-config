@@ -3,6 +3,7 @@
     ./hardware-configuration.nix
     ./secrets/secrets.nix
     ./modules/grub.nix
+    ./modules/aagl.nix
     ../../packages.nix
     ../../modules/bundle.nix
     ../../modules/gamemode.nix
