@@ -3,6 +3,7 @@
     ./hardware-configuration.nix
     ./secrets/secrets.nix
     ./modules/grub.nix
+    ./modules/syncthing.nix
     ../../packages.nix
     ../../modules/bundle.nix
     ../../modules/adb.nix
