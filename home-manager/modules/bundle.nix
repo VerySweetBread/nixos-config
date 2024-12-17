@@ -4,7 +4,6 @@
     ./qt.nix
     ./sops.nix
     ./neofetch.nix
-    ./syncthing.nix
     ./yazi.nix
     ./ags.nix
     ./zsh.nix

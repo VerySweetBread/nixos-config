@@ -21,6 +21,4 @@
     homeDirectory = "/home/sweetbread";
     stateVersion = "23.11";
   };
-
-  services.syncthing.enable = true;
 }
