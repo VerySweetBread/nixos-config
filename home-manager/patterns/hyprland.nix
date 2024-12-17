@@ -122,6 +122,7 @@
         "float, ^(mpv)$"
         "float, ^(nmtui)$"
         "float, title:^(Список друзей)"
+        "move onscreen cursor -50% -50%, ^(xdragon)$"
       ];
 
       windowrulev2 = [

@@ -50,6 +50,10 @@ in {
 					run = "plugin chmod";
 					desc = "Chmod on selected files";
 				}
+				{
+					on = [ "<C-n>" ];
+					run = ''shell '${lib.getExe pkgs.xdragon} -x -i -T "$@"' --confirm'';
+				}
 			];
 		};
 	};
