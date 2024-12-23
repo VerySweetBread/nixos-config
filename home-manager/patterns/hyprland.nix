@@ -131,6 +131,7 @@
       ];
 
       exec-once = [
+        "${pkgs.udiskie}"
         "systemctl --user start plasma-polkit-agent"
         "swww init"
         "${lib.getExe wallpaper_changer}"
