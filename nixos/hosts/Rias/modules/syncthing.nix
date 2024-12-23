@@ -12,22 +12,23 @@
     settings = {
       devices = {
         Akeno = { id = "YVFVE2M-GSCKJBJ-AMC5JM3-AOMCVNP-RLFAWEZ-35VP4HP-DGP5QD2-6QWEZQW"; };
+        Koneko = { id = "PJFWQRY-ZFUBGDR-NV7KVBL-UBDQ4HT-KPTYP34-MUDFPJU-4EZUHTT-ZLYRMAB"; };
       };
 
       folders = {
         "Books" = {
           path = "/mnt/D/SyncThing/Books";
-          devices = [ "Akeno" ];
+          devices = [ "Akeno" "Koneko" ];
         };
 
         ".RPI" = {
           path = "/mnt/D/SyncThing/.RPI";
-          devices = [ "Akeno" ];
+          devices = [ "Akeno" "Koneko" ];
         };
 
         "Music" = {
           path = "/home/sweetbread/Music";
-          devices = [ "Akeno" ];
+          devices = [ "Akeno" "Koneko" ];
         };
       };
     };
