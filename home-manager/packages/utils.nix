@@ -9,6 +9,7 @@
     imv
     gromit-mpx
     notify-desktop
+    rtorrent
     inputs.tlock.packages.${system}.default
   ];
 }
