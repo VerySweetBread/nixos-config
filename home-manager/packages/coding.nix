@@ -1,10 +1,10 @@
-{ pkgs, ... }: {
-  home.packages = with pkgs; [
+{ pkgs, pkgs-stable, ... }: {
+  home.packages = with pkgs-stable; [
     vscode
     jetbrains.pycharm-community
     jetbrains.idea-community
     android-studio
-
+  ] ++ ( with pkgs; [
     cmake
     gnumake
     nodejs
@@ -13,5 +13,5 @@
     rocmPackages.llvm.clang-tools-extra
     rocmPackages.llvm.clang
     ncurses
-  ];
+  ]);
 }
