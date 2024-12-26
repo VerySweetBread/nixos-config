@@ -10,6 +10,8 @@
     gromit-mpx
     notify-desktop
     rtorrent
+    gparted
+    unrar
     inputs.tlock.packages.${system}.default
   ];
 }
