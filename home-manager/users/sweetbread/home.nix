@@ -11,7 +11,6 @@
     ./modules/git.nix
     ./modules/hyprland.nix
     ./modules/style.nix
-    ./modules/waybar.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
