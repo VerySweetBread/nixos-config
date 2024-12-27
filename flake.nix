@@ -24,7 +24,6 @@
     ayugram-desktop.url = "github:/ayugram-port/ayugram-desktop/release?submodules=1";
     tlock.url = "git+https://github.com/eklairs/tlock?submodules=1";
 
-    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
@@ -37,13 +36,12 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, ... }@inputs: let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs {
-      inherit system;
-      overlays = [ inputs.hyprpanel.overlay ];
-    };
-  in {
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, ... }@inputs:
+
+    let
+      system = "x86_64-linux";
+    in {
+
     nixosConfigurations = {
       Rias = nixpkgs.lib.nixosSystem {
         specialArgs = {
@@ -90,7 +88,7 @@
 
     homeConfigurations = {
       sweetbread = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+        pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = {
           inherit inputs;
           pkgs-stable = import nixpkgs-stable {
@@ -102,12 +100,11 @@
           ./home-manager/users/sweetbread/home.nix
           inputs.sops-nix.homeManagerModules.sops
           inputs.stylix.homeManagerModules.stylix
-          inputs.ags.homeManagerModules.default
         ];
       };
       
       chest = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+        pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = {
           inherit inputs;
           pkgs-stable = import nixpkgs-stable {
@@ -119,7 +116,6 @@
           ./home-manager/users/chest/home.nix
           inputs.sops-nix.homeManagerModules.sops
           inputs.stylix.homeManagerModules.stylix
-          inputs.ags.homeManagerModules.default
         ];
       };
     };

@@ -134,7 +134,6 @@
         "systemctl --user start plasma-polkit-agent"
         "swww init"
         "${lib.getExe wallpaper_changer}"
-        "${lib.getExe pkgs.hyprpanel}"
         "${clipsync}"
         "clipse -listen"
       ];
