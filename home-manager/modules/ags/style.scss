@@ -1,69 +1,83 @@
 @use "sass:color";
+@use "colors.scss" as *;
 
-$bg: #212223;
-$fg: #f1f1f1;
-$accent: #378DF7;
-$radius: 7px;
+$radius: 10px;
+
+%item {
+    all: unset;
+    background: $bg;
+    border-radius: $radius;
+    padding: 4px;
+
+    & + &, .item + & { margin-left: 4px; }
+
+    label { margin: 0 8px; }
+}
 
 window.Bar {
     border: none;
     box-shadow: none;
-    background-color: $bg;
+    background-color: transparent;
     color: $fg;
     font-size: 1.1em;
     font-weight: bold;
-
-    label {
-        margin: 0 8px;
+    
+    .Container {
+        margin: 10px 10px 0;
     }
 
     .Workspaces  {
         button {
             all: unset;
-            background-color: transparent;
 
             &:hover label {
-                background-color: color.adjust($fg, $alpha: -0.84);
-                border-color: color.adjust($accent, $alpha: -0.8);
+                background: $surface0;
+                color: $accent;
             }
 
             &:active label {
-                background-color: color.adjust($fg, $alpha: -0.8)
+                background: $surface0;
+                color: $accent;
             }
         }
 
         label {
             transition: 200ms;
-            padding: 0 8px;
+            padding: 0 6px;
             margin: 2px;
             border-radius: $radius;
             border: 1pt solid transparent;
         }
 
         .focused label {
-            color: $accent;
+            background: $accent;
+            color: $bg;
             border-color: $accent;
         }
     }
 
-    .SysTray {
-        margin-right: 8px;
+    .SysTray button {
+        all: unset;
+        padding: 8px;
+        border-radius: inherit;
 
-        button {
-            padding: 0 4px;
+        &:hover {
+            background: $surface0;
         }
     }
 
-    .FocusedClient {
-        color: $accent;
-    }
-
-    .Media .Cover {
-        min-height: 1.2em;
-        min-width: 1.2em;
-        border-radius: $radius;
-        background-position: center;
-        background-size: contain;
+    .Media {
+        &.playing {
+            border: 2pt solid $accent;
+        }
+        
+        .Cover {
+            min-height: 1.2em;
+            min-width: 1.2em;
+            border-radius: $radius;
+            background-position: center;
+            background-size: contain;
+        }
     }
 
     .Battery label {
@@ -71,36 +85,11 @@ window.Bar {
         margin-left: 0;
     }
 
-    .AudioSlider {
-        * {
-            all: unset;
-        }
+    .Time { padding: 0 8px; }
 
-        icon {
-            margin-right: .6em;
-        }
+    .AudioSlider icon { margin-left: 8px; }
 
-        & {
-            margin: 0 1em;
-        }
-
-        trough {
-            background-color: color.adjust($fg, $alpha: -0.8);
-            border-radius: $radius;
-        }
-
-        highlight {
-            background-color: $accent;
-            min-height: .8em;
-            border-radius: $radius;
-        }
-
-        slider {
-            background-color: $fg;
-            border-radius: $radius;
-            min-height: 1em;
-            min-width: 1em;
-            margin: -.2em;
-        }
+    .Workspaces, .Media, .SysTray, .AudioSlider, .Time {
+        @extend %item;
     }
 }
