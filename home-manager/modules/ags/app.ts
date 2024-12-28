@@ -4,7 +4,7 @@ import Bar from "./widget/Bar"
 
 App.start({
     css: style,
-    instanceName: "js",
+    instanceName: "ags",
     requestHandler(request, res) {
         print(request)
         res("ok")
