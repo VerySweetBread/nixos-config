@@ -3,13 +3,16 @@
     loader = {
       timeout = 3;
       # systemd-boot.enable = true;
-      efi.efiSysMountPoint = "/boot";
+      efi = {
+        efiSysMountPoint = "/boot";
+        canTouchEfiVariables = true;
+      };
       
        grub = {
         enable = true;
         efiSupport = true;
-        efiInstallAsRemovable = true;
         device = "nodev";
+        useOSProber = true;
       };
       # efi.canTouchEfiVariables = true;
     };
