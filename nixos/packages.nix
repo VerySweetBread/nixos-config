@@ -10,7 +10,7 @@
     tree
     wget
     git
-    btop 
+    (btop.override { cudaSupport = true; })
     nix-index
     unzip
     yazi
