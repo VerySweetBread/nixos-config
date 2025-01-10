@@ -1,9 +1,9 @@
-{ pkgs, ... }: {
+{ pkgs, pkgs-stable, ... }: {
   imports = [
     ../../modules/bundle.nix
     
-    ../../packages/desktop.nix
     ../../packages/art.nix
+    ../../packages/desktop.nix
 
     ./modules/git.nix
     ./modules/hyprland.nix
@@ -19,6 +19,8 @@
 
     packages = with pkgs; [
       nautilus
-    ];
+    ] ++ (with pkgs-stable; [
+      jetbrains.pycharm-community
+    ]);
   };
 }
