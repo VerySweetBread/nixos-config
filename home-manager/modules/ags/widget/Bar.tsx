@@ -5,6 +5,7 @@ import Time         from "./elements/Time"
 import Wifi         from "./elements/Wifi"
 import Audio        from "./elements/Audio"
 import Media        from "./elements/Media"
+import Layout       from "./elements/Keyboard"
 import SysTray      from "./elements/SysTray"
 import Workspaces   from "./elements/Workspaces"
 import BatteryLevel from "./elements/Battery"
@@ -21,6 +22,7 @@ export default function Bar(monitor: Gdk.Monitor) {
         <centerbox className="Container">
             <box hexpand halign={Gtk.Align.START}>
                 <Workspaces />
+                <Layout />
             </box>
             <box>
                 <Media />
