@@ -56,6 +56,8 @@ window.Bar {
         }
     }
 
+    .Layout.en { color: $accent; }
+
     .SysTray button {
         all: unset;
         padding: 8px;
@@ -89,7 +91,7 @@ window.Bar {
 
     .AudioSlider icon { margin-left: 8px; }
 
-    .Workspaces, .Media, .SysTray, .AudioSlider, .Time {
+    .Workspaces, .Layout, .Media, .SysTray, .AudioSlider, .Time {
         @extend %item;
     }
 }
