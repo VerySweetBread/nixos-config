@@ -11,6 +11,7 @@
     notify-desktop
     rtorrent
     gparted
+    git-lfs
     unrar
     inputs.tlock.packages.${system}.default
   ];
