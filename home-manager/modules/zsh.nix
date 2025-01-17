@@ -12,7 +12,7 @@
         add_newline = true;
         format = ''
           $os$directory$git_branch$git_status
-          $status$character
+          $nix_shell$status$character
         '';
         right_format = "$all";
 
@@ -35,6 +35,7 @@
           fish_style_pwd_dir_length = 1;
           read_only = " RO";
         };
+        nix_shell.format = "[nix-shell]($style) ";
         os.disabled = false;
         python = {
           symbol = "py ";
