@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, pkgs-stable, ...}: {
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
@@ -7,7 +7,7 @@
     mangohud
     protonup
     bottles
-    heroic
+    pkgs-stable.heroic
   ];
 
   environment.sessionVariables = {
