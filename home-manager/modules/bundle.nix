@@ -8,6 +8,7 @@
     ./ags.nix
     ./zsh.nix
     ./helix.nix
+    ./btop.nix
 
     ./wms/wofi.nix
     ./wms/mako.nix
