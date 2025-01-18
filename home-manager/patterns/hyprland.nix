@@ -1,13 +1,12 @@
 { pkgs, lib, config, collection, swww_flags, inputs }: {
   home.packages = with pkgs; [
-    swww
     kitty
     pamixer
     wofi
     clipse
     grimblast
-    xclip
-    clipnotify
+    wl-clipboard
+    cliphist
   ];
 
   wayland.windowManager.hyprland =
@@ -58,15 +57,15 @@
         filename = choice(listdir(folder))
 
       finally:
-        system(f"swww img {folder}/{filename} ${swww_flags}")
+        system(f"${lib.getExe pkgs.swww} img {folder}/{filename} ${swww_flags}")
     '';
 
     clipsync = pkgs.writers.writeBash "clipsync" ''
-      while clipnotify; do
-        xclip -q -sel clip -t image/png -o > /dev/null && \
-          xclip -sel clip -t image/png -o | wl-copy
-        xclip -q -sel clip -o > /dev/null && \
-          xclip -sel clip -o | wl-copy
+      while ${lib.getExe pkgs.clipnotify}; do
+        ${lib.getExe pkgs.xclip} -q -sel clip -t image/png -o > /dev/null && \
+          ${lib.getExe pkgs.xclip} -sel clip -t image/png -o | wl-copy
+        ${lib.getExe pkgs.xclip} -q -sel clip -o > /dev/null && \
+          ${lib.getExe pkgs.xclip} -sel clip -o | wl-copy
       done
     '';
   in {
@@ -132,7 +131,7 @@
 
       exec-once = [
         "systemctl --user start plasma-polkit-agent"
-        "swww init"
+        "${lib.getExe' pkgs.swww "swww-daemon"}"
         "${lib.getExe wallpaper_changer}"
         "${clipsync}"
         "clipse -listen"
