@@ -14,5 +14,7 @@
     git-lfs
     unrar
     inputs.tlock.packages.${system}.default
+    hexyl
+    jq
   ];
 }

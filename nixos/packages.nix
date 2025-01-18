@@ -5,66 +5,20 @@
   };
 
   environment.systemPackages = with pkgs; [
-    # CLI utils
     file
     tree
     wget
     git
     (btop.override { cudaSupport = true; })
-    nix-index
     unzip
     yazi
-    zram-generator
     zip
-    ntfs3g
-    openssl
     lazygit
-    bluez
-    bluez-tools
     httpie
     ncdu
-    hexyl
-    jq
     tldr
-    xdg-utils
     helix
-    playerctl
-    duf
-    v2raya
-
-    # GUI utils
-    feh
-    imv
-    gromit-mpx
-    notify-desktop
-
-    # Wayland stuff
-    xwayland
-    wl-clipboard
-    cliphist
-    ueberzugpp
-
-    # WMs and stuff
-    seatd
-    waybar
-    waypaper
-    lxqt.lxqt-policykit
-    hyprcursor
-
-    # Sound
-    pipewire
-    pulseaudio
-    pamixer
-
-    # GPU stuff 
-    glaxnimate
-
-    # Other
     home-manager
-    spice-vdagent
-    libsForQt5.qtstyleplugin-kvantum
-    libsForQt5.qt5ct
-    papirus-nord
   ];
 
   fonts.packages = with pkgs; [
