@@ -135,6 +135,7 @@
         "${lib.getExe wallpaper_changer}"
         "${clipsync}"
         "clipse -listen"
+        "${lib.getExe' pkgs.udiskie "udiskie"}"
       ];
 
       bind = [
