@@ -4,7 +4,7 @@
   programs.ags = {
     enable = true;
 
-    configDir = ./ags;
+    configDir = null;
 
     extraPackages = with inputs.ags.packages.${pkgs.system}; [
       battery
@@ -17,4 +17,6 @@
   };
 
   wayland.windowManager.hyprland.settings.exec-once = [ "ags run" ];
+
+  xdg.configFile."ags".source = (pkgs.callPackage ../packages/drvs/ags.nix { colors = config.lib.stylix.colors; });
 }
