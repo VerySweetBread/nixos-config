@@ -11,6 +11,7 @@
     ./vpn.nix
     ./printing.nix
     ./shutdown-on-lan.nix
+    ./console.nix
   ];
 
   programs.hyprland.enable = true;
