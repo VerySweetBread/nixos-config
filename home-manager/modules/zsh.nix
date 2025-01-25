@@ -72,6 +72,7 @@
         ff = "fastfetch";
         cat = "${pkgs.lib.getExe pkgs.bat}";
         cd = "z";
+        lg = "lazygit";
       };
 
       initExtra = ''
