@@ -18,8 +18,8 @@
       exec-once =["${lib.getExe pkgs.linux-wallpaperengine} /mnt/D/SteamLibrary/steamapps/workshop/content/431960/816353979 --assets-dir /mnt/D/SteamLibrary/steamapps/common/wallpaper_engine/assets --screen-root DP-1 --noautomute"];
       general = {
         gaps_in = 5;
-        gaps_out = 20;
-        border_size = 3;
+        gaps_out = 5;
+        border_size = 2;
         "col.active_border" = "rgba(${colors.base0C}ee) rgba(${colors.base0B}ee) 45deg";
         "col.inactive_border" = "rgba(${colors.base05}aa)";
 
