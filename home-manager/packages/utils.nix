@@ -16,5 +16,6 @@
     inputs.tlock.packages.${system}.default
     hexyl
     jq
+    litecli
   ];
 }
