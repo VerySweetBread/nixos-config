@@ -11,8 +11,8 @@
     polarity = "dark";
 
     image = pkgs.fetchurl {
-      url = "https://w.wallhaven.cc/full/kx/wallhaven-kxedr7.jpg";
-      sha256 = "0ypqnq7bsr2giq7nq1c3xrw2m0gkii9j5zhfp512r93wc96zvm50";
+      url = "https://w.wallhaven.cc/full/8o/wallhaven-8o52j2.jpg";
+      sha256 = "sha256-u4d21a0Kh5OHEzQMSQ7+ey/Va2ftS1DefrOQFahaeC4=";
     };
 
     iconTheme = {
@@ -28,7 +28,7 @@
       };
 
       serif = {
-        name = "Gabriela";
+        name = "GabrieLa";
         package = (pkgs.google-fonts.override { fonts = [ "Gabriela" ]; });
       };
 
@@ -40,7 +40,7 @@
 
     opacity = {
       popups = .8;
-      terminal = .75;
+      terminal = .9;
     };
   };
 }
