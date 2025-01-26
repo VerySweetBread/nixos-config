@@ -45,9 +45,9 @@
     in {
 
     nixosConfigurations = {
-      Rias = nixpkgs.lib.nixosSystem {
+      Rias = nixpkgs-stable.lib.nixosSystem {
         specialArgs = {
-          pkgs-stable = import nixpkgs-stable {
+          pkgs-unstable = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
@@ -59,9 +59,9 @@
         ];
       };
 
-      Senko = nixpkgs.lib.nixosSystem {
+      Senko = nixpkgs-stable.lib.nixosSystem {
         specialArgs = {
-          pkgs-stable = import nixpkgs-stable {
+          pkgs-unstable = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
@@ -73,9 +73,9 @@
         ];
       };
 
-      Eclipse = nixpkgs.lib.nixosSystem {
+      Eclipse = nixpkgs-stable.lib.nixosSystem {
         specialArgs = {
-          pkgs-stable = import nixpkgs-stable {
+          pkgs-unstable = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
