@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, pkgs-unstable, inputs, ... }: {
   nixpkgs.config = {
     allowUnfree = true;
     permittedInsecurePackages = ["python-2.7.18.8" "electron-25.9.0" "freeimage-unstable-2021-11-01" "obsidian-1.5.12"];
@@ -18,10 +18,10 @@
     ncdu
     tldr
     helix
-    home-manager
+    pkgs-unstable.home-manager
   ];
 
-  fonts.packages = with pkgs; [
+  fonts.packages = with pkgs-unstable; [
     jetbrains-mono
     noto-fonts
     noto-fonts-emoji
