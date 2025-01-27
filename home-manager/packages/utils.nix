@@ -17,5 +17,6 @@
     hexyl
     jq
     litecli
+    trashy
   ];
 }
