@@ -6,6 +6,7 @@
     settings = {
       # theme = "catppuccin-mocha";
       editor = {
+        insert-final-newline = false;
         whitespace.render = {
           space = "all";
           tab = "all";
