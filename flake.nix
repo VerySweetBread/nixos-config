@@ -38,87 +38,41 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, ... }@inputs:
-
-    let
-      system = "x86_64-linux";
-    in {
-
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, ... }@inputs: let
+    system = "x86_64-linux";
+  in {
     nixosConfigurations = {
-      Rias = nixpkgs-stable.lib.nixosSystem {
+      Rias = nixpkgs.lib.nixosSystem {
         specialArgs = {
-          pkgs-unstable = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          inherit inputs system;
-        };
-        modules = [
-          ./nixos/hosts/Rias/configuration.nix
-          inputs.sops-nix.nixosModules.sops
-        ];
-      };
-
-      Senko = nixpkgs-stable.lib.nixosSystem {
-        specialArgs = {
-          pkgs-unstable = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          inherit inputs system;
-        };
-        modules = [
-          ./nixos/hosts/Senko/configuration.nix
-          inputs.sops-nix.nixosModules.sops
-        ];
-      };
-
-      Eclipse = nixpkgs-stable.lib.nixosSystem {
-        specialArgs = {
-          pkgs-unstable = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          inherit inputs system;
-        };
-        modules = [
-          ./nixos/hosts/Eclipse/configuration.nix
-          inputs.sops-nix.nixosModules.sops
-        ];
-      };
-    };
-
-    homeConfigurations = {
-      sweetbread = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${system};
-        extraSpecialArgs = {
-          inherit inputs;
           pkgs-stable = import nixpkgs-stable {
             inherit system;
             config.allowUnfree = true;
           };
+          inherit inputs system;
         };
-        modules = [
-          ./home-manager/users/sweetbread/home.nix
-          inputs.sops-nix.homeManagerModules.sops
-          inputs.stylix.homeManagerModules.stylix
-        ];
+        modules = [ ./host/Rias/configuration.nix ];
       };
-      
-      chest = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${system};
-        extraSpecialArgs = {
-          inherit inputs;
+
+      Senko = nixpkgs.lib.nixosSystem {
+        specialArgs = {
           pkgs-stable = import nixpkgs-stable {
             inherit system;
             config.allowUnfree = true;
           };
+          inherit inputs system;
         };
-        modules = [
-          ./home-manager/users/chest/home.nix
-          inputs.sops-nix.homeManagerModules.sops
-          inputs.stylix.homeManagerModules.stylix
-        ];
+        modules = [ ./host/Senko/configuration.nix ];
+      };
+
+      Eclipse = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          pkgs-stable = import nixpkgs-stable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          inherit inputs system;
+        };
+        modules = [ ./host/Eclipse/configuration.nix ];
       };
     };
 
