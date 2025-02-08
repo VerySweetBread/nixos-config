@@ -2,8 +2,14 @@
 	yazi-plugins = pkgs.fetchFromGitHub {
 		owner = "yazi-rs";
 		repo = "plugins";
-		rev = "7afba3a73cdd69f346408b77ea5aac26fe09e551";
-		hash = "sha256-w9dSXW0NpgMOTnBlL/tzlNSCyRpZNT4XIcWZW5NlIUQ=";
+		rev = "07258518f3bffe28d87977bc3e8a88e4b825291b";
+		hash = "sha256-axoMrOl0pdlyRgckFi4DiS+yBKAIHDhVeZQJINh8+wk=";
+	};
+	starship = pkgs.fetchFromGitHub {
+		owner = "Rolv-Apneseth";
+		repo = "starship.yazi";
+		rev = "d1cd0a38aa6a2c2e86e62a466f43e415f781031e";
+		sha256 = "sha256-XiEsykudwYmwSNDO41b5layP1DqVa89e6Emv9Qf0mz0=";
 	};
 in {
 	programs.yazi = {
@@ -25,12 +31,7 @@ in {
 			chmod = "${yazi-plugins}/chmod.yazi";
 			full-border = "${yazi-plugins}/full-border.yazi";
 			max-preview = "${yazi-plugins}/max-preview.yazi";
-			starship = pkgs.fetchFromGitHub {
-				owner = "Rolv-Apneseth";
-				repo = "starship.yazi";
-				rev = "247f49da1c408235202848c0897289ed51b69343";
-				sha256 = "sha256-0J6hxcdDX9b63adVlNVWysRR5htwAtP5WhIJ2AK2+Gs=";
-			};
+			starship = starship;
 		};
 
 		initLua = ''
