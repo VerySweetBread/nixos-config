@@ -1,6 +1,6 @@
-{ pkgs, pkgs-stable, inputs, ... }: {
+{ pkgs, inputs, ... }: {
   home.packages = with pkgs; [
-    pkgs-stable.google-chrome
+    google-chrome
     inputs.ayugram-desktop.packages.${pkgs.system}.ayugram-desktop
     vesktop
     obs-studio
