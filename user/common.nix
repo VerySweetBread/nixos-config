@@ -4,6 +4,8 @@
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
+        backupFileExtension = "rebuild";
+
         users.${name} = {
           imports = [
             inputs.sops-nix.homeManagerModules.sops

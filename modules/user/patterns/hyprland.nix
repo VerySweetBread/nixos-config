@@ -74,11 +74,13 @@
     
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
-      hyprbars
+      # hyprbars  # Version mismatch
     ];
 
     settings = {
       "$mainMod" = "SUPER";
+
+      ecosystem.no_donation_nag = true;
 
       env = [
         "LIBVA_DRIVER_NAME,nvidia"
@@ -115,7 +117,7 @@
           natural_scroll = false;
         };
 
-        sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
+        sensitivity = 0;
       };
 
       windowrule = [
