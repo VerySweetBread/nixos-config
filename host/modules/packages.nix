@@ -20,6 +20,7 @@
   fonts.packages = with pkgs; [
     jetbrains-mono
     noto-fonts
+    (google-fonts.override{fonts=["Press Start 2P" "Overpass Mono"];})
     noto-fonts-emoji
     noto-fonts-cjk-sans
     twemoji-color-font
