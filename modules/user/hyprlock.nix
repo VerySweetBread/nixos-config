@@ -13,7 +13,6 @@ lib.mkIf config.programs.hyprlock.enable {
     settings = {
       background = {
         path = lib.mkForce "${image}";
-        color = "rgba(25, 20, 20, 1.0)";
         blur_passes = 0;
         blur_size = 7;
         noise = 0.0117;
