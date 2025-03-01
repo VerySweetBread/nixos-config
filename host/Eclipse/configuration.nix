@@ -5,6 +5,7 @@
     ./modules/grub.nix
     ./modules/zram.nix
     ../modules/nvidia.nix
+    ../../modules/host/adb.nix
 
     (import ../modules/common.nix {
       inherit lib;
@@ -22,5 +23,6 @@
     })
   ];
 
+  nixpkgs.config.allowBroken = true;
   programs.gamemode.enable = true;
 }

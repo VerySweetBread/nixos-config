@@ -1,4 +1,4 @@
 {
   programs.adb.enable = true;
-  users.users.sweetbread.extraGroups = ["adbusers"];  # FIXME: check users
+  users.users.chest.extraGroups = ["adbusers"];  # FIXME: check users
 }
