@@ -4,7 +4,6 @@
     nautilus
     burpsuite
     exiftool
-    prismlauncher
     python3
     pkgs-stable.jetbrains.pycharm-community
   ];

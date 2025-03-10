@@ -11,6 +11,7 @@ lib.mkIf config.programs.gamemode.enable {
     protonup
     pkgs.bottles
     heroic
+    pkgs.prismlauncher
   ];
 
   environment.sessionVariables = {
