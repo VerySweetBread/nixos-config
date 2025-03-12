@@ -18,7 +18,7 @@
 
   inputs = {
     aagl.url = "github:ezKEa/aagl-gtk-on-nix";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/master";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
