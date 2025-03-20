@@ -23,4 +23,6 @@
 
   hardware.bluetooth.enable = true;
   host.laptop = true;
+
+  environment.systemPackages = [ pkgs.dbgate ];
 }
