@@ -1,5 +1,6 @@
 import { bind } from "astal"
 import Network from "gi://AstalNetwork"
+import { execAsync } from "astal/process"
 
 export default function Wifi() {
     const network = Network.get_default()
@@ -7,11 +8,19 @@ export default function Wifi() {
 
     return <box visible={wifi.as(Boolean)}>
         {wifi.as(wifi => wifi && (
-            <icon
-                tooltipText={bind(wifi, "ssid").as(String)}
+            <button
                 className="Wifi"
-                icon={bind(wifi, "iconName")}
-            />
+                onClicked={() => {execAsync("kitty nmtui")}}>
+                <box>
+                    <icon
+                        tooltipText={bind(wifi, "ssid").as(String)}
+                        icon={bind(wifi, "iconName")}
+                    />
+                    <label
+                        label={bind(wifi, "ssid").as(String)}
+                    />
+                </box>
+            </button>
         ))}
     </box>
 }

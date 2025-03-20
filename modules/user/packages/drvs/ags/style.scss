@@ -91,7 +91,7 @@ window.Bar {
 
     .AudioSlider icon { margin-left: 8px; }
 
-    .Workspaces, .Layout, .Media, .SysTray, .AudioSlider, .Time {
+    .Workspaces, .Wifi, .Layout, .Media, .SysTray, .AudioSlider, .Battery, .Time {
         @extend %item;
     }
 }
