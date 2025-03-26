@@ -10,6 +10,8 @@
       echo \$surface0: \#${colors.base02}\; >> colors.scss
       echo \$fg:       \#${colors.base05}\; >> colors.scss
       echo \$accent:   \#${colors.base0B}\; >> colors.scss
+
+      echo \#${colors.base0B} > accent.css
     '';
 
     installPhase = ''
@@ -17,5 +19,6 @@
       mkdir $out
       cp $src/* $out -r
       mv colors.scss $out
+      mv accent.css  $out
     '';
   }
