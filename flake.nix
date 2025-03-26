@@ -24,7 +24,6 @@
     stylix.url = "github:danth/stylix";
     ags.url = "github:Aylur/ags";
     ayugram-desktop.url = "github:/ayugram-port/ayugram-desktop/release?submodules=1";
-    tlock.url = "git+https://github.com/eklairs/tlock?submodules=1";
 
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
