@@ -13,10 +13,12 @@
     gparted
     git-lfs
     unrar
-    inputs.tlock.packages.${system}.default
     hexyl
     jq
     litecli
     trashy
+    dig
+    mtr
+    imagemagick
   ];
 }
