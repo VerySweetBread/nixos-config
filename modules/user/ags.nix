@@ -16,6 +16,10 @@
     ];
   };
 
+  home.packages = with pkgs; [
+    pulsemixer
+  ];
+
   wayland.windowManager.hyprland.settings.exec-once = [ "ags run" ];
 
   xdg.configFile."ags".source = (pkgs.callPackage ./packages/drvs/ags.nix { colors = config.lib.stylix.colors; });

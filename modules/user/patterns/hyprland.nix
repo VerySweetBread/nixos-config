@@ -131,6 +131,7 @@
 
       windowrulev2 = [
         "float, title:(nmtui)"
+        "float, title:(pulsemixer)"
         "float, title:(clipse)"
         "size 622 652, title:(clipse)"
       ];
