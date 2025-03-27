@@ -1,6 +1,5 @@
 {
   imports = [
-    ./user/kitty.nix
     ./user/qt.nix
     ./user/sops.nix
     ./user/neofetch.nix
@@ -12,6 +11,7 @@
     ./user/btop.nix
     ./user/wofi.nix
     ./user/mako.nix
+    ./user/ghostty.nix
     ./user/packages/art.nix
     ./user/packages/desktop.nix
     ./user/packages/coding.nix

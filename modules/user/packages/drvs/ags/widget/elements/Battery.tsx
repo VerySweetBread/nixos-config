@@ -7,8 +7,8 @@ export default function BatteryLevel() {
     const percent = bind(bat, "percentage").as(p => Math.floor(p * 100));
 
     return (
-        <box 
-            className="Battery" 
+        <box
+            className="Battery"
             visible={bind(bat, "isPresent")}
             css={percent.as(p => `
                 background-image: linear-gradient(
