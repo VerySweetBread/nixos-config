@@ -80,6 +80,10 @@
         source "$(fzf-share)/completion.zsh"
       '';
 
+      envExtra = ''
+        TERM=xterm-256color
+      '';
+
       history.size = 10000;
       history.path = "${config.xdg.dataHome}/zsh/history";
 
