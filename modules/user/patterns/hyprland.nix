@@ -1,6 +1,6 @@
 { pkgs, lib, config, collection, swww_flags, inputs }: {
   home.packages = with pkgs; [
-    kitty
+    ghostty
     pamixer
     wofi
     clipse
@@ -130,8 +130,9 @@
       ];
 
       windowrulev2 = [
-        "float, class:(clipse)"
-        "size 622 652, class:(clipse)"
+        "float, title:(nmtui)"
+        "float, title:(clipse)"
+        "size 622 652, title:(clipse)"
       ];
 
       exec-once = [
@@ -144,12 +145,12 @@
       ];
 
       bind = [
-        "$mainMod, V, exec, kitty --class clipse -e clipse"
+        "$mainMod, V, exec, ghostty --title=clipse -e clipse"
 
-        "$mainMod, Return, exec, kitty"
+        "$mainMod, Return, exec, ghostty"
         "$mainMod, Q, killactive,"
         "$mainMod, M, exit,"
-        "$mainMod, E, exec, kitty -e sh -c yazi"
+        "$mainMod, E, exec, ghostty -e sh -c yazi"
         "$mainMod, F, togglefloating,"
         "$mainMod, D, exec, wofi --show drun"
         "$mainMod, P, pseudo, # dwindle"

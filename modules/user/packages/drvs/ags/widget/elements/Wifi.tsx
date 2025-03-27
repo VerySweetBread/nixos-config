@@ -10,7 +10,7 @@ export default function Wifi() {
         {wifi.as(wifi => wifi && (
             <button
                 className="Wifi"
-                onClicked={() => {execAsync("kitty nmtui")}}>
+                onClicked={() => {execAsync("ghostty --title=nmtui -e nmtui")}}>
                 <box>
                     <icon
                         tooltipText={bind(wifi, "ssid").as(String)}
