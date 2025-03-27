@@ -205,8 +205,8 @@
         "$mainMod, mouse_up, workspace, e-1"
 
         # Keyboard backlight
-        "$mainMod, F3, exec, brightnessctl -d *::kbd_backlight set +33%"
-        "$mainMod, F2, exec, brightnessctl -d *::kbd_backlight set 33%-"
+        "$mainMod, F3, exec, ${lib.getExe pkgs.brightnessctl} -d *::kbd_backlight set +33%"
+        "$mainMod, F2, exec, ${lib.getExe pkgs.brightnessctl} -d *::kbd_backlight set 33%-"
 
         # Volume and Media Control
         ", XF86AudioRaiseVolume, exec, pamixer -i 5 "
@@ -215,8 +215,8 @@
         ", XF86AudioMicMute, exec, pamixer --default-source -m"
         
         # Brightness control
-        ", XF86MonBrightnessDown, exec, brightnessctl set 5%- "
-        ", XF86MonBrightnessUp, exec, brightnessctl set +5% "
+        ", XF86MonBrightnessDown, exec, ${lib.getExe pkgs.brightnessctl} set 5%- "
+        ", XF86MonBrightnessUp,   exec, ${lib.getExe pkgs.brightnessctl} set +5% "
 
         # Waybar
         "$mainMod, B, exec, pkill -SIGUSR1 waybar"
