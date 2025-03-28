@@ -13,6 +13,7 @@
     ./host/sound.nix
     ./host/virtmanager.nix
     ./host/vpn.nix
+    ./host/network.nix
   ];
 
   programs.hyprland.enable = true;
@@ -21,5 +22,4 @@
     fstrim.enable = true;
     upower.enable = true;
   };
-  networking.networkmanager.enable = true;
 }
