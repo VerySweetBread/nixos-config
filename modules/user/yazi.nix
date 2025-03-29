@@ -55,6 +55,11 @@ in {
 					on = [ "<C-n>" ];
 					run = ''shell '${lib.getExe pkgs.xdragon} -x -i -T "$@"' --confirm'';
 				}
+				{
+					on = [ "g" "<S-d>" ];
+					run = ''cd /mnt/D'';
+					desc = "Goto D drive";
+				}
 			];
 		};
 	};
