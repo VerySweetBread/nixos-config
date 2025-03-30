@@ -80,7 +80,10 @@
     settings = {
       "$mainMod" = "SUPER";
 
-      ecosystem.no_donation_nag = true;
+      ecosystem = {
+        no_donation_nag = true;
+        no_update_news = true;
+      };
 
       env = [
         "LIBVA_DRIVER_NAME,nvidia"
@@ -121,15 +124,11 @@
       };
 
       windowrule = [
-        "float, ^(imv)$"
-        "float, ^(feh)$"
-        "float, ^(mpv)$"
-        "float, ^(nmtui)$"
+        "float, class:^(imv)$"
+        "float, class:^(feh)$"
+        "float, class:^(mpv)$"
         "float, title:^(Список друзей)"
-        "move onscreen cursor -50% -50%, ^(xdragon)$"
-      ];
-
-      windowrulev2 = [
+        "move onscreen cursor -50% -50%, class:^(xdragon)$"
         "float, title:(nmtui)"
         "float, title:(pulsemixer)"
         "float, title:(clipse)"

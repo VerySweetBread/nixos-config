@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-stable, lib, inputs, ...}: {
+{ config, pkgs, pkgs-stable, pkgs-fixed, lib, inputs, ...}: {
   imports = [
     ./secrets/secrets.nix
     ./modules/aagl.nix
@@ -16,6 +16,7 @@
       inherit config;
       inherit pkgs;
       inherit pkgs-stable;
+      inherit pkgs-fixed;
       inherit lib;
       inherit inputs;
       name = "chest";
