@@ -1,5 +1,5 @@
-{ pkgs-stable, ... }: {
-  home.packages = with pkgs-stable; [
+{ pkgs-fixed, ... }: {
+  home.packages = with pkgs-fixed; [
     (blender.override { cudaSupport = true; })
     aseprite
   ];

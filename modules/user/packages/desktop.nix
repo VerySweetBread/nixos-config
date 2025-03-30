@@ -1,12 +1,13 @@
-{ pkgs, inputs, pkgs-stable, ... }: {
+{ pkgs, inputs, pkgs-fixed, ... }: {
   home.packages = with pkgs; [
     google-chrome
     inputs.ayugram-desktop.packages.${pkgs.system}.ayugram-desktop
-    pkgs-stable.vesktop
+    # pkgs-stable.vesktop
+    vesktop
     obs-studio
     mpv
     obsidian
-    thunderbird
+    pkgs-fixed.thunderbird
     libreoffice
   ];
 }
