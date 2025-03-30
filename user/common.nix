@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, lib, inputs, name, fullname ? name, ... }: {
+{ pkgs, pkgs-stable, pkgs-fixed, lib, inputs, name, fullname ? name, ... }: {
   imports = [
     inputs.home-manager.nixosModules.home-manager {
       home-manager = {
@@ -26,6 +26,7 @@
         extraSpecialArgs = {
           inherit inputs;
           inherit pkgs-stable;
+          inherit pkgs-fixed;
         };
       };
     }

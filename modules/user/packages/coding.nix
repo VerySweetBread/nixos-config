@@ -1,5 +1,5 @@
-{ pkgs, pkgs-stable, ... }: {
-  home.packages = with pkgs-stable; [
+{ pkgs-fixed, ... }: {
+  home.packages = with pkgs-fixed; [
     vscode
     jetbrains.pycharm-community
     jetbrains.idea-community
