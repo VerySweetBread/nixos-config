@@ -17,19 +17,13 @@
     helix
   ];
 
-  fonts.packages = with pkgs; [
-    jetbrains-mono
-    noto-fonts
-    (google-fonts.override{fonts=["Press Start 2P" "Overpass Mono"];})
-    noto-fonts-emoji
-    noto-fonts-cjk-sans
-    twemoji-color-font
-    font-awesome
-    powerline-fonts
-    powerline-symbols
-    ubuntu_font_family
-    unifont
-    nerd-fonts.symbols-only
-    corefonts
-  ];
+  fonts = {
+    enableDefaultPackages = false;
+    packages = with pkgs; [
+      jetbrains-mono          # Best mono font
+      noto-fonts-cjk-sans     # Japanese
+      powerline-symbols       # Console decoration
+      unifont                 # Other
+    ];
+  };
 }
