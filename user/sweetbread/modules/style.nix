@@ -32,6 +32,11 @@
         package = (pkgs.google-fonts.override { fonts = [ "Gabriela" ]; });
       };
 
+      emoji = {
+        package = pkgs.noto-fonts-monochrome-emoji;
+        name = "Noto Emoji";
+      };
+
       sizes = {
         applications = 13;
         desktop = 12;
