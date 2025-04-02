@@ -25,8 +25,8 @@
         gaps_in = 5;
         gaps_out = 20;
         border_size = 3;
-        "col.active_border" = "rgba(${colors.base0C}ee) rgba(${colors.base0B}ee) 45deg";
-        "col.inactive_border" = "rgba(${colors.base05}aa)";
+        "col.active_border" = lib.mkForce "rgba(${colors.base0C}ee) rgba(${colors.base0B}ee) 45deg";
+        "col.inactive_border" = lib.mkForce "rgba(${colors.base05}aa)";
 
         layout = "dwindle";
       };
@@ -45,7 +45,6 @@
           enabled = true;
           range = 4;
           render_power = 3;
-          color = "rgba(1a1a1aee)";
         };
       };
 
