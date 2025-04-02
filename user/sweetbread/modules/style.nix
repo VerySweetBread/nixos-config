@@ -2,7 +2,7 @@
   stylix = {
     enable = true;
     targets = {
-      hyprland.enable = false;
+      hyprland.enable = true;
       waybar.enable = false;
       kitty.variant256Colors = true;
     };
@@ -19,6 +19,12 @@
       enable = true;
       package = pkgs.pop-icon-theme;
       dark = "Pop-Dark";
+    };
+
+    cursor = {
+      name = "catppuccin-mocha-green-cursors";
+      size = 24;
+      package = pkgs.catppuccin-cursors.mochaGreen;
     };
 
     fonts = {

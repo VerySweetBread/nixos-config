@@ -97,7 +97,8 @@
         "XDG_SESSION_DESKTOP,Hyprland"
 
         "WLR_NO_HARDWARE_CURSORS,1"
-        "XCURSOR_SIZE,36"
+        "XCURSOR_SIZE, ${toString config.stylix.cursor.size}"
+        "XCURSOR_THEME, ${config.stylix.cursor.name}"
 
         "XDG_SCREENSHOTS_DIR,~/screens"
       ];

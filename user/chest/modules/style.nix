@@ -21,6 +21,12 @@
       dark = "Pop-Dark";
     };
 
+    cursor = {
+      name = "catppuccin-mocha-peach-cursors";
+      size = 24;
+      package = pkgs.catppuccin-cursors.mochaPeach;
+    };
+
     fonts = {
       monospace = {
         name = "JetBrains Mono";
