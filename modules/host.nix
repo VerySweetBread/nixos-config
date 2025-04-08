@@ -14,6 +14,7 @@
     ./host/virtmanager.nix
     ./host/vpn.nix
     ./host/network.nix
+    ./host/yggdrasil.nix
   ];
 
   programs.hyprland.enable = true;
