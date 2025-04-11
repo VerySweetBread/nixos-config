@@ -23,7 +23,7 @@
 
     cursor = {
       name = "catppuccin-mocha-peach-cursors";
-      size = 24;
+      size = 16;
       package = pkgs.catppuccin-cursors.mochaPeach;
     };
 

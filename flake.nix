@@ -86,6 +86,21 @@
         };
         modules = [ ./host/Eclipse/configuration.nix ];
       };
+
+      Impreza = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          pkgs-stable = import nixpkgs-stable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          pkgs-fixed = import nixpkgs-fixed {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          inherit inputs system;
+        };
+        modules = [ ./host/Impreza/configuration.nix ];
+      };
     };
 
     devShells."${system}".default = let
