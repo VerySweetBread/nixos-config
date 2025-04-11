@@ -6,7 +6,9 @@ export default function Wifi() {
     const network = Network.get_default()
     const wifi = bind(network, "wifi")
 
-    return <box visible={wifi.as(Boolean)}>
+    return <box
+            visible={wifi.as(Boolean)}
+            className="item">
         {wifi.as(wifi => wifi && (
             <button
                 className="Wifi"

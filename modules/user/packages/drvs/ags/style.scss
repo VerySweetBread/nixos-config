@@ -3,16 +3,22 @@
 
 $radius: 10px;
 
-%item {
+* {
     all: unset;
+}
+
+%item {
     background: $bg;
     border-radius: $radius;
-    padding: 4px;
+    padding: 6px 8px;
 
-    & + &, .item + & { margin-left: 4px; }
+    & + &, .item + &, & + .item  { margin-left: 4px; }
 
-    label { margin: 0 8px; }
+    icon + label { margin-left: 4px; }
 }
+
+.item + .item { margin-left: 4px; }
+
 
 window.Bar {
     border: none;
@@ -28,8 +34,6 @@ window.Bar {
 
     .Workspaces  {
         button {
-            all: unset;
-
             &:hover label {
                 background: $surface0;
                 color: $accent;
@@ -59,12 +63,12 @@ window.Bar {
     .Layout.en { color: $accent; }
 
     .SysTray button {
-        all: unset;
-        padding: 8px;
+        padding: 4px;
         border-radius: inherit;
 
         &:hover {
             background: $surface0;
+            border-radius: 4px;
         }
     }
 
@@ -82,16 +86,17 @@ window.Bar {
         }
     }
 
-    .Battery label {
-        padding-left: 0;
-        margin-left: 0;
-    }
-
-    .Time { padding: 0 8px; }
-
-    .AudioSlider icon { margin-left: 8px; }
-
     .Workspaces, .Wifi, .Layout, .Media, .SysTray, .AudioSlider, .Battery, .Time {
         @extend %item;
+    }
+
+    .Wifi, .AudioSlider {
+        &, button {
+            &:hover { background-color: $surface0; }
+            &:active {
+                background-color: $accent;
+                color: $bg;
+            }
+        }
     }
 }
