@@ -15,6 +15,7 @@
     ncdu
     tldr
     helix
+    pinentry
   ];
 
   fonts = {
