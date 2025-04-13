@@ -6,7 +6,7 @@ in {
     ./modules/grub.nix
     ./modules/syncthing.nix
     ../../modules/host/adb.nix
-    ../modules/nvidia.nix
+    ../modules/gpu/nvidia.nix
 
     (import ../modules/common.nix {
       inherit lib;
