@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, pkgs-fixed, lib, inputs, name, fullname ? name, ... }: {
+{ config, pkgs, pkgs-stable, pkgs-fixed, lib, inputs, laptop, name, fullname ? name, ... }: {
   imports = [
     inputs.home-manager.nixosModules.home-manager {
       home-manager = {
@@ -27,6 +27,10 @@
           inherit inputs;
           inherit pkgs-stable;
           inherit pkgs-fixed;
+          host = {
+            laptop = laptop;
+            name = config.networking.hostName;
+          };
         };
       };
     }

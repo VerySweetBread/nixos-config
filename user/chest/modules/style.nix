@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }: {
+{ pkgs, config, lib, host, ... }: {
   stylix = {
     enable = true;
     targets = {
@@ -21,7 +21,11 @@
       dark = "Pop-Dark";
     };
 
-    cursor = {
+    cursor = if host.name == "Impreza" then {
+      name = "catppuccin-mocha-pink-cursors";
+      size = 16;
+      package = pkgs.catppuccin-cursors.mochaPink;
+    } else {
       name = "catppuccin-mocha-peach-cursors";
       size = 16;
       package = pkgs.catppuccin-cursors.mochaPeach;

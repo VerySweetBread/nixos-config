@@ -1,4 +1,6 @@
-{ config, pkgs, pkgs-stable, pkgs-fixed, lib, inputs, ...}: {
+{ config, pkgs, pkgs-stable, pkgs-fixed, lib, inputs, ...}: let
+  laptop = false;
+in {
   imports = [
     ./secrets/secrets.nix
     ./modules/aagl.nix
@@ -19,6 +21,7 @@
       inherit pkgs-fixed;
       inherit lib;
       inherit inputs;
+      inherit laptop;
       name = "chest";
     })
   ];

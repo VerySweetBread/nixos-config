@@ -15,7 +15,7 @@
   in {
     settings = {
       monitor = ",preferred,auto,1";
-      exec-once =["${lib.getExe pkgs.linux-wallpaperengine} /mnt/D/SteamLibrary/steamapps/workshop/content/431960/816353979 --assets-dir /mnt/D/SteamLibrary/steamapps/common/wallpaper_engine/assets --screen-root DP-1 --noautomute"];
+      exec-once =["${lib.getExe pkgs.linux-wallpaperengine} ~/.local/share/wpe/wallpaper --assets-dir ~/.local/share/wpe/assets --screen-root DP-1 --noautomute"];
       general = {
         gaps_in = 5;
         gaps_out = 5;
