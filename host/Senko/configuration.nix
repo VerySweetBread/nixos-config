@@ -4,7 +4,7 @@ in {
   imports = [
     ./secrets/secrets.nix
     ./modules/grub.nix
-    ../modules/nvidia.nix
+    ../modules/gpu/nvidia.nix
 
     (import ../modules/common.nix {
       inherit lib;
