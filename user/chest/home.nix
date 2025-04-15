@@ -3,6 +3,7 @@
   home.packages = with pkgs; [
     nautilus
     burpsuite
+    binwalk
     exiftool
     python3
     pkgs-fixed.jetbrains.pycharm-community
