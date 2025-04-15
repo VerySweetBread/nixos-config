@@ -7,5 +7,4 @@
     python3
     pkgs-fixed.jetbrains.pycharm-community
   ];
-  programs.hyprlock.enable = host.laptop;
 }
