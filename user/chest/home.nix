@@ -1,10 +1,11 @@
 { pkgs, pkgs-fixed, host, ... }: {
+  imports = [
+    ../../modules/user/packages/cs_utils.nix
+  ];
+
   disabledModules = [ ../../modules/user/packages/coding.nix ];
   home.packages = with pkgs; [
     nautilus
-    burpsuite
-    binwalk
-    exiftool
     python3
     pkgs-fixed.jetbrains.pycharm-community
   ];
