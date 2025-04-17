@@ -2,7 +2,7 @@
   stylix = {
     enable = true;
     targets = {
-      hyprland.enable = true;
+      hyprpaper.enable = lib.mkForce false;
       waybar.enable = false;
       kitty.variant256Colors = true;
     };
