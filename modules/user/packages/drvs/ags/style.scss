@@ -33,7 +33,10 @@ window.Bar {
     }
 
     .Workspaces  {
+        padding: 0;
+
         button {
+            margin: 0;
             &:hover label {
                 background: $surface0;
                 color: $accent;
@@ -48,7 +51,7 @@ window.Bar {
         label {
             transition: 200ms;
             padding: 0 6px;
-            margin: 2px;
+            margin: 0px;
             border-radius: $radius;
             border: 1pt solid transparent;
         }
