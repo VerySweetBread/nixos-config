@@ -7,12 +7,14 @@
       "https://cache.garnix.io"
       "https://hyprland.cachix.org"
       "https://ezkea.cachix.org"
+      "https://risdeveau.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
+      "risdeveau.cachix.org-1:TsoFSVeLl7iKtUYGX7qsvKPjf2vbNLfLC5v3SAdU8r0="
     ];
   };
 
@@ -20,7 +22,7 @@
     aagl.url = "github:ezKEa/aagl-gtk-on-nix";
     nixpkgs.url = "github:nixos/nixpkgs/30b27177a006d425120fb850a64ceb792636501a";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
-    nixpkgs-fixed.url = "github:nixos/nixpkgs/b27ba4eb322d9d2bf2dc9ada9fd59442f50c8d7c";
+    nixpkgs-fixed.url = "github:nixos/nixpkgs/26d499fc9f1d567283d5d56fcf367edd815dba1d";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
     ags.url = "github:Aylur/ags";
