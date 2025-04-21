@@ -112,8 +112,8 @@
 
       input = {
         kb_layout = "us,ru";
-        kb_variant = "lang";
         kb_options = "grp:caps_toggle";
+        numlock_by_default = true;
 
         follow_mouse = 1;
 
