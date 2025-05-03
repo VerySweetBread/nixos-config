@@ -24,8 +24,14 @@
       options = [ "fmask=0022" "dmask=0022" ];
     };
 
-    fileSystems."/mnt/D" = {
+  fileSystems."/mnt/D" = {
     device = "/dev/disk/by-uuid/E030A4DF30A4BDC2";
+    fsType = "ntfs";
+    options = ["umask=0022" "gid=100" "uid=1002"];
+  };
+
+  fileSystems."/mnt/F" = {
+    device = "/dev/disk/by-uuid/1C6278FC2848E1EF";
     fsType = "ntfs";
     options = ["umask=0022" "gid=100" "uid=1002"];
   };
