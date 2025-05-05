@@ -16,7 +16,7 @@
       };
       open = false;
       nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.beta;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
 
       prime = lib.optionalAttrs config.host.laptop {
         intelBusId = "PCI:0:2:0";

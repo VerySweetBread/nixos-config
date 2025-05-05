@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-stable, lib, ... }:
+{ config, pkgs, pkgs-unstable, lib, ... }:
 
 lib.mkIf config.programs.gamemode.enable {
   programs.steam = {
@@ -6,12 +6,12 @@ lib.mkIf config.programs.gamemode.enable {
     gamescopeSession.enable = true;
   };
 
-  environment.systemPackages = with pkgs-stable; [
+  environment.systemPackages = with pkgs; [
     mangohud
     protonup
-    pkgs.bottles
+    bottles
     heroic
-    pkgs.prismlauncher
+    prismlauncher
   ];
 
   environment.sessionVariables = {

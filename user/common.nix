@@ -1,8 +1,8 @@
-{ config, pkgs, pkgs-stable, pkgs-fixed, lib, inputs, laptop, name, fullname ? name, ... }: {
+{ config, pkgs, pkgs-unstable, pkgs-fixed, lib, inputs, laptop, name, fullname ? name, ... }: {
   imports = [
     inputs.home-manager.nixosModules.home-manager {
       home-manager = {
-        useGlobalPkgs = true;
+        useGlobalPkgs = false;
         useUserPackages = true;
         backupFileExtension = "rebuild";
 
@@ -22,10 +22,13 @@
             homeDirectory = "/home/${name}";
             stateVersion = "23.11";
           };
+
+          _module.args.pkgs = lib.mkForce pkgs-unstable;
         };
+
         extraSpecialArgs = {
           inherit inputs;
-          inherit pkgs-stable;
+          pkgs-stable = pkgs;
           inherit pkgs-fixed;
           host = {
             laptop = laptop;

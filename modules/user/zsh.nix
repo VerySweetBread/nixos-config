@@ -75,7 +75,7 @@
 
       initExtra = ''
         eval "$(zoxide init zsh)"
-        eval "$(nh completions --shell zsh)"
+        eval "$(nh completions zsh)"
         source "$(fzf-share)/key-bindings.zsh"
         source "$(fzf-share)/completion.zsh"
       '';

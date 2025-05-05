@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-stable, pkgs-fixed, lib, inputs, ...}: let
+{ config, pkgs, pkgs-unstable, pkgs-fixed, lib, inputs, ...}: let
   laptop = false;
 in {
   imports = [
@@ -17,7 +17,7 @@ in {
     (import ../../user/common.nix {
       inherit config;
       inherit pkgs;
-      inherit pkgs-stable;
+      inherit pkgs-unstable;
       inherit pkgs-fixed;
       inherit lib;
       inherit inputs;
