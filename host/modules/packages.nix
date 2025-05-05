@@ -1,7 +1,7 @@
-{ pkgs, inputs, ... }: {
+{ pkgs-unstable, inputs, ... }: {
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs-unstable; [
     file
     tree
     wget
@@ -20,7 +20,7 @@
 
   fonts = {
     enableDefaultPackages = false;
-    packages = with pkgs; [
+    packages = with pkgs-unstable; [
       jetbrains-mono          # Best mono font
       noto-fonts-cjk-sans     # Japanese
       powerline-symbols       # Console decoration

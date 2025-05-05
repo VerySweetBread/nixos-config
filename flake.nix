@@ -20,7 +20,7 @@
 
   inputs = {
     aagl.url = "github:ezKEa/aagl-gtk-on-nix";
-    nixpkgs.url = "github:nixos/nixpkgs/30b27177a006d425120fb850a64ceb792636501a";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-fixed.url = "github:nixos/nixpkgs/26d499fc9f1d567283d5d56fcf367edd815dba1d";
     sops-nix.url = "github:Mic92/sops-nix";
@@ -44,9 +44,9 @@
     system = "x86_64-linux";
   in {
     nixosConfigurations = {
-      Rias = nixpkgs.lib.nixosSystem {
+      Rias = nixpkgs-stable.lib.nixosSystem {
         specialArgs = {
-          pkgs-stable = import nixpkgs-stable {
+          pkgs-unstable = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
@@ -59,9 +59,9 @@
         modules = [ ./host/Rias/configuration.nix ];
       };
 
-      Senko = nixpkgs.lib.nixosSystem {
+      Senko = nixpkgs-stable.lib.nixosSystem {
         specialArgs = {
-          pkgs-stable = import nixpkgs-stable {
+          pkgs-unstable = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
@@ -74,9 +74,9 @@
         modules = [ ./host/Senko/configuration.nix ];
       };
 
-      Eclipse = nixpkgs.lib.nixosSystem {
+      Eclipse = nixpkgs-stable.lib.nixosSystem {
         specialArgs = {
-          pkgs-stable = import nixpkgs-stable {
+          pkgs-unstable = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
@@ -89,9 +89,9 @@
         modules = [ ./host/Eclipse/configuration.nix ];
       };
 
-      Impreza = nixpkgs.lib.nixosSystem {
+      Impreza = nixpkgs-stable.lib.nixosSystem {
         specialArgs = {
-          pkgs-stable = import nixpkgs-stable {
+          pkgs-unstable = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
