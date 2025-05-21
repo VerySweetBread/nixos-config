@@ -8,6 +8,5 @@
     mpv
     obsidian
     pkgs-fixed.thunderbird
-    libreoffice
   ];
 }
