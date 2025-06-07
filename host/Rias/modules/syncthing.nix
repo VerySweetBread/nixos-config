@@ -11,7 +11,7 @@
 
     settings = {
       devices = {
-        Akeno = { id = "YVFVE2M-GSCKJBJ-AMC5JM3-AOMCVNP-RLFAWEZ-35VP4HP-DGP5QD2-6QWEZQW"; };
+        Akeno = { id = "QDW3WJX-J7ETS4R-32CUAIY-EGNM2RD-ZEHOUW2-CHOEOUG-USZOWTR-HHQS2QX"; };
         Koneko = { id = "PJFWQRY-ZFUBGDR-NV7KVBL-UBDQ4HT-KPTYP34-MUDFPJU-4EZUHTT-ZLYRMAB"; };
       };
 
@@ -24,6 +24,11 @@
         ".RPI" = {
           path = "/mnt/D/SyncThing/.RPI";
           devices = [ "Akeno" "Koneko" ];
+        };
+
+        "JoiPlay" = {
+          path = "/mnt/D/SyncThing/JoiPlay";
+          devices = [ "Akeno" ];
         };
 
         "Music" = {
