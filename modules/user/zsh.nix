@@ -73,7 +73,7 @@
         lg = "lazygit";
       };
 
-      initExtra = ''
+      initContent = ''
         eval "$(zoxide init zsh)"
         eval "$(nh completions zsh)"
         source "$(fzf-share)/key-bindings.zsh"
