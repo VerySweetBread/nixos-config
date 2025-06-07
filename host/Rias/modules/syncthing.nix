@@ -26,6 +26,11 @@
           devices = [ "Akeno" "Koneko" ];
         };
 
+        "JoiPlay" = {
+          path = "/mnt/D/SyncThing/JoiPlay";
+          devices = [ "Akeno" ];
+        };
+
         "Music" = {
           path = "/home/sweetbread/Music";
           devices = [ "Akeno" "Koneko" ];
