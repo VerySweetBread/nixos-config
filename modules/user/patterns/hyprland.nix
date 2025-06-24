@@ -210,10 +210,11 @@
         "$mainMod, F2, exec, ${lib.getExe pkgs.brightnessctl} -d *::kbd_backlight set 33%-"
 
         # Volume and Media Control
-        ", XF86AudioRaiseVolume, exec, pamixer -i 5 "
-        ", XF86AudioLowerVolume, exec, pamixer -d 5 "
         ", XF86AudioMute, exec, pamixer -t"
         ", XF86AudioMicMute, exec, pamixer --default-source -m"
+        ", XF86AudioPlay, exec, ${lib.getExe pkgs.playerctl} play-pause"
+        ", XF86AudioPrev, exec, ${lib.getExe pkgs.playerctl} position 5-"
+        ", XF86AudioNext, exec, ${lib.getExe pkgs.playerctl} position 5+"
         
         # Brightness control
         ", XF86MonBrightnessDown, exec, ${lib.getExe pkgs.brightnessctl} set 5%- "
@@ -224,6 +225,16 @@
         #"$mainMod, W, exec, pkill -SIGUSR2 waybar"
 
         "$mainMod, W, exec, ${lib.getExe wallpaper_changer}"
+      ];
+
+      binde = [
+        ", XF86AudioRaiseVolume, exec, pamixer -i 5 "
+        ", XF86AudioLowerVolume, exec, pamixer -d 5 "
+      ];
+
+      bindo = [
+        ", XF86AudioPrev, exec, ${lib.getExe pkgs.playerctl} previous"
+        ", XF86AudioNext, exec, ${lib.getExe pkgs.playerctl} next"
       ];
 
       # Move/resize windows with mainMod + LMB/RMB and dragging
