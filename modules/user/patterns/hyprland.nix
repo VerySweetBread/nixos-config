@@ -215,6 +215,10 @@
         ", XF86AudioPlay, exec, ${lib.getExe pkgs.playerctl} play-pause"
         ", XF86AudioPrev, exec, ${lib.getExe pkgs.playerctl} position 5-"
         ", XF86AudioNext, exec, ${lib.getExe pkgs.playerctl} position 5+"
+
+        ", XF86Explorer, exec, ghostty -e sh -c yazi"
+        ", XF86Mail, exec, thunderbird"
+        ", XF86WWW, exec, google-chrome-stable"  # TODO: Replace hard-code to some variable
         
         # Brightness control
         ", XF86MonBrightnessDown, exec, ${lib.getExe pkgs.brightnessctl} set 5%- "

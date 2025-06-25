@@ -89,6 +89,8 @@
         "    , Print, exec, grimblast --notify --freeze copy output"
         "CTRL, Print, exec, grimblast --notify --freeze copy area"
         "ALT , Print, exec, grimblast --notify --freeze copy active"
+
+        '', XF86Calculator, exec, ghostty --title=pulsemixer -e pulsemixer''
       ];
     };
   };
