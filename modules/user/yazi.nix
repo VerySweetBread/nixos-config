@@ -25,6 +25,11 @@ in {
 				max_width = 1000;
 				max_height = 1000;
 			};
+			plugin = {
+				preloaders = [
+					{ name = "*.crdownload"; run = "noop"; }
+				];
+			};
 		};
 
 		plugins = {
