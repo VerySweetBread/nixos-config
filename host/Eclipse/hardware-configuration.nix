@@ -13,27 +13,27 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/34e32809-6876-4361-95d8-70a479ea8e19";
-      fsType = "ext4";
-    };
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/NixOS";
+    fsType = "ext4";
+  };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/2B65-0D2E";
-      fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
-    };
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-partlabel/EFI\\x20system\\x20partition";
+    fsType = "vfat";
+    options = [ "fmask=0022" "dmask=0022" "nofail" ];
+  };
 
   fileSystems."/mnt/D" = {
     device = "/dev/disk/by-uuid/E030A4DF30A4BDC2";
     fsType = "ntfs";
-    options = ["umask=0022" "gid=100" "uid=1002"];
+    options = ["umask=0022" "gid=100" "uid=1000" "nofail" ];
   };
 
   fileSystems."/mnt/F" = {
     device = "/dev/disk/by-uuid/1C6278FC2848E1EF";
     fsType = "ntfs";
-    options = ["umask=0022" "gid=100" "uid=1002"];
+    options = ["umask=0022" "gid=100" "uid=1000" "nofail" ];
   };
 
   swapDevices = [ ];

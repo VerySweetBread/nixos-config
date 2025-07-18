@@ -15,7 +15,7 @@
   in {
     settings = {
       monitor = ",preferred,auto,1";
-      exec-once =["${lib.getExe pkgs.linux-wallpaperengine} ~/.local/share/wpe/wallpaper --assets-dir ~/.local/share/wpe/assets --screen-root DP-1 --noautomute"];
+      exec-once =["${lib.getExe pkgs.linux-wallpaperengine} ~/.local/share/wpe/wallpaper --assets-dir ~/.local/share/wpe/assets --screen-root DP-3 --noautomute"];
       general = {
         gaps_in = 5;
         gaps_out = 5;

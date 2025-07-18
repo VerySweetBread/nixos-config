@@ -2,7 +2,7 @@
   icon = pkgs.fetchurl {
     url = "https://preview.redd.it/a2nga4jvjy291.png?width=640&crop=smart&auto=webp&s=7d1458b41101c960bc13c28a6b92c5a6ddc20210";
     name = "nixos-chan.png";
-    sha256 = "sha256-9pleL+PiiylT8/aWw0iGve1iY3h0XohSQ7MVILzabHY=";
+    sha256 = "sha256-dAms/+CgYrao2b8omXEdS/HnjGUa++ol5jjpvej39Og=";
   };
 in {
   home.packages = [ pkgs.neofetch ];
