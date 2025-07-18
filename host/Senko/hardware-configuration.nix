@@ -17,7 +17,7 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/D706-818C";
+    device = "/dev/disk/by-partlabel/EFI";
     fsType = "vfat";
     options = [ "fmask=0022" "dmask=0022" "nofail" ];
   };
