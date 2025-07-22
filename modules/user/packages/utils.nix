@@ -20,5 +20,6 @@
     dig
     mtr
     imagemagick
+    wl-clipboard
   ];
 }

@@ -22,11 +22,10 @@
     aagl.url = "github:ezKEa/aagl-gtk-on-nix";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
-    nixpkgs-fixed.url = "github:nixos/nixpkgs/26d499fc9f1d567283d5d56fcf367edd815dba1d";
+    nixpkgs-fixed.url = "github:nixos/nixpkgs/ce01daebf8489ba97bd1609d185ea276efdeb121";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
-    ags.url = "github:Aylur/ags";
-    ayugram-desktop.url = "github:/ayugram-port/ayugram-desktop/release?submodules=1";
+    ags.url = "github:Aylur/ags/3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6";
 
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
