@@ -1,8 +1,8 @@
 { config, pkgs, ... }: let
   icon = pkgs.fetchurl {
-    url = "https://preview.redd.it/a2nga4jvjy291.png?width=640&crop=smart&auto=webp&s=7d1458b41101c960bc13c28a6b92c5a6ddc20210";
-    name = "nixos-chan.png";
-    sha256 = "sha256-dAms/+CgYrao2b8omXEdS/HnjGUa++ol5jjpvej39Og=";
+    url = "https://cloud.codrs.ru/pub/nixos-chan.webp?raw";
+    name = "nixos-chan.webp";
+    sha256 = "sha256-0majB9ljjMdZwvOijEgWdFKxWLje5tHgXHBJUWZfHfY=";
   };
 in {
   home.packages = [ pkgs.neofetch ];
