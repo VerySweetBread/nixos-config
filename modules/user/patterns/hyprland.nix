@@ -4,9 +4,6 @@
     pamixer
     wofi
     clipse
-    grimblast
-    wl-clipboard
-    cliphist
   ];
 
   wayland.windowManager.hyprland =
@@ -58,15 +55,6 @@
 
       finally:
         system(f"${lib.getExe pkgs.swww} img {folder}/{filename} ${swww_flags}")
-    '';
-
-    clipsync = pkgs.writers.writeBash "clipsync" ''
-      while ${lib.getExe pkgs.clipnotify}; do
-        ${lib.getExe pkgs.xclip} -q -sel clip -t image/png -o > /dev/null && \
-          ${lib.getExe pkgs.xclip} -sel clip -t image/png -o | wl-copy
-        ${lib.getExe pkgs.xclip} -q -sel clip -o > /dev/null && \
-          ${lib.getExe pkgs.xclip} -sel clip -o | wl-copy
-      done
     '';
   in {
     enable = true;
@@ -140,7 +128,6 @@
         "systemctl --user start plasma-polkit-agent"
         "${lib.getExe' pkgs.swww "swww-daemon"}"
         "${lib.getExe wallpaper_changer}"
-        "${clipsync}"
         "clipse -listen"
         "${lib.getExe' pkgs.udiskie "udiskie"}"
       ];

@@ -2,7 +2,7 @@
   let
     sol = pkgs.writers.writePython3 "shutdown-on-lan.py" {
       libraries = [ pkgs.python312Packages.psutil ];
-      flakeIgnore = [ "E501" "E302" "E305" ];
+      flakeIgnore = [ "E302" "E305" "E501" "E701" ];
     } /*py*/ ''
       # https://habr.com/ru/articles/816765/
 
@@ -21,20 +21,26 @@
           ip_addr = mac_addr = None
 
           while not ip_addr or not mac_addr or ip_addr == '127.0.0.1':
-              net = psutil.net_if_addrs()
-              for item in net[list(net.keys())[-1]]:
-                  addr = item.address
-                  # В IPv4-адресах разделители - точки
-                  if '.' in addr:
-                      ip_addr = addr
-                  # В MAC-адресах разделители либо тире, либо одинарное двоеточие.
-                  # Двойное двоеточие - это разделители для адресов IPv6
-                  elif ('-' in addr or ':' in addr) and '::' not in addr:
-                      # Приводим MAC-адрес к одному формату. Формат может меняться в зависимости от ОС
-                      mac_addr = addr.replace(':', '-').upper()
+              nets = psutil.net_if_addrs()
+              for net in list(nets.keys())[::-1]:
+                  if net in ('lo', 'tun0'): continue
+                  logger.debug(str(net))
+                  for item in nets[net]:
+                      # logger.debug(str(item))
+                      addr = item.address
+                      logger.debug(addr)
+                      # В IPv4-адресах разделители - точки
+                      if '.' in addr:
+                          ip_addr = addr
+                      # В MAC-адресах разделители либо тире, либо одинарное двоеточие.
+                      # Двойное двоеточие - это разделители для адресов IPv6
+                      elif ('-' in addr or ':' in addr) and '::' not in addr:
+                          # Приводим MAC-адрес к одному формату. Формат может меняться в зависимости от ОС
+                          mac_addr = addr.replace(':', '-').upper()
               if not ip_addr or not mac_addr or ip_addr == '127.0.0.1':
-                  logger.debug('Не удалось получить IP или MAC-адрес сетевого интерфейса')
+                  logger.error('Не удалось получить IP или MAC-адрес сетевого интерфейса')
                   sleep(10)
+          logger.debug(mac_addr)
           return ip_addr, mac_addr
 
       def assemble_wol_packet(mac_address: str) -> str:
