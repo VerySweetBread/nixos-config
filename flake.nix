@@ -25,7 +25,7 @@
     nixpkgs-fixed.url = "github:nixos/nixpkgs/26d499fc9f1d567283d5d56fcf367edd815dba1d";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
-    ags.url = "github:Aylur/ags";
+    ags.url = "github:Aylur/ags/3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6";
     ayugram-desktop.url = "github:/ayugram-port/ayugram-desktop/release?submodules=1";
 
     hyprland.url = "github:hyprwm/Hyprland";
