@@ -5,7 +5,7 @@
     sha256 = "sha256-0majB9ljjMdZwvOijEgWdFKxWLje5tHgXHBJUWZfHfY=";
   };
 in {
-  home.packages = [ pkgs.neofetch ];
+  home.packages = [ pkgs.fastfetch ];
   xdg.configFile."neofetch/config.conf".text = ''
 print_info() {
     info title
