@@ -85,9 +85,9 @@
       };
 
       bind = [
-        "    , Print, exec, grimblast --notify --freeze copy output"
-        "CTRL, Print, exec, grimblast --notify --freeze copy area"
-        "ALT , Print, exec, grimblast --notify --freeze copy active"
+        "    , Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m output"
+        "CTRL, Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m region"
+        "ALT , Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m window"
 
         '', XF86Calculator, exec, ghostty --title=pulsemixer -e pulsemixer''
       ];
