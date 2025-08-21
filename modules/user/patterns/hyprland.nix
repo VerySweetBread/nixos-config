@@ -4,6 +4,9 @@
     pamixer
     wofi
     clipse
+    wl-clipboard
+    wl-clip-persist
+    xclip
   ];
 
   wayland.windowManager.hyprland =
@@ -128,6 +131,7 @@
         "systemctl --user start plasma-polkit-agent"
         "${lib.getExe' pkgs.swww "swww-daemon"}"
         "${lib.getExe wallpaper_changer}"
+        "wl-clip-persist --clipboard both"
         "clipse -listen"
         "${lib.getExe' pkgs.udiskie "udiskie"}"
       ];
