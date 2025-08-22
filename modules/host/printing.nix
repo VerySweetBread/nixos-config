@@ -12,4 +12,14 @@ lib.mkIf config.services.printing.enable {
       openFirewall = true;
     };
   };
+
+  hardware.sane = {
+    enable = true;
+    extraBackends = with pkgs; [ sane-airscan ];
+  };
+
+  environment.systemPackages = with pkgs; [
+    sane-frontends
+    simple-scan
+  ];
 }
