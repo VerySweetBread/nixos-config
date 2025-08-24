@@ -19,8 +19,8 @@
   environment.etc = {
     "v2raya/ru_geoip.dat".source = pkgs.fetchurl {
       name = "geoip.dat";
-      url = "https://github.com/runetfreedom/russia-blocked-geoip/releases/download/202508140928/geoip.dat";
-      hash = "sha256-5yzkVmNnC3PKCFB1hlP5bO2KD30NzKBtYGQe2fU5QDw=";
+      url = "https://github.com/runetfreedom/russia-blocked-geoip/releases/download/202509010928/geoip.dat";
+      hash = "sha256-BYDijRYTbID4G9OdEPNSZ19OHaAsp4Ctkz/JJH1Eej4=";
     };
 
     "v2raya/bolt.db".source = config.sops.secrets.vpn_bolt.path;
