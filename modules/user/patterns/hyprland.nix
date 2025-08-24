@@ -115,6 +115,16 @@
         sensitivity = 0;
       };
 
+      gestures = {
+        workspace_swipe_invert = true;
+        workspace_swipe_distance = 200;
+        workspace_swipe_forever = true;
+      };
+
+      gesture = [
+        "3, horizontal, workspace"
+      ];
+
       windowrule = [
         "float, class:^(imv)$"
         "float, class:^(feh)$"
