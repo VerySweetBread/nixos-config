@@ -1,18 +1,12 @@
-{ pkgs, lib, ... }: let
-	yazi-plugins = pkgs.fetchFromGitHub {
-		owner = "yazi-rs";
-		repo = "plugins";
-		rev = "e95c7b384e7b0a9793fe1471f0f8f7810ef2a7ed";
-		hash = "sha256-TUS+yXxBOt6tL/zz10k4ezot8IgVg0/2BbS8wPs9KcE=";
-	};
-	starship = pkgs.fetchFromGitHub {
-		owner = "Rolv-Apneseth";
-		repo = "starship.yazi";
-		rev = "a63550b2f91f0553cc545fd8081a03810bc41bc0";
-		sha256 = "sha256-PYeR6fiWDbUMpJbTFSkM57FzmCbsB4W4IXXe25wLncg=";
-	};
-in {
+{ pkgs, lib, inputs, ... }: {
+	home.packages = with pkgs; [
+		( ouch.override { enableUnfree = true; } )
+	];
+
 	programs.yazi = {
+		package = inputs.yazi.packages
+			.${pkgs.stdenv.hostPlatform.system}.default
+			.override { _7zz = pkgs._7zz-rar; };
 		enable = true;
 		enableZshIntegration = true;
 		shellWrapperName = "y";
@@ -29,17 +23,35 @@ in {
 				preloaders = [
 					{ name = "*.crdownload"; run = "noop"; }
 				];
+
+				prepend_previewers = [
+					{ mime = "application/xz";            run = "ouch"; }
+					{ mime = "application/zip";           run = "ouch"; }
+					{ mime = "application/rar";           run = "ouch"; }
+					{ mime = "application/gzip";          run = "ouch"; }
+					{ mime = "application/7z-compressed"; run = "ouch"; }
+				];
+
+				prepend_fetchers = [
+					{ id = "git"; mime = "*"; run = "git"; }
+				];
 			};
 		};
 
-		plugins = {
-			chmod = "${yazi-plugins}/chmod.yazi";
-			full-border = "${yazi-plugins}/full-border.yazi";
-			max-preview = "${yazi-plugins}/max-preview.yazi";
-			starship = starship;
+		plugins = with pkgs.yaziPlugins; {
+			inherit
+				chmod
+				ouch
+				full-border
+				starship
+				mount
+				git
+				toggle-pane
+				;
 		};
 
 		initLua = ''
+			require("git"):setup()
 			require("full-border"):setup()
 			require("starship"):setup()
 		'';
@@ -48,13 +60,18 @@ in {
 			mgr.prepend_keymap = [
 				{
 					on = "T";
-					run = "plugin --sync max-preview";
+					run = "plugin toggle-pane max-preview";
 					desc = "Maximize or restore the preview pane";
 				}
 				{
 					on = ["c" "m"];
 					run = "plugin chmod";
 					desc = "Chmod on selected files";
+				}
+				{
+					on = ["M"];
+					run = "plugin mount";
+					desc = "Open mount menu";
 				}
 				{
 					on = [ "<C-n>" ];
