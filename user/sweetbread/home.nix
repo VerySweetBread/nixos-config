@@ -5,5 +5,6 @@
   programs.hyprlock.enable = true;
   home.packages = with pkgs; [
     libreoffice
+    vivaldi
   ];
 }
