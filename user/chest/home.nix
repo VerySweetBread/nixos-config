@@ -13,5 +13,6 @@
     pkgs-fixed.jetbrains.pycharm-community
     aseprite
     krita
+    google-chrome
   ];
 }
