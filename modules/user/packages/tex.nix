@@ -6,13 +6,26 @@
         babel-russian
         cm-super
         cyrillic
+        hyphen-russian
+        hyphenat
         titlesec
-        hyperref
-        geometry
         caption
         float
         xcolor
         listings
+        pagecolor
+        moresize
+        raleway
+        fontawesome5
+        luatexbase
+        fontspec
+        ragged2e
+        enumitem
+        extsizes
+        multirow
+        varwidth
+        paracol
+        anyfontsize
         scheme-basic;
     })
   ];
