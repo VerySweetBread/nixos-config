@@ -101,6 +101,10 @@
         enable_stdout_logs = true;
       };
 
+      misc = {
+        focus_on_activate = true;
+      };
+
       input = {
         kb_layout = "us,ru";
         kb_options = "grp:caps_toggle";
