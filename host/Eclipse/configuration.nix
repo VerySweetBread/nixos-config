@@ -29,4 +29,6 @@ in {
   nixpkgs.config.allowBroken = true;
   programs.gamemode.enable = true;
   services.printing.enable = true;
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "chest" ];
 }
