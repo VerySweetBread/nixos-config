@@ -77,17 +77,12 @@
       };
 
       env = [
-        "LIBVA_DRIVER_NAME,nvidia"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-        "GBM_BACKEND,nvidia"
-
         "XDG_SESSION_TYPE,wayland"
         "QT_QPA_PLATFORM,wayland"
 
         "XDG_CURRENT_DESKTOP,Hyprland"
         "XDG_SESSION_DESKTOP,Hyprland"
 
-        "WLR_NO_HARDWARE_CURSORS,1"
         "XCURSOR_SIZE, ${toString config.stylix.cursor.size}"
         "XCURSOR_THEME, ${config.stylix.cursor.name}"
 
