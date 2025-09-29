@@ -54,4 +54,17 @@
       terminal = .9;
     };
   };
+
+  dconf.settings = {
+    "org/gnome/desktop/interface".color-scheme = "prefer-dark";
+  };
+
+  gtk = {
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
+  };
 }
