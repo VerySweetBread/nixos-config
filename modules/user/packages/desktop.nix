@@ -5,6 +5,7 @@
     obs-studio
     mpv
     obsidian
+    qbittorrent
     pkgs-fixed.thunderbird
   ];
 }
