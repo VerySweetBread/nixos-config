@@ -5,6 +5,7 @@
         useGlobalPkgs = false;
         useUserPackages = true;
         backupFileExtension = "rebuild";
+        overwriteBackup = true;
 
         users.${name} = {
           imports = [
