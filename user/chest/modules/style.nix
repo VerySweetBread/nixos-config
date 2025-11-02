@@ -10,14 +10,12 @@
       url = "https://ko-fi.com/api/file-upload/cf0bb0a7-feb8-4090-8e2e-68fd33b7b040/download?transactionId=684d8995-2014-4f9f-bb77-39e4dae3bad7";
       curlOpts = "-A HTTPie/3.2.4";
       extension = "zip";
-      hash = "sha256-WYk8Hh92IE3CyUCAOp7QMKrYN8Hpt/cs+O17jhh5tJs=";
+      hash = "sha256-aWnq1SckuRBVmX1T+htbideBbYUGvAqDyRB1v3cbpyA=";
     };
 
     nativeBuildInputs = [ pkgs.win2xcur ];
 
     patchPhase = ''
-      rm 02-Link.ani
-
       pwd
       echo $src
       mkdir Miku/cursors -p
