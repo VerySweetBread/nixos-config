@@ -7,4 +7,9 @@
     libreoffice
     vivaldi
   ];
+
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications."application/pdf" = "vivaldi-stable.desktop";
+  };
 }
