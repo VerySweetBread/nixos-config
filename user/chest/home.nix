@@ -15,4 +15,9 @@
     krita
     google-chrome
   ];
+
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications."application/pdf" = "google-chrome.desktop";
+  };
 }
