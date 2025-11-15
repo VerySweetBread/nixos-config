@@ -141,4 +141,11 @@ in {
       gtk-application-prefer-dark-theme = true;
     };
   };
+
+  services.xsettingsd = {
+    enable = true;
+    settings = {
+      "Gtk/CursorThemeName" = config.stylix.cursor.name;
+    };
+  };
 }
