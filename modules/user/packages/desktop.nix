@@ -7,5 +7,6 @@
     obsidian
     qbittorrent
     thunderbird
+    libreoffice
   ];
 }
