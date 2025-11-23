@@ -15,7 +15,7 @@
     ncdu
     tldr
     helix
-    pinentry
+    pinentry-gnome3
   ];
 
   fonts = {
