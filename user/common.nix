@@ -13,7 +13,6 @@
             inputs.stylix.homeModules.stylix
             ../modules/user.nix
             ./${name}/modules/git.nix
-            ./${name}/modules/hyprland.nix
             ./${name}/modules/style.nix
             ./${name}/home.nix
           ];
@@ -35,6 +34,7 @@
             laptop = laptop;
             name = config.networking.hostName;
           };
+          username = name;
         };
       };
     }

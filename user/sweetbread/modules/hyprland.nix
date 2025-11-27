@@ -1,26 +1,55 @@
 { pkgs, lib, config, inputs, ... }: {
-  imports = [(
-    import ../../../modules/user/patterns/hyprland.nix {
-      inherit lib;
-      inherit pkgs;
-      inherit config;
-      inherit inputs;
-      collection = "sweetbread/1764377";
-      swww_flags = "--transition-type center";
-    }
-  )];
-
   wayland.windowManager.hyprland = let
     colors = config.lib.stylix.colors;
+
+    wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
+      libraries = [ pkgs.python3Packages.requests ];
+      flakeIgnore = [ "E501" "E111" "E701" "E241" "E731" ];
+    } /*py*/ ''
+      import requests as requests
+      from random import choice
+      from os import system, mkdir, listdir
+      from os.path import exists
+
+      notify = lambda s: system(f"notify-desktop Wallpaper '{s}'")
+      folder = "${config.home.homeDirectory}/Wallpapers"
+      url = "https://wallhaven.cc/api/v1/collections/sweetbread/1764377"
+      with open("${config.sops.secrets."tokens/apis/wallhaven".path}") as f:
+        token = f.read()
+
+      notify("Updating wallpaper!")
+
+      try:
+        json = requests.get(url, params={'apikey': token}).json()
+
+        wallpaper = choice(json['data'])
+        link = wallpaper['path']
+        format = wallpaper['file_type']
+        id = wallpaper['id']
+
+        if format == "image/jpeg": ext = "jpg"
+        else:                      ext = "png"
+
+        filename = f"{id}.{ext}"
+
+        if not exists(f"{folder}/{filename}"):
+          if not exists(folder):
+            mkdir(f"{folder}")
+
+          notify("Downloading...")
+          with open(f"{folder}/{filename}", 'wb') as f:
+            r = requests.get(link)
+            f.write(r.content)
+
+      except requests.exceptions.ConnectionError:
+        notify("Offline mode")
+        filename = choice(listdir(folder))
+
+      finally:
+        system(f"${lib.getExe pkgs.swww} img {folder}/{filename} --transition-type center")
+    '';
   in {
     settings = {
-      monitor = [
-        "DP-3, 3440x1440@165.00Hz, auto-right, 1"
-        # "HDMI-A-1, 3840x2160@60.00Hz, auto-left, 2"
-        "HDMI-A-1, disabled"
-        ",preferred,auto,1"
-      ];
-
       general = {
         gaps_in = 5;
         gaps_out = 10;
@@ -76,12 +105,16 @@
         enable_swallow = true;
       };
 
+      exec-once = [
+        "${lib.getExe wallpaper_changer}"
+      ];
+
       bind = [
         "    , Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m output"
         "CTRL, Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m region"
         "ALT , Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m window"
 
-        '', XF86Calculator, exec, ghostty --title=pulsemixer -e pulsemixer''
+        "$mainMod, W, exec, ${lib.getExe wallpaper_changer}"
       ];
     };
   };
