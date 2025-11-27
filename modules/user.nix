@@ -12,6 +12,7 @@
     ./user/wofi.nix
     ./user/mako.nix
     ./user/ghostty.nix
+    ./user/hyprland.nix
     ./user/packages/art.nix
     ./user/packages/desktop.nix
     ./user/packages/coding.nix

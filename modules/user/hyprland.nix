@@ -1,4 +1,11 @@
-{ pkgs, lib, config, collection, swww_flags, inputs }: {
+{ pkgs, lib, config, osConfig, inputs, username, ... }: let
+  optImport = path: lib.optional (builtins.pathExists path) path;
+  hostname = osConfig.networking.hostName;
+in {
+  imports =
+    optImport ../../host/${hostname}/modules/hyprland.nix ++
+    optImport ../../user/${username}/modules/hyprland.nix;
+
   home.packages = with pkgs; [
     ghostty
     pamixer
@@ -9,60 +16,12 @@
     xclip
   ];
 
-  wayland.windowManager.hyprland =
-  let
+  wayland.windowManager.hyprland = let
     colors = config.lib.stylix.colors;
-    
-    wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
-      libraries = [ pkgs.python3Packages.requests ];
-      flakeIgnore = [ "E501" "E111" "E701" "E241" "E731" ];
-    } /*py*/ ''
-      import requests as requests
-      from random import choice
-      from os import system, mkdir, listdir
-      from os.path import exists
-
-      notify = lambda s: system(f"notify-desktop Wallpaper '{s}'")
-      folder = "${config.home.homeDirectory}/Wallpapers"
-      url = "https://wallhaven.cc/api/v1/collections/${collection}"
-      with open("${config.sops.secrets."tokens/apis/wallhaven".path}") as f:
-        token = f.read()
-
-      notify("Updating wallpaper!")
-
-      try:
-        json = requests.get(url, params={'apikey': token}).json()
-
-        wallpaper = choice(json['data'])
-        link = wallpaper['path']
-        format = wallpaper['file_type']
-        id = wallpaper['id']
-
-        if format == "image/jpeg": ext = "jpg"
-        else:                      ext = "png"
-
-        filename = f"{id}.{ext}"
-
-        if not exists(f"{folder}/{filename}"):
-          if not exists(folder):
-            mkdir(f"{folder}")
-
-          notify("Downloading...")
-          with open(f"{folder}/{filename}", 'wb') as f:
-            r = requests.get(link)
-            f.write(r.content)
-
-      except requests.exceptions.ConnectionError:
-        notify("Offline mode")
-        filename = choice(listdir(folder))
-
-      finally:
-        system(f"${lib.getExe pkgs.swww} img {folder}/{filename} ${swww_flags}")
-    '';
   in {
     enable = true;
     xwayland.enable = true;
-    
+
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
       # hyprbars  # Version mismatch
@@ -136,10 +95,9 @@
         "size 622 652, title:(clipse)"
       ];
 
-      exec-once = [
+      exec-once = lib.mkBefore [
         "systemctl --user start plasma-polkit-agent"
         "${lib.getExe' pkgs.swww "swww-daemon"}"
-        "${lib.getExe wallpaper_changer}"
         "wl-clip-persist --clipboard both"
         "clipse -listen"
         "${lib.getExe' pkgs.udiskie "udiskie"}"
@@ -213,27 +171,24 @@
         ", XF86AudioMute, exec, pamixer -t"
         ", XF86AudioMicMute, exec, pamixer --default-source -m"
         ", XF86AudioPlay, exec, ${lib.getExe pkgs.playerctl} play-pause"
-        ", XF86AudioPrev, exec, ${lib.getExe pkgs.playerctl} position 5-"
-        ", XF86AudioNext, exec, ${lib.getExe pkgs.playerctl} position 5+"
 
         ", XF86Explorer, exec, ghostty -e sh -c yazi"
         ", XF86Mail, exec, thunderbird"
         ", XF86WWW, exec, google-chrome-stable"  # TODO: Replace hard-code to some variable
-        
+
         # Brightness control
         ", XF86MonBrightnessDown, exec, ${lib.getExe pkgs.brightnessctl} set 5%- "
         ", XF86MonBrightnessUp,   exec, ${lib.getExe pkgs.brightnessctl} set +5% "
-
-        # Waybar
-        "$mainMod, B, exec, pkill -SIGUSR1 waybar"
-        #"$mainMod, W, exec, pkill -SIGUSR2 waybar"
-
-        "$mainMod, W, exec, ${lib.getExe wallpaper_changer}"
       ];
 
       binde = [
         ", XF86AudioRaiseVolume, exec, pamixer -i 5 "
         ", XF86AudioLowerVolume, exec, pamixer -d 5 "
+      ];
+
+      bindc = [
+        ", XF86AudioPrev, exec, ${lib.getExe pkgs.playerctl} position 5-"
+        ", XF86AudioNext, exec, ${lib.getExe pkgs.playerctl} position 5+"
       ];
 
       bindo = [

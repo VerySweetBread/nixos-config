@@ -1,21 +1,8 @@
 { pkgs, lib, config, inputs, ... }: {
-  imports = [(
-    import ../../../modules/user/patterns/hyprland.nix {
-      inherit lib;
-      inherit pkgs;
-      inherit config;
-      inherit inputs;
-      collection = "cheeeest/1767552";
-      swww_flags = "";
-    }
-  )];
-
   wayland.windowManager.hyprland = let
     colors = config.lib.stylix.colors;
   in {
     settings = {
-      monitor = ",preferred,auto,1";
-      exec-once =["${lib.getExe pkgs.linux-wallpaperengine} ~/.local/share/wpe/wallpaper --assets-dir ~/.local/share/wpe/assets --screen-root DP-3 --noautomute"];
       general = {
         gaps_in = 5;
         gaps_out = 5;
