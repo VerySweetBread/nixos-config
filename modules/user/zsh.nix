@@ -51,23 +51,12 @@
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
 
-      shellAliases =
-        let
-          flakeDir = "~/nix";
-        in {
+      shellAliases = let
+        flakeDir = "~/nix";
+      in {
         rb = "nh os switch ${flakeDir}";
         upd = "nix flake update --flake ${flakeDir}";
-        upg = "sudo nixos-rebuild switch --upgrade --flake ${flakeDir}";
 
-        hms = "nh home switch ${flakeDir}";
-        rhms = ''${pkgs.bash} $(home-manager generations | fzf | awk -F '-> ' '{print $2 "/activate"}')'';  #https://github.com/nix-community/home-manager/issues/1114#issuecomment-2067785129
-
-        conf = "$EDITOR ${flakeDir}/nixos/hosts/$(hostname)/configuration.nix";
-        pkgs = "$EDITOR ${flakeDir}/nixos/packages.nix";
-
-        ll = "ls -l";
-        se = "sudoedit";
-        ff = "fastfetch";
         cat = "${pkgs.lib.getExe pkgs.bat}";
         cd = "z";
         lg = "lazygit";
