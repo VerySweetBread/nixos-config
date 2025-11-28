@@ -42,67 +42,21 @@
 
   outputs = { self, nixpkgs, nixpkgs-stable, nixpkgs-fixed, home-manager, ... }@inputs: let
     system = "x86_64-linux";
+    config = { allowUnfree = true; };
+    mkHost = hostname: nixpkgs-stable.lib.nixosSystem {
+      specialArgs = {
+        inherit inputs;
+        pkgs-unstable = import nixpkgs { inherit system config; };
+        pkgs-fixed = import nixpkgs-fixed { inherit system config; };
+      };
+      modules = [ ./host/${hostname}/configuration.nix ];
+    };
   in {
     nixosConfigurations = {
-      Rias = nixpkgs-stable.lib.nixosSystem {
-        specialArgs = {
-          pkgs-unstable = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          pkgs-fixed = import nixpkgs-fixed {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          inherit inputs system;
-        };
-        modules = [ ./host/Rias/configuration.nix ];
-      };
-
-      Senko = nixpkgs-stable.lib.nixosSystem {
-        specialArgs = {
-          pkgs-unstable = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          pkgs-fixed = import nixpkgs-fixed {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          inherit inputs system;
-        };
-        modules = [ ./host/Senko/configuration.nix ];
-      };
-
-      Eclipse = nixpkgs-stable.lib.nixosSystem {
-        specialArgs = {
-          pkgs-unstable = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          pkgs-fixed = import nixpkgs-fixed {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          inherit inputs system;
-        };
-        modules = [ ./host/Eclipse/configuration.nix ];
-      };
-
-      Impreza = nixpkgs-stable.lib.nixosSystem {
-        specialArgs = {
-          pkgs-unstable = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          pkgs-fixed = import nixpkgs-fixed {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          inherit inputs system;
-        };
-        modules = [ ./host/Impreza/configuration.nix ];
-      };
+      Rias = mkHost "Rias";
+      Senko = mkHost "Senko";
+      Eclipse = mkHost "Eclipse";
+      Impreza = mkHost "Impreza";
     };
 
     devShells."${system}".default = let
