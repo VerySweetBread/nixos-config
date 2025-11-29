@@ -58,17 +58,5 @@
       Eclipse = mkHost "Eclipse";
       Impreza = mkHost "Impreza";
     };
-
-    devShells."${system}".default = let
-      pkgs = import nixpkgs { inherit system; };
-    in pkgs.mkShell {
-      shellHook = "zsh";
-      packages = with pkgs; [
-        cargo
-        rustc
-        rust-analyzer
-        lldb
-      ];
-    };
   };
 }
