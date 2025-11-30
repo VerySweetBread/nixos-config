@@ -55,11 +55,13 @@
         flakeDir = "~/nix";
       in {
         rb = "nh os switch ${flakeDir}";
+        trb = "nh os test ${flakeDir}";
         upd = "nix flake update --flake ${flakeDir}";
 
         cat = "${pkgs.lib.getExe pkgs.bat}";
         cd = "z";
         lg = "lazygit";
+        s = "nix-shell . --run zsh";
       };
 
       initContent = ''
