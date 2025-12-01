@@ -4,7 +4,7 @@
     secrets = {
       vpn_bolt = {
         format = "binary";
-        sopsFile = ./vpn_bolt.db;
+        sopsFile = ../../Rias/secrets/vpn_bolt.db;
       };
     };
   };
