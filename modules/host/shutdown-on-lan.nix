@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
   let
     sol = pkgs.writers.writePython3 "shutdown-on-lan.py" {
-      libraries = [ pkgs.python312Packages.psutil ];
+      libraries = [ pkgs.python313Packages.psutil ];
       flakeIgnore = [ "E302" "E305" "E501" "E701" ];
     } /*py*/ ''
       # https://habr.com/ru/articles/816765/

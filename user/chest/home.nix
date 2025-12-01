@@ -1,4 +1,4 @@
-{ pkgs, pkgs-fixed, host, ... }: {
+{ pkgs, pkgs-pinned, host, ... }: {
   imports = [
     ../../modules/user/packages/cs_utils.nix
   ];
@@ -10,7 +10,7 @@
   home.packages = with pkgs; [
     nautilus
     python3
-    pkgs-fixed.jetbrains.pycharm-community
+    pkgs-pinned.jetbrains.pycharm-community
     aseprite
     krita
     google-chrome

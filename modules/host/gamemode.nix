@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-unstable, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 lib.mkIf config.programs.gamemode.enable {
   programs.steam = {
@@ -8,7 +8,7 @@ lib.mkIf config.programs.gamemode.enable {
 
   environment.systemPackages = with pkgs; [
     mangohud
-    protonup
+    protonup-ng
     bottles
     heroic
     prismlauncher

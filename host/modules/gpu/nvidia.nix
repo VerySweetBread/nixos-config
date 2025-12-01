@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs-stable, lib, ... }: {
   boot.kernelParams = [ "nvidia-drm.modeset=1" ];
   services.xserver.videoDrivers = [ "nvidia" ];
 
@@ -6,12 +6,12 @@
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [
+      extraPackages = with pkgs-stable; [
         nvidia-vaapi-driver
         intel-media-driver
         libvdpau-va-gl
       ];
-      extraPackages32 = with pkgs.pkgsi686Linux; [nvidia-vaapi-driver intel-media-driver];
+      extraPackages32 = with pkgs-stable.pkgsi686Linux; [nvidia-vaapi-driver intel-media-driver];
     };
 
     nvidia = {

@@ -1,8 +1,16 @@
-{ config, pkgs, pkgs-unstable, pkgs-fixed, lib, inputs, name, fullname ? name, ... }: {
+{ config
+, pkgs
+, pkgs-stable
+, pkgs-pinned
+, lib
+, inputs
+, name
+, fullname ? name
+}: {
   imports = [
     inputs.home-manager.nixosModules.home-manager {
       home-manager = {
-        useGlobalPkgs = false;
+        useGlobalPkgs = true;
         useUserPackages = true;
         backupFileExtension = "rebuild";
         overwriteBackup = true;
@@ -22,14 +30,12 @@
             homeDirectory = "/home/${name}";
             stateVersion = "23.11";
           };
-
-          _module.args.pkgs = lib.mkForce pkgs-unstable;
         };
 
         extraSpecialArgs = {
           inherit inputs;
-          pkgs-stable = pkgs;
-          inherit pkgs-fixed;
+          inherit pkgs-stable;
+          inherit pkgs-pinned;
           username = name;
         };
       };
@@ -49,7 +55,7 @@
   };
 
   services.greetd = let
-    tuigreet = lib.getExe pkgs.greetd.tuigreet;
+    tuigreet = lib.getExe pkgs.tuigreet;
     session = lib.getExe inputs.hyprland.packages.${pkgs.system}.default;
   in {
     enable = true;
