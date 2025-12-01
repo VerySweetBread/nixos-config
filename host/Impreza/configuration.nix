@@ -24,6 +24,7 @@ in {
     })
   ];
 
+  nix.settings.cores = 3;
   nixpkgs.config.allowBroken = true;
   programs.gamemode.enable = true;
   hardware.bluetooth.enable = true;
