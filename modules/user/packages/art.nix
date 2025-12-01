@@ -1,6 +1,6 @@
-{ pkgs-fixed, lib, host, ... }:
+{ pkgs-fixed, lib, osConfig, ... }:
 
-lib.mkIf (!host.laptop) {
+lib.mkIf (!osConfig.host.laptop) {
   home.packages = with pkgs-fixed; [
     (blender.override { cudaSupport = true; })
     aseprite
