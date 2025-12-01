@@ -7,7 +7,7 @@
         gaps_in = 5;
         gaps_out = 5;
         border_size = 2;
-        "col.active_border" = "rgba(${colors.base0C}ee) rgba(${colors.base0B}ee) 45deg";
+        "col.active_border" = "rgba(${colors.base0E}ee) rgba(${colors.base0C}ee) 45deg";
         "col.inactive_border" = "rgba(${colors.base05}aa)";
 
         layout = "dwindle";
