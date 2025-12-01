@@ -1,6 +1,6 @@
-{ pkgs, inputs, pkgs-fixed, ... }: {
+{ pkgs, pkgs-pinned, inputs, ... }: {
   home.packages = with pkgs; [
-    pkgs-fixed.ayugram-desktop
+    pkgs-pinned.ayugram-desktop
     vesktop
     obs-studio
     mpv

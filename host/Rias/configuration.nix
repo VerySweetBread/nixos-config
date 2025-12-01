@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-unstable, pkgs-fixed, lib, inputs, ...}: {
+{ config, pkgs, pkgs-stable, pkgs-pinned, lib, inputs, ... }: {
   imports = [
     ./secrets/secrets.nix
     ./modules/grub.nix
@@ -15,8 +15,8 @@
     (import ../../user/common.nix {
       inherit config;
       inherit pkgs;
-      inherit pkgs-unstable;
-      inherit pkgs-fixed;
+      inherit pkgs-stable;
+      inherit pkgs-pinned;
       inherit lib;
       inherit inputs;
       name = "sweetbread";
