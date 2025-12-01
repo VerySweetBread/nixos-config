@@ -2,6 +2,7 @@
   imports = [ inputs.aagl.nixosModules.default ];
   nix.settings = inputs.aagl.nixConfig; # Set up Cachix
   programs.honkers-railway-launcher.enable = true;
+  programs.sleepy-launcher.enable = true;
   networking.hosts."0.0.0.0" = [
     "overseauspider.yuanshen.com"
     "log-upload-os.hoyoverse.com"
