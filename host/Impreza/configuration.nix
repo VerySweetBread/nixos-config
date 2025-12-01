@@ -1,6 +1,4 @@
-{ config, pkgs, pkgs-unstable, pkgs-fixed, lib, inputs, ...}: let
-  laptop = true;
-in {
+{ config, pkgs, pkgs-unstable, pkgs-fixed, lib, inputs, ...}: {
   imports = [
     ./secrets/secrets.nix
     ./modules/grub.nix
@@ -19,7 +17,6 @@ in {
       inherit pkgs-fixed;
       inherit lib;
       inherit inputs;
-      inherit laptop;
       name = "chest";
     })
   ];
@@ -28,5 +25,5 @@ in {
   nixpkgs.config.allowBroken = true;
   programs.gamemode.enable = true;
   hardware.bluetooth.enable = true;
-  host.laptop = laptop;
+  host.laptop = true;
 }
