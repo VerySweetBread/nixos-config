@@ -6,7 +6,10 @@
     settings = {
       # theme = "catppuccin-mocha";
       editor = {
+        rulers = [ 81 ];
         insert-final-newline = false;
+        indent-guides.render = true;
+
         whitespace.render = {
           space = "all";
           tab = "all";
@@ -15,7 +18,11 @@
           newline = "none";
         };
 
-        indent-guides.render = true;
+        cursor-shape = {
+          normal = "block";
+          insert = "bar";
+          select = "underline";
+        };
       };
     };
   };
