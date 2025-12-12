@@ -2,6 +2,7 @@
   imports = [
     ./user/ags.nix
     ./user/btop.nix
+    ./user/fuzzel.nix
     ./user/ghostty.nix
     ./user/helix.nix
     ./user/hyprland.nix
@@ -10,7 +11,6 @@
     ./user/neofetch.nix
     ./user/qt.nix
     ./user/sops.nix
-    ./user/wofi.nix
     ./user/yazi.nix
     ./user/zsh.nix
 

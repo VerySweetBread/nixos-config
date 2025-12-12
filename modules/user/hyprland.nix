@@ -9,7 +9,6 @@ in {
   home.packages = with pkgs; [
     ghostty
     pamixer
-    wofi
     clipse
     wl-clipboard
     wl-clip-persist
@@ -111,7 +110,7 @@ in {
         "$mainMod, M, exit,"
         "$mainMod, E, exec, ghostty -e sh -c yazi"
         "$mainMod, F, togglefloating,"
-        "$mainMod, D, exec, wofi --show drun"
+        "$mainMod, D, exec, fuzzel"
         "$mainMod, P, pseudo, # dwindle"
         "$mainMod, J, togglesplit, # dwindle"
 
