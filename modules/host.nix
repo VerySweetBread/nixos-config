@@ -8,12 +8,12 @@
     ./host/gamemode.nix
     ./host/gpg.nix
     ./host/laptop.nix
+    ./host/network.nix
     ./host/printing.nix
     ./host/shutdown-on-lan.nix
     ./host/sound.nix
     ./host/virtmanager.nix
     ./host/vpn.nix
-    ./host/network.nix
     ./host/yggdrasil.nix
   ];
 
