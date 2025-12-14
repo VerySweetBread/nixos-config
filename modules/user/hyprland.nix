@@ -87,7 +87,7 @@ in {
         "float, class:^(feh)$"
         "float, class:^(mpv)$"
         "float, title:^(Список друзей)"
-        "move onscreen cursor -50% -50%, class:^(xdragon)$"
+        "move onscreen cursor -50% -50%, class:^(dragon-drop)$"
         "float, title:(nmtui)"
         "float, title:(pulsemixer)"
         "float, title:(clipse)"
