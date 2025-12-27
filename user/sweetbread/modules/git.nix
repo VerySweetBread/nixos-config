@@ -3,7 +3,7 @@
     enable = true;
     settings.user = {
       name  = "Sweetbread";
-      email = "risdeveau@codrs.ru";
+      email = "risdeveau@lair.moe";
     };
   };
 }
