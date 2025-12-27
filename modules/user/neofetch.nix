@@ -1,6 +1,6 @@
 { config, pkgs, ... }: let
   icon = pkgs.fetchurl {
-    url = "https://cloud.codrs.ru/pub/nixos-chan.webp?raw";
+    url = "https://cloud.lair.moe/pub/nixos-chan.webp?raw";
     name = "nixos-chan.webp";
     sha256 = "sha256-0majB9ljjMdZwvOijEgWdFKxWLje5tHgXHBJUWZfHfY=";
   };
