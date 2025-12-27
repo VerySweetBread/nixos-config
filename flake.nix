@@ -3,7 +3,7 @@
 
   nixConfig = {
     extra-substituters = [
-      "https://nix.codrs.ru/main"
+      "https://nix.lair.moe/main"
       "https://nix-community.cachix.org"
       "https://hyprland.cachix.org"
       "https://ezkea.cachix.org"

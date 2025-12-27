@@ -4,7 +4,7 @@
     persistentKeys = true;
     settings = {
       Peers = [
-        "tcp://codrs.ru:5001"
+        "tcp://lair.moe:5001"
       ];
     };
   };

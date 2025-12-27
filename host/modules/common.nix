@@ -13,7 +13,7 @@
   config = {
     nix.settings = {
       keep-going = true;
-      extra-substituters = [ "https://nix.codrs.ru/main" ];
+      extra-substituters = [ "https://nix.lair.moe/main" ];
       extra-trusted-public-keys = [ "main:kpwMe+9BsGJ/IUb7i3iadaV38y5/Yuqoct0mf7wI9ds=" ];
       experimental-features = [ "nix-command" "flakes" ];
     };
