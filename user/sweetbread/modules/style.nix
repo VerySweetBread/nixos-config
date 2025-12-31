@@ -97,7 +97,7 @@ in {
       sha256 = "sha256-u4d21a0Kh5OHEzQMSQ7+ey/Va2ftS1DefrOQFahaeC4=";
     };
 
-    iconTheme = {
+    icons = {
       enable = true;
       package = pkgs.pop-icon-theme;
       dark = "Pop-Dark";
