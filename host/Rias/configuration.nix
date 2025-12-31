@@ -3,7 +3,6 @@
     ./secrets/secrets.nix
     ./modules/grub.nix
     ./modules/syncthing.nix
-    ../../modules/host/adb.nix
     ../modules/gpu/nvidia.nix
 
     (import ../modules/common.nix {
@@ -27,4 +26,7 @@
   programs.gamemode.enable = true;
   services.printing.enable = true;
   hardware.opentabletdriver.enable = true;
+
+  environment.systemPackages = [ pkgs.android-tools ];
+  users.users.sweetbread.extraGroups = [ "kvm" ];
 }
