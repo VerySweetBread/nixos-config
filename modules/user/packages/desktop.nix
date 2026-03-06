@@ -4,6 +4,7 @@
     vesktop
     obs-studio
     mpv
+    imhex
     obsidian
     qbittorrent
     thunderbird

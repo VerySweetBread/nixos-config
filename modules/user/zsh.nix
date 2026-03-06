@@ -1,5 +1,6 @@
-{ config, pkgs, ... }: {
+{ config, osConfig, pkgs, lib, ... }: {
   home.packages = [ pkgs.nh ];
+
   programs = {
     zoxide.enable = true;
     fzf.enable = true;
@@ -62,11 +63,12 @@
         cd = "z";
         lg = "lazygit";
         s = "nix-shell . --run zsh";
+      } // lib.optionalAttrs osConfig.boot.loader.grub.useOSProber {
+        win = "sudo grub-reboot 2; sudo reboot";
       };
 
-      initContent = ''
+      initContent = /*bash*/ ''
         eval "$(zoxide init zsh)"
-        eval "$(nh completions zsh)"
         source "$(fzf-share)/key-bindings.zsh"
         source "$(fzf-share)/completion.zsh"
       '';
