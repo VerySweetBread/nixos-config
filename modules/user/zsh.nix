@@ -1,5 +1,4 @@
-{ config, pkgs, ... }: {
-  home.packages = [ pkgs.nh ];
+{ config, osConfig, pkgs, lib, ... }: {
   programs = {
     zoxide.enable = true;
     fzf.enable = true;
@@ -51,22 +50,21 @@
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
 
-      shellAliases = let
-        flakeDir = "~/nix";
-      in {
-        rb = "nh os switch ${flakeDir}";
-        trb = "nh os test ${flakeDir}";
-        upd = "nix flake update --flake ${flakeDir}";
+      shellAliases = {
+        rb = "nh os switch";
+        trb = "nh os test";
+        upd = "nix flake update --flake ~/nix";
 
         cat = "${pkgs.lib.getExe pkgs.bat}";
         cd = "z";
         lg = "lazygit";
         s = "nix-shell . --run zsh";
+      } // lib.optionalAttrs osConfig.boot.loader.grub.useOSProber {
+        win = "sudo grub-reboot 2; sudo reboot";
       };
 
       initContent = ''
         eval "$(zoxide init zsh)"
-        eval "$(nh completions zsh)"
         source "$(fzf-share)/key-bindings.zsh"
         source "$(fzf-share)/completion.zsh"
       '';
@@ -83,6 +81,11 @@
       };
 
       oh-my-zsh.enable = true;
+    };
+
+    nh = {
+      enable = true;
+      flake = "nix";
     };
   };
 }
