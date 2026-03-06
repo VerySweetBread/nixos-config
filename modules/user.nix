@@ -16,7 +16,6 @@
 
     ./user/packages/art.nix
     ./user/packages/desktop.nix
-    ./user/packages/coding.nix
     ./user/packages/utils.nix
   ];
 }
