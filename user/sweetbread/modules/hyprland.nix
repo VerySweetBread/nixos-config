@@ -51,11 +51,10 @@
   in {
     settings = {
       general = {
-        gaps_in = 5;
+        gaps_in = 2;
         gaps_out = 10;
         border_size = 3;
-        "col.active_border" = lib.mkForce "rgba(${colors.base0C}ee) rgba(${colors.base0B}ee) 45deg";
-        "col.inactive_border" = lib.mkForce "rgba(${colors.base05}aa)";
+        "col.active_border" = lib.mkForce "rgba(${colors.base0C}aa) rgba(${colors.base0B}aa) 45deg";
 
         layout = "dwindle";
       };
@@ -70,11 +69,7 @@
           new_optimizations = true;
         };
 
-        shadow = {
-          enabled = true;
-          range = 4;
-          render_power = 3;
-        };
+        shadow.enabled = false;
       };
 
       animations = {
