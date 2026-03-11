@@ -54,6 +54,13 @@ in {
         enable_stdout_logs = true;
       };
 
+      general = {
+        "col.inactive_border" = lib.mkForce "rgba(00000000)";
+      };
+
+      decoration.inactive_opacity = lib.mkDefault .95;
+      decoration.border_part_of_window = false;
+
       misc = {
         focus_on_activate = true;
       };
@@ -82,6 +89,10 @@ in {
         "3, horizontal, workspace"
       ];
 
+      workspace = [
+        "w[t1], gapsout:10 0 0, gapsin:0"
+      ];
+
       windowrule = [
         "float, class:^(imv)$"
         "float, class:^(feh)$"
@@ -92,6 +103,9 @@ in {
         "float, title:(pulsemixer)"
         "float, title:(clipse)"
         "size 622 652, title:(clipse)"
+
+        "rounding 0, focus:1"
+        "bordersize 0, floating:0, onworkspace:w[t1]"
       ];
 
       exec-once = lib.mkBefore [
