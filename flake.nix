@@ -38,6 +38,11 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    russia-blocked-geoip = {
+      url = "github:runetfreedom/russia-blocked-geoip/release";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, nixpkgs-stable, nixpkgs-pinned, home-manager, ... }@inputs: let
