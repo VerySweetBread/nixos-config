@@ -885,9 +885,27 @@
         "nixpkgs": "nixpkgs_5",
         "nixpkgs-pinned": "nixpkgs-pinned",
         "nixpkgs-stable": "nixpkgs-stable",
+        "russia-blocked-geoip": "russia-blocked-geoip",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "yazi": "yazi"
+      }
+    },
+    "russia-blocked-geoip": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773222740,
+        "narHash": "sha256-x2We3wwRUjfatG5je8P9ip1snK3NvtTHv9tKlPsqOwI=",
+        "owner": "runetfreedom",
+        "repo": "russia-blocked-geoip",
+        "rev": "6138773989321235eac52193a889197c38efd942",
+        "type": "github"
+      },
+      "original": {
+        "owner": "runetfreedom",
+        "ref": "release",
+        "repo": "russia-blocked-geoip",
+        "type": "github"
       }
     },
     "rust-overlay": {
@@ -1170,4 +1188,3 @@
   "root": "root",
   "version": 7
 }
-

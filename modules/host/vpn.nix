@@ -1,4 +1,4 @@
-{ pkgs, config, ... }: {
+{ inputs, pkgs, config, ... }: {
   systemd.services.v2raya = {
     enable = true;
     description = "v2rayA gui client";
@@ -17,12 +17,7 @@
   };
 
   environment.etc = {
-    "v2raya/ru_geoip.dat".source = pkgs.fetchurl {
-      name = "geoip.dat";
-      url = "https://github.com/runetfreedom/russia-blocked-geoip/releases/download/202603040949/geoip.dat";
-      hash = "sha256-TmWQqoC26+vrJ2xaRrIiPM2kp9xhrw9h9H8yjq4CA7U=";
-    };
-
+    "v2raya/ru_geoip.dat".source = "${inputs.russia-blocked-geoip}/geoip.dat";
     "v2raya/bolt.db".source = config.sops.secrets.vpn_bolt.path;
   };
 }
