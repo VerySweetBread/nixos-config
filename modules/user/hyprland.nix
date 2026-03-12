@@ -90,22 +90,23 @@ in {
       ];
 
       workspace = [
-        "w[t1], gapsout:10 0 0, gapsin:0"
+        "w[t1], gapsout:0"
       ];
 
       windowrule = [
-        "float, class:^(imv)$"
-        "float, class:^(feh)$"
-        "float, class:^(mpv)$"
-        "float, title:^(Список друзей)"
-        "move onscreen cursor -50% -50%, class:^(dragon-drop)$"
-        "float, title:(nmtui)"
-        "float, title:(pulsemixer)"
-        "float, title:(clipse)"
-        "size 622 652, title:(clipse)"
+        "match:class imv,           float 1"
+        "match:class feh,           float 1"
+        "match:class mpv,           float 1"
 
-        "rounding 0, focus:1"
-        "bordersize 0, floating:0, onworkspace:w[t1]"
+        "match:title Список друзей, float 1"
+        "match:title nmtui,         float 1"
+        "match:title pulsemixer,    float 1"
+
+        "match:title clipse,        float 1"
+        "match:title clipse,   size 622 652"
+
+        "match:focus 1, rounding 0"
+        "match:float 0, match:workspace w[t1], border_size 0"
       ];
 
       exec-once = lib.mkBefore [
@@ -126,7 +127,8 @@ in {
         "$mainMod, F, togglefloating,"
         "$mainMod, D, exec, fuzzel"
         "$mainMod, P, pseudo, # dwindle"
-        "$mainMod, J, togglesplit, # dwindle"
+        "$mainMod, J, layoutmsg, togglesplit"
+        "$mainMod, K, layoutmsg, swapsplit"
 
         # Move focus with mainMod + arrow keys
         "$mainMod, left,  movefocus, l"
