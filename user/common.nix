@@ -22,6 +22,7 @@
             ../modules/user.nix
             ./${name}/modules/git.nix
             ./${name}/modules/style.nix
+            ./${name}/modules/waybar.nix
             ./${name}/home.nix
           ];
 

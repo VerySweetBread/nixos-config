@@ -1,6 +1,5 @@
 { config, lib, ... }: {
   imports = [
-    ./user/ags.nix
     ./user/btop.nix
     ./user/fuzzel.nix
     ./user/ghostty.nix
@@ -11,6 +10,7 @@
     ./user/neofetch.nix
     ./user/qt.nix
     ./user/sops.nix
+    ./user/waybar.nix
     ./user/yazi.nix
     ./user/zsh.nix
 
