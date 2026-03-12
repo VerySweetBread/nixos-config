@@ -3,6 +3,10 @@
 		( ouch.override { enableUnfree = true; } )
 	];
 
+	wayland.windowManager.hyprland.settings.windowrule = [
+		"match:class dragon-drop, move cursor_x-window_w/2 cursor_y-window_h/2"
+	];
+
 	programs.yazi = {
 		package = inputs.yazi.packages
 			.${pkgs.stdenv.hostPlatform.system}.default

@@ -1,4 +1,4 @@
-{ pkgs, lib, config, inputs, ... }: {
+{ pkgs, lib, config, osConfig, inputs, ... }: {
   wayland.windowManager.hyprland = let
     colors = config.lib.stylix.colors;
 
@@ -13,7 +13,10 @@
 
       notify = lambda s: system(f"notify-desktop Wallpaper '{s}'")
       folder = "${config.home.homeDirectory}/Wallpapers"
-      url = "https://wallhaven.cc/api/v1/collections/sweetbread/1764377"
+      url = "https://wallhaven.cc/api/v1/collections/sweetbread/${
+        if osConfig.networking.hostName == "Rias" then "1764377"
+        else "2108577"
+      }"
       with open("${config.sops.secrets."tokens/apis/wallhaven".path}") as f:
         token = f.read()
 
