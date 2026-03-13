@@ -71,14 +71,14 @@
         capslock = true;
         format = "{icon}";
         format-icons = {
-          locked = "CUPS";
+          locked = " CUPS";
           unlocked = "";
         };
       };
 
       "hyprland/language" = {
-        format-en = "EN";
-        format-ru = "RU";
+        format-en = "en";
+        format-ru = "ru";
       };
 
 
@@ -153,10 +153,6 @@
         font-size: 1.1em;
       }
 
-      window#waybar > * {
-        padding: 4px;
-      }
-
       #language,
       #mpris,
       #pulseaudio,
@@ -164,6 +160,7 @@
       #battery,
       #cpu,
       #temperature,
+      #keyboard-state,
       #custom-mem,
       #clock {
         background: ${colors.base00};
@@ -223,11 +220,52 @@
         background: ${colors.base01};
       }
       #pulseaudio.muted {
-        color: ${colors.base08};
+        background: ${colors.base08};
+        color: ${colors.base00};
       }
 
       #network:hover {
         background: ${colors.base01};
+      }
+
+      #system .drawer-child > * {
+        margin-right: 4px
+      }
+
+      #language {
+        border-radius: ${radius} 0 0 ${radius};
+        margin-right: 0;
+        padding-right: 0;
+      }
+      #keyboard-state {
+        color: ${colors.base08};
+        border-radius: 0 ${radius} ${radius} 0;
+        margin-left: -8px;
+        padding-left: 0;
+      }
+
+      #battery.charging {
+        color: ${colors.base05};
+        background-color: ${colors.base0B};
+      }
+      #battery.warning:not(.charging) {
+        background-color: ${colors.base09};
+        color: black;
+      }
+      #battery.critical:not(.charging) {
+        background-color: ${colors.base08};
+        color: ${colors.base05};
+        animation-name: blink;
+        animation-duration: 0.5s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+      }
+    	@keyframes blink {
+        to {
+            background-color: #${colors.base05};
+            color: #${colors.base00};
+        }
       }
     '';
   };
