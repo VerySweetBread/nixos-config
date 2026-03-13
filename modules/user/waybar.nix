@@ -60,18 +60,15 @@
           warning = 30;
           critical = 15;
         };
-        format = "{capacity}%";
-        format-charging = "{capacity}% {time}";
-        format-plugged = "{capacity}%";
-        format-alt = "{time}";
-        format-time = "{H}:{m}";
+        format = "{icon} {capacity}%";
+        format-icons = ["" "" "" "" ""];
       };
 
       "keyboard-state" = {
         capslock = true;
         format = "{icon}";
         format-icons = {
-          locked = " CUPS";
+          locked = "CAPS";
           unlocked = "";
         };
       };
@@ -132,7 +129,7 @@
 
       temperature = {
         # thermal-zone = 2;
-        # hwmon-path = "/sys/class/hwmon/hwmon2/temp1_input";
+        hwmon-path = "/sys/class/hwmon/hwmon5/temp1_input";
         critical-threshold = 80;
         # format-critical = "{temperatureC}°C {icon}";
         format = "{temperatureC}°C {icon}";
@@ -160,7 +157,7 @@
       #battery,
       #cpu,
       #temperature,
-      #keyboard-state,
+      #keyboard-state label.locked,
       #custom-mem,
       #clock {
         background: ${colors.base00};
@@ -175,6 +172,7 @@
       }
 
       #workspaces button {
+        color: ${colors.base05};
         padding: 4px;
         border-radius: ${radius};
         border: 1pt solid transparent;
@@ -216,7 +214,8 @@
         border-color: ${colors.base09};
       }
 
-      #pulseaudio:hover {
+      #pulseaudio:hover,
+      #pulseaudio.muted:hover {
         background: ${colors.base01};
       }
       #pulseaudio.muted {
@@ -232,29 +231,21 @@
         margin-right: 4px
       }
 
-      #language {
-        border-radius: ${radius} 0 0 ${radius};
-        margin-right: 0;
-        padding-right: 0;
-      }
-      #keyboard-state {
+      #keyboard-state label.locked {
+        background-color: ${colors.base00};
         color: ${colors.base08};
-        border-radius: 0 ${radius} ${radius} 0;
-        margin-left: -8px;
-        padding-left: 0;
       }
 
       #battery.charging {
-        color: ${colors.base05};
-        background-color: ${colors.base0B};
+        color: ${colors.base0B};
       }
       #battery.warning:not(.charging) {
+        color: ${colors.base00};
         background-color: ${colors.base09};
-        color: black;
       }
       #battery.critical:not(.charging) {
         background-color: ${colors.base08};
-        color: ${colors.base05};
+        color: ${colors.base00};
         animation-name: blink;
         animation-duration: 0.5s;
         animation-timing-function: linear;
@@ -263,8 +254,8 @@
       }
     	@keyframes blink {
         to {
-            background-color: #${colors.base05};
-            color: #${colors.base00};
+            background-color: ${colors.base00};
+            color: ${colors.base08};
         }
       }
     '';
