@@ -11,6 +11,7 @@
     ./user/neofetch.nix
     ./user/qt.nix
     ./user/sops.nix
+    ./user/ssh.nix
     ./user/waybar.nix
     ./user/yazi.nix
     ./user/zsh.nix
