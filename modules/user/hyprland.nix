@@ -2,7 +2,9 @@
   optImport = path: lib.optional (builtins.pathExists path) path;
   hostname = osConfig.networking.hostName;
 in {
-  imports =
+  imports = [
+    ./hyprland/zoom.nix
+  ] ++
     optImport ../../host/${hostname}/modules/hyprland.nix ++
     optImport ../../user/${username}/modules/hyprland.nix;
 
