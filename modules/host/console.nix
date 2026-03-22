@@ -1,6 +1,6 @@
-{ pkgs, ... }: {
+{
   console = {
-    font = "${pkgs.kbd}/share/consolefonts/LatArCyrHeb-19.psfu.gz";
+    font = "LatArCyrHeb-19";
     colors = [
       "16161E"
       "1A1B26"
