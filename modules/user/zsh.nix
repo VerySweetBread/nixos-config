@@ -37,7 +37,10 @@
           read_only = " RO";
         };
         nix_shell.format = "[nix-shell]($style) ";
-        os.disabled = false;
+        os = {
+          disabled = false;
+          style = "white";
+        };
         python = {
           symbol = "py ";
           python_binary = ["python3" "python"];
