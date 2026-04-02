@@ -14,6 +14,7 @@
         & > * { padding: 8px; }
       }
 
+      #cava,
       #language,
       #mpris,
       #pulseaudio,

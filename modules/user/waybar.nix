@@ -3,6 +3,7 @@
     font-awesome
     nerd-fonts.symbols-only
     playerctl
+    cava
   ];
   
   programs.waybar = {
@@ -14,6 +15,7 @@
         "hyprland/workspaces"
         "hyprland/language"
         "keyboard-state"
+        "cava"
       ];
 
       modules-center = [
@@ -27,6 +29,15 @@
         "battery"
         "clock"
       ];
+
+      cava = {
+        bars = 14;
+        sleep_timer = 5;
+        hide_on_silence = true;
+        bar_delimiter = 0;
+        input_delay = 0;
+        format-icons = [" " "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
+      };
 
       clock = {
         tooltip = false;
