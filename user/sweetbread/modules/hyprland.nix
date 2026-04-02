@@ -107,6 +107,10 @@
         "${lib.getExe wallpaper_changer}"
       ];
 
+      workspace = [
+        "2, layout:scrolling"
+      ];
+
       bind = [
         "    , Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m output"
         "CTRL, Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m region"

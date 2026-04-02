@@ -39,11 +39,6 @@
         ''$mainMod, F2, exec, ${lib.getExe monitor-switcher} mirror''
         ''$mainMod, F3, exec, ${lib.getExe monitor-switcher}''
       ];
-
-      workspace = [
-        "2, layout:scrolling"
-        "4, layout:monocle"
-      ];
     };
   };
 }
