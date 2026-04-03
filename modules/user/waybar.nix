@@ -32,15 +32,10 @@
 
       cava = {
         bars = 14;
+        sleep_timer = 5;
         hide_on_silence = true;
-        method = "pulse";
-        stereo = true;
-        reverse = false;
         bar_delimiter = 0;
-        monstercat = false;
-        waves = false;
-        noise_reduction = 0.77;
-        input_delay = 2;
+        input_delay = 0;
         format-icons = [" " "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
       };
 
