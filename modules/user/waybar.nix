@@ -11,30 +11,51 @@
     systemd.enable = true;
 
     settings.mainBar = {
-      modules-left = [
+      modules-center = [
+         "group/left"
+         "group/center"
+         "group/right"
+      ];
+
+
+
+      "group/left" = {
+        orientation = "inherit";
+        modules = [
         "hyprland/workspaces"
+        "custom/sep-left"
         "hyprland/language"
         "keyboard-state"
+        ];
+      };
+
+      "group/center" = {
+        orientation = "inherit";
+        modules = [
         "cava"
-      ];
-
-      modules-center = [
         "mpris"
-      ];
+        ];
+      };
 
-      modules-right = [
+      
+      "group/right" = {
+        orientation = "inherit";
+        modules = [
         "tray"
+        "custom/sep-left"
         "group/system"
+        "custom/sep-left"
         "pulseaudio"
+        "custom/sep-left"
         "battery"
         "clock"
-      ];
+        ];
+      };
 
       cava = {
-        bars = 14;
-        sleep_timer = 5;
-        hide_on_silence = true;
+        bars = 9;
         bar_delimiter = 0;
+        stereo = false;
         input_delay = 0;
         format-icons = [" " "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
       };
@@ -62,7 +83,7 @@
 
       mpris = {
         format = "{dynamic}";
-        dynamic-len = if osConfig.host.laptop then 32 else 64;
+        dynamic-len = if osConfig.host.laptop then 16 else 32;
         dynamic-order = [ "title" "artist" "album" ];
       };
 
@@ -72,13 +93,18 @@
           warning = 30;
           critical = 15;
         };
-        format = "{icon} {capacity}%";
+        format = "{icon} {capacity}% | ";
         format-icons = {
           default = ["󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹"];
           charging = ["󰢟" "󰢜" "󰂆" "󰂇" "󰂈" "󰢝" "󰂉" "󰢞" "󰂊" "󰂋" "󰂅"];
         };
       };
 
+      "custom/sep-left" = {
+      format = " | ";
+      tooltip = false;
+      };
+      
       "keyboard-state" = {
         capslock = true;
         format = "{icon}";
