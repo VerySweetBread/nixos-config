@@ -7,7 +7,23 @@
   ];
 
   options = {
-    host.laptop = lib.mkEnableOption "laptop mode";
+    host = {
+      laptop = lib.mkEnableOption "laptop mode";
+
+      nvidia.prime = {
+        enable = lib.mkEnableOption "NVIDIA PRIME offload for hybrid graphics";
+        intelBusId = lib.mkOption {
+          type = lib.types.str;
+          default = "PCI:0:2:0";
+          description = "Intel/iGPU Bus ID used by NVIDIA PRIME.";
+        };
+        nvidiaBusId = lib.mkOption {
+          type = lib.types.str;
+          default = "PCI:1:0:0";
+          description = "NVIDIA dGPU Bus ID used by NVIDIA PRIME.";
+        };
+      };
+    };
   };
 
   config = {
