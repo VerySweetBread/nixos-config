@@ -24,6 +24,7 @@
 
   hardware.bluetooth.enable = true;
   host.laptop = true;
+  host.nvidia.prime.enable = true;
 
   environment.systemPackages = [ pkgs.dbgate ];
 }
