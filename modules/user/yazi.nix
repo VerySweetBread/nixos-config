@@ -25,7 +25,7 @@
 			};
 			plugin = {
 				preloaders = [
-					{ name = "*.crdownload"; run = "noop"; }
+					{ url = "*.crdownload"; run = "noop"; }
 				];
 
 				prepend_previewers = [
@@ -37,28 +37,51 @@
 				];
 
 				prepend_fetchers = [
-					{ id = "git"; mime = "*"; run = "git"; }
+					{ group = "git"; url = "*"; run = "git"; }
 				];
 			};
 		};
 
-		plugins = with pkgs.yaziPlugins; {
+		plugins = let
+			yaziPlugin = name: pkgs.stdenvNoCC.mkDerivation {
+		    pname = "${name}.yazi";
+		    version = "unstable";
+		    src = inputs.yazi-plugins;
+
+		    installPhase = ''
+		      runHook preInstall
+		      mkdir -p $out
+		      cp -r ${name}.yazi/* $out/
+		      rm -f $out/LICENSE
+		      cp LICENSE $out/LICENSE
+		      runHook postInstall
+		    '';
+		  };
+		in with pkgs.yaziPlugins; {
 			inherit
 				chmod
 				ouch
-				full-border
-				starship
 				mount
-				git
 				toggle-pane
-				;
+			;
+			
+			full-border = {
+				package = yaziPlugin "full-border";
+				setup = true;
+			};
+
+			starship = {
+				package = starship;
+				setup = true;
+			};
+
+			git = {
+				package = git;
+				setup = true;
+			};
 		};
 
 		initLua = ''
-			require("git"):setup()
-			require("full-border"):setup()
-			require("starship"):setup()
-
 			Status:children_add(function()
 				local h = cx.active.current.hovered
 				if not h or ya.target_family() ~= "unix" then
@@ -83,7 +106,7 @@
 				}
 				{
 					on = "Y";
-					run = ''shell -- for path in "$@"; do echo "file://$path"; done | wl-copy -t text/uri-list'';
+					run = ''shell -- for path in %s; do echo "file://$path"; done | wl-copy -t text/uri-list'';
 					desc = "Copy files into system clipboard";
 				}
 				{

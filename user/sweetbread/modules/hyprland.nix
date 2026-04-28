@@ -49,7 +49,7 @@
         filename = choice(listdir(folder))
 
       finally:
-        system(f"${lib.getExe pkgs.swww} img {folder}/{filename} --transition-type center")
+        system(f"awww img {folder}/{filename} --transition-type center")
     '';
   in {
     settings = {

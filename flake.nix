@@ -20,13 +20,18 @@
 
   inputs = {
     aagl.url = "github:ezKEa/aagl-gtk-on-nix";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/5a5f98738120adbb3d2753087b17839a45701cbe";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-pinned.url = "github:nixos/nixpkgs/2d293cbfa5a793b4c50d17c05ef9e385b90edf6c";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
     ags.url = "github:Aylur/ags/3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6";
+
     yazi.url = "github:sxyazi/yazi";
+    yazi-plugins = {
+      url = "github:yazi-rs/plugins";
+      flake = false;
+    };
 
     hyprland.url = "github:hyprwm/Hyprland/v0.54.2-b";
     hyprland-plugins = {
@@ -40,7 +45,7 @@
     };
 
     russia-blocked-geoip = {
-      url = "github:runetfreedom/russia-blocked-geoip/release";
+      url = "github:runetfreedom/russia-blocked-geoip/bbe32b96712342ae479ac598fb1a939b59d586c2";
       flake = false;
     };
   };

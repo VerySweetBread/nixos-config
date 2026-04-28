@@ -83,6 +83,8 @@ in {
 # {
   stylix = {
     enable = true;
+    overlays.enable = false;
+
     targets = {
       hyprpaper.enable = lib.mkForce false;
       waybar.enable = false;

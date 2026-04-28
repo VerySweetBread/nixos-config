@@ -15,16 +15,18 @@ in {
     wl-clipboard
     wl-clip-persist
     xclip
+    awww
   ];
 
   wayland.windowManager.hyprland = let
     colors = config.lib.stylix.colors;
   in {
     enable = true;
+    configType = "hyprlang";
     xwayland.enable = true;
 
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-    plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    plugins = with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}; [
       # hyprbars  # Version mismatch
     ];
 
@@ -113,7 +115,7 @@ in {
 
       exec-once = lib.mkBefore [
         "systemctl --user start plasma-polkit-agent"
-        "${lib.getExe' pkgs.swww "swww-daemon"}"
+        "awww-daemon"
         "wl-clip-persist --clipboard both"
         "clipse -listen"
         "${lib.getExe' pkgs.udiskie "udiskie"}"
