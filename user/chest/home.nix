@@ -8,6 +8,7 @@
 
   home.packages = with pkgs; [
     nautilus
+    vscode
     python3
     pkgs-pinned.jetbrains.pycharm-oss
     aseprite
