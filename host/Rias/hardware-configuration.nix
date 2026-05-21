@@ -24,7 +24,7 @@
 
   fileSystems."/mnt/D" = {
     device = "/dev/disk/by-label/Data";
-    fsType = "ntfs";
+    fsType = "ntfs3";
     options = ["umask=0022" "gid=100" "uid=1000" "nofail" ];
   };
 
