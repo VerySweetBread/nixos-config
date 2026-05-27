@@ -1,24 +1,8 @@
-{ inputs, pkgs, config, ... }: {
-  systemd.services.v2raya = {
+{
+  programs.clash-verge = {
     enable = true;
-    description = "v2rayA gui client";
-    after = [ "network.target" ];
-    serviceConfig = {
-      Restart = "always";
-      ExecStart = "${pkgs.v2raya}/bin/v2rayA";
-    };
-    path = with pkgs; [ iptables bash iproute2 ];
-    wantedBy = [ "multi-user.target" ];
-    environment = {
-      V2RAYA_LOG_FILE = "/var/log/v2raya/v2raya.log";
-      V2RAYA_V2RAY_BIN = pkgs.lib.getExe pkgs.xray;
-      V2RAY_LOCATION_ASSET = "/etc/v2raya";
-      XRAY_LOCATION_ASSET = "/etc/v2raya";
-    };
-  };
-
-  environment.etc = {
-    "v2raya/ru_geoip.dat".source = "${inputs.russia-blocked-geoip}/geoip.dat";
-    "v2raya/bolt.db".source = config.sops.secrets.vpn_bolt.path;
+    serviceMode = true;
+    tunMode = true;
+    autoStart = true;
   };
 }
