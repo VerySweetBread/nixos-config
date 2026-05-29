@@ -20,9 +20,9 @@
 
   inputs = {
     aagl.url = "github:ezKEa/aagl-gtk-on-nix";
-    nixpkgs.url = "github:nixos/nixpkgs/5a5f98738120adbb3d2753087b17839a45701cbe";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
-    nixpkgs-pinned.url = "github:nixos/nixpkgs/2d293cbfa5a793b4c50d17c05ef9e385b90edf6c";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixpkgs-pinned.url = "github:nixos/nixpkgs/ec942ba042dad5ef097e2ef3a3effc034241f011";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
     ags.url = "github:Aylur/ags/3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6";

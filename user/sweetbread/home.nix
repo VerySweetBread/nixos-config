@@ -5,7 +5,10 @@
   programs.hyprlock.enable = true;
   home.packages = with pkgs; [
     android-studio
-    vivaldi
+    (vivaldi.override {
+      proprietaryCodecs = true;
+      enableWidevine = true;
+    })
     weechat
   ];
 
