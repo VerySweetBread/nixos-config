@@ -41,6 +41,11 @@ in {
       env = [
         "XDG_SESSION_TYPE,wayland"
         "QT_QPA_PLATFORM,wayland"
+        "QT_QPA_PLATFORMTHEME,xdgdesktopportal"
+        "GTK_USE_PORTAL,1"
+        "TDESKTOP_USE_GTK_FILE_DIALOG,1"
+        "NIXOS_OZONE_WL,1"
+        "ELECTRON_OZONE_PLATFORM_HINT,auto"
 
         "XDG_CURRENT_DESKTOP,Hyprland"
         "XDG_SESSION_DESKTOP,Hyprland"
@@ -115,6 +120,8 @@ in {
 
       exec-once = lib.mkBefore [
         "systemctl --user start plasma-polkit-agent"
+        "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all"
+        "systemctl --user import-environment XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE WAYLAND_DISPLAY DISPLAY GTK_USE_PORTAL QT_QPA_PLATFORMTHEME TDESKTOP_USE_GTK_FILE_DIALOG NIXOS_OZONE_WL ELECTRON_OZONE_PLATFORM_HINT"
         "awww-daemon"
         "wl-clip-persist --clipboard both"
         "clipse -listen"
@@ -228,11 +235,21 @@ in {
 
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-termfilechooser
     ];
 
-    config.common = {
-      default = [ "hyprland" "gtk" ];
-      "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+    config = {
+      common = {
+        default = [ "hyprland" "gtk" ];
+        "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" "gtk" ];
+        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
+      };
+
+      hyprland = {
+        default = [ "hyprland" "gtk" ];
+        "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" "gtk" ];
+        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
+      };
     };
   };
 }

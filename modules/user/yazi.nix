@@ -27,6 +27,61 @@
     exec ${lib.getExe pkgs.ghostty} --title="Yazi" -e ${lib.getExe yaziPkg} "$target"
   '';
 
+  yaziFileChooser = pkgs.writeShellScriptBin "yazi-file-chooser" ''
+    set -efu
+
+    directory="''${2:-0}"
+    save="''${3:-0}"
+    path="''${4:-}"
+    out="''${5:?missing termfilechooser output path}"
+
+    state_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/xdg-desktop-portal-termfilechooser"
+    last_selected_path="$state_dir/last-selected"
+    ${lib.getExe' pkgs.coreutils "mkdir"} -p "$state_dir"
+
+    if [ -s "$last_selected_path" ]; then
+      IFS= read -r last_selected < "$last_selected_path" || true
+      if [ -d "$last_selected" ]; then
+        if [ "$save" = "1" ] && [ -n "$path" ]; then
+          path="$last_selected/''${path##*/}"
+        else
+          path="$last_selected"
+        fi
+      fi
+    fi
+
+    if [ -z "$path" ]; then
+      path="$HOME"
+    fi
+
+    created_placeholder=0
+    if [ "$save" = "1" ] && [ ! -e "$path" ]; then
+      placeholder_dir="''${path%/*}"
+      if [ "$placeholder_dir" != "$path" ]; then
+        ${lib.getExe' pkgs.coreutils "mkdir"} -p "$placeholder_dir"
+      fi
+
+      {
+        printf '%s\n' 'This file was created by xdg-desktop-portal-termfilechooser.'
+        printf '%s\n' 'Move/rename it in Yazi, then open/select it to choose the save path.'
+      } > "$path"
+      created_placeholder=1
+    fi
+
+    ${lib.getExe pkgs.ghostty} --title="Yazi File Picker" -e ${lib.getExe yaziPkg} --chooser-file="$out" --cwd-file="$last_selected_path" "$path"
+
+    if [ "$directory" = "1" ] && [ ! -s "$out" ] && [ -s "$last_selected_path" ]; then
+      IFS= read -r cwd < "$last_selected_path" || true
+      if [ -n "''${cwd:-}" ] && [ -d "$cwd" ]; then
+        printf '%s\n' "$cwd" > "$out"
+      fi
+    fi
+
+    if [ "$created_placeholder" = "1" ] && [ ! -s "$out" ]; then
+      ${lib.getExe' pkgs.coreutils "rm"} -f "$path"
+    fi
+  '';
+
   fileManager1 = pkgs.writeShellScriptBin "yazi-filemanager1" ''
     exec ${pkgs.python3.withPackages (ps: [ ps.dbus-next ])}/bin/python ${pkgs.writeText "yazi-filemanager1.py" ''
       import asyncio
@@ -97,6 +152,18 @@ in {
     yaziOpen
   ];
 
+  home.sessionVariables = {
+    GTK_USE_PORTAL = "1";
+  };
+
+  xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
+    [filechooser]
+    cmd=${lib.getExe yaziFileChooser}
+    default_dir=$HOME
+    open_mode=suggested
+    save_mode=last
+  '';
+
   xdg.desktopEntries.yazi = {
     name = "Yazi";
     genericName = "File Manager";
@@ -123,6 +190,8 @@ in {
 
   wayland.windowManager.hyprland.settings.windowrule = [
     "match:class dragon-drop, move cursor_x-window_w/2 cursor_y-window_h/2"
+    "match:title Yazi File Picker, float 1"
+    "match:title Yazi File Picker, size 1200 800"
   ];
 
   programs.yazi = {
