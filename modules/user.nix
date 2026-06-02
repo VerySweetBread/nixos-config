@@ -9,6 +9,7 @@
     ./user/mako.nix
     ./user/neofetch.nix
     ./user/qt.nix
+    ./user/quickshell.nix
     ./user/sops.nix
     ./user/ssh.nix
     ./user/yazi.nix
