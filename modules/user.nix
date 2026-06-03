@@ -12,6 +12,7 @@
     ./user/quickshell.nix
     ./user/sops.nix
     ./user/ssh.nix
+    ./user/wob.nix
     ./user/yazi.nix
     ./user/zsh.nix
 
