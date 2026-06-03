@@ -9,5 +9,6 @@
     qbittorrent
     thunderbird
     libreoffice
+    pear-desktop
   ];
 }
