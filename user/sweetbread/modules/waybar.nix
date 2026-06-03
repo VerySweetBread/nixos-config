@@ -1,10 +1,12 @@
 { osConfig, config, pkgs, lib, ... }: {
   home.packages = with pkgs; [
-    font-awesome
-    nerd-fonts.symbols-only
     playerctl
     cava
     pulsemixer
+
+    monocraft
+    font-awesome
+    nerd-fonts.symbols-only
   ];
 
   programs.waybar = {
@@ -49,7 +51,7 @@
       };
 
       pulseaudio = {
-        format = "{icon} {volume}%";
+        format = "{icon}  {volume}%";
         format-icons = {
           headphone =  "";
           hands-free =  "";
@@ -159,6 +161,7 @@
           background: transparent;
           color: ${colors.base05};
           border-radius: ${radius};
+          font-family: "Symbols Nerd Font Mono", "Monocraft", "Font Awesome 7 Free";
           font-weight: bold;
           font-size: .85em;
 
