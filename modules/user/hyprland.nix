@@ -136,7 +136,6 @@ in {
         "$mainMod, M, exit,"
         "$mainMod, E, exec, ghostty -e sh -c yazi"
         "$mainMod, F, togglefloating,"
-        "$mainMod, D, exec, fuzzel"
         "$mainMod, P, pseudo, # dwindle"
         "$mainMod, J, layoutmsg, togglesplit"
         "$mainMod, K, layoutmsg, swapsplit"

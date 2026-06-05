@@ -1,7 +1,6 @@
 { config, lib, ... }: {
   imports = [
     ./user/btop.nix
-    ./user/fuzzel.nix
     ./user/ghostty.nix
     ./user/helix.nix
     ./user/hyprland.nix
@@ -12,6 +11,7 @@
     ./user/quickshell.nix
     ./user/sops.nix
     ./user/ssh.nix
+    ./user/walker.nix
     ./user/wob.nix
     ./user/yazi.nix
     ./user/zsh.nix
