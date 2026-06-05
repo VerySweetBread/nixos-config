@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, pkgs-stable, ... }: {
   home.packages = with pkgs; [
     ayugram-desktop
     vesktop
@@ -6,7 +6,7 @@
     mpv
     imhex
     obsidian
-    qbittorrent
+    pkgs-stable.qbittorrent
     thunderbird
     libreoffice
     pear-desktop
