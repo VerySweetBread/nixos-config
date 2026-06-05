@@ -163,7 +163,6 @@ in {
 
   gtk = {
     gtk4 = {
-      theme = null;
       extraConfig = {
         gtk-application-prefer-dark-theme = true;
       };
