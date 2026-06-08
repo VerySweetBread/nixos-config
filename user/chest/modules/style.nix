@@ -89,6 +89,7 @@ in {
     };
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/eris.yaml";
+    accent = "base0E";
     polarity = "dark";
 
     image = pkgs.fetchurl {

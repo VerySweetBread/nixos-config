@@ -9,6 +9,7 @@
     ./user/neofetch.nix
     ./user/qt.nix
     ./user/quickshell.nix
+    ./user/stylix.nix
     ./user/sops.nix
     ./user/ssh.nix
     ./user/walker.nix

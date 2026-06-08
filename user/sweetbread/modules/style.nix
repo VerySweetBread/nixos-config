@@ -105,6 +105,7 @@ in {
     };
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    accent = "base0B";
     polarity = "dark";
 
     image = pkgs.fetchurl {

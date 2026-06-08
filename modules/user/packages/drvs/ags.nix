@@ -1,15 +1,11 @@
-{ stdenv, lib, config, colors, username, ... }:
+{ stdenv, colors, accent ? colors.base0B, ... }:
   stdenv.mkDerivation {
     name = "AGS theme";
 
     src = ./ags;
     dontUnpack = true;
 
-    patchPhase = let
-      accent = if username == "chest"
-        then colors.base0E
-        else colors.base0B;
-    in ''
+    patchPhase = ''
       echo \$bg:       \#${colors.base00}\;  > colors.scss
       echo \$surface0: \#${colors.base02}\; >> colors.scss
       echo \$fg:       \#${colors.base05}\; >> colors.scss

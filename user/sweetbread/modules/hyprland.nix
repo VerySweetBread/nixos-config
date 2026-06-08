@@ -1,6 +1,7 @@
 { pkgs, lib, config, osConfig, inputs, ... }: {
   wayland.windowManager.hyprland = let
     colors = config.lib.stylix.colors;
+    accent = colors.${config.stylix.accent};
 
     wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
       libraries = [ pkgs.python3Packages.requests ];
@@ -57,7 +58,7 @@
         gaps_in = 2;
         gaps_out = 10;
         border_size = 3;
-        "col.active_border" = lib.mkForce "rgba(${colors.base0C}aa) rgba(${colors.base0B}aa) 45deg";
+        "col.active_border" = lib.mkForce "rgba(${colors.base0C}aa) rgba(${accent}aa) 45deg";
 
         layout = "dwindle";
       };

@@ -1,13 +1,14 @@
 { pkgs, lib, config, inputs, ... }: {
   wayland.windowManager.hyprland = let
     colors = config.lib.stylix.colors;
+    accent = colors.${config.stylix.accent};
   in {
     settings = {
       general = {
         gaps_in = 5;
         gaps_out = 5;
         border_size = 2;
-        "col.active_border" = "rgba(${colors.base0E}ee) rgba(${colors.base0C}ee) 45deg";
+        "col.active_border" = "rgba(${accent}ee) rgba(${colors.base0C}ee) 45deg";
         "col.inactive_border" = "rgba(${colors.base05}aa)";
 
         layout = "dwindle";

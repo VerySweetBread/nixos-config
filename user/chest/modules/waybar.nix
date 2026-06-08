@@ -175,7 +175,7 @@
 
     style = let
       colors = config.lib.stylix.colors.withHashtag;
-      accent = colors.base0E;
+      accent = colors.${config.stylix.accent};
       scssFile = pkgs.writeText "waybar.scss" /*scss*/ ''
         window#waybar {
           background: transparent;

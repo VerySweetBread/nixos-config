@@ -155,6 +155,7 @@
 
     style = let
       colors = config.lib.stylix.colors.withHashtag;
+      accent = colors.${config.stylix.accent};
       radius = "6px";
       scssFile = pkgs.writeText "waybar.scss" /*scss*/ ''
         window#waybar {
@@ -199,13 +200,13 @@
           &:hover { background: ${colors.base01}; }
 
           &.active {
-            background: ${colors.base0B};
+            background: ${accent};
             color: ${colors.base00};
 
             &:hover {
-              border-color: ${colors.base0B};
+              border-color: ${accent};
               background: ${colors.base01};
-              color: ${colors.base0B};
+              color: ${accent};
             }
           }
         }
@@ -259,7 +260,7 @@
 
         #battery {
           &.plugged { color: ${colors.base0D}; }
-          &.charging { color: ${colors.base0B}; }
+          &.charging { color: ${accent}; }
           &:not(.charging) {
             &.warning {
               color: ${colors.base00};
@@ -277,7 +278,7 @@
           }
           &.full {
             color: ${colors.base00};
-            background: ${colors.base0B};
+            background: ${accent};
           }
         }
 
