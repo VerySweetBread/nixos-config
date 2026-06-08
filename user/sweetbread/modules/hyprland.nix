@@ -5,14 +5,78 @@
 
     wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
       libraries = [ pkgs.python3Packages.requests ];
-      flakeIgnore = [ "E501" "E111" "E701" "E241" "E731" ];
+      flakeIgnore = [ "E111" "E121" "E241" "E501" "E701" "E731" ];
     } /*py*/ ''
       import requests as requests
       from random import choice
-      from os import system, mkdir, listdir
+      from os import listdir, makedirs, remove, replace, system
       from os.path import exists
+      from subprocess import run
 
-      notify = lambda s: system(f"notify-desktop Wallpaper '{s}'")
+      notify_id = None
+
+
+      def notify(text, progress=None, expire_time=5000):
+        global notify_id
+
+        command = [
+          "${pkgs.libnotify}/bin/notify-send",
+          "--app-name", "wallpaper_changer",
+          "--print-id",
+          "--expire-time", str(expire_time),
+        ]
+
+        if notify_id:
+          command.extend(["--replace-id", str(notify_id)])
+
+        if progress is not None:
+          command.extend(["--hint", f"int:value:{progress}"])
+
+        command.extend(["Wallpaper", text])
+
+        result = run(command, capture_output=True, text=True, check=False)
+        output = result.stdout.strip()
+        if output.isdigit():
+          notify_id = output
+
+
+      def download_with_progress(link, destination):
+        temporary = f"{destination}.part"
+        downloaded = 0
+        last_progress = -1
+
+        response = None
+        try:
+          response = requests.get(link, stream=True)
+          response.raise_for_status()
+          total = int(response.headers.get("content-length", 0))
+
+          with open(temporary, "wb") as file:
+            for chunk in response.iter_content(chunk_size=256 * 1024):
+              if not chunk:
+                continue
+
+              file.write(chunk)
+              downloaded += len(chunk)
+
+              if total <= 0:
+                continue
+
+              progress = min(100, downloaded * 100 // total)
+              if progress == 100 or progress >= last_progress + 2:
+                notify(f"Downloading... {progress}%", progress, 0)
+                last_progress = progress
+
+          replace(temporary, destination)
+        except Exception:
+          if exists(temporary):
+            remove(temporary)
+          raise
+        finally:
+          if response is not None:
+            response.close()
+
+
       folder = "${config.home.homeDirectory}/Wallpapers"
       url = "https://wallhaven.cc/api/v1/collections/sweetbread/${
         if osConfig.networking.hostName == "Rias" then "1764377"
@@ -21,10 +85,13 @@
       with open("${config.sops.secrets."tokens/apis/wallhaven".path}") as f:
         token = f.read()
 
-      notify("Updating wallpaper!")
+      filename = None
+      notify("Updating wallpaper...", 0)
 
       try:
-        json = requests.get(url, params={'apikey': token}).json()
+        response = requests.get(url, params={'apikey': token})
+        response.raise_for_status()
+        json = response.json()
 
         wallpaper = choice(json['data'])
         link = wallpaper['path']
@@ -35,22 +102,27 @@
         else:                      ext = "png"
 
         filename = f"{id}.{ext}"
+        destination = f"{folder}/{filename}"
 
-        if not exists(f"{folder}/{filename}"):
-          if not exists(folder):
-            mkdir(f"{folder}")
+        if not exists(destination):
+          makedirs(folder, exist_ok=True)
+          notify("Downloading... 0%", 0, 0)
+          download_with_progress(link, destination)
+          notify("Downloaded", 100)
+        else:
+          notify("Using cached wallpaper", 100)
 
-          notify("Downloading...")
-          with open(f"{folder}/{filename}", 'wb') as f:
-            r = requests.get(link)
-            f.write(r.content)
-
-      except requests.exceptions.ConnectionError:
+      except requests.exceptions.RequestException:
         notify("Offline mode")
-        filename = choice(listdir(folder))
+        try:
+          filename = choice(listdir(folder))
+        except (FileNotFoundError, IndexError):
+          notify("Offline mode and wallpaper cache is empty")
 
       finally:
-        system(f"awww img {folder}/{filename} --transition-type center")
+        if filename is not None:
+          notify("Applying wallpaper", 100)
+          system(f"awww img {folder}/{filename} --transition-type center")
     '';
   in {
     settings = {
