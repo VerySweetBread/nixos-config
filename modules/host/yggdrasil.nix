@@ -4,7 +4,8 @@
     persistentKeys = true;
     settings = {
       Peers = [
-        "tls://ip4.01.ekb.ru.dioni.su:9003"
+        "tcp://box.paulll.cc:13337"
+        "tcp://lair.moe:5001"
       ];
     };
   };
