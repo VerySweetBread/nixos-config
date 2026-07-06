@@ -1,6 +1,76 @@
-{
+{ inputs, pkgs, ... }: let
+  helixSteel =
+    inputs.helix-steel.packages.${pkgs.system}.default.overrideAttrs (old: {
+      cargoBuildFlags = (old.cargoBuildFlags or []) ++ [
+        "--features"
+        "steel,git"
+      ];
+    });
+
+  comment-headers = pkgs.fetchurl {
+    url = "https://github.com/codingvivi/comment-dividers.hx/raw/refs/heads/main/comment_headers.scm";
+    name = "comment_headers.scm";
+    hash = "sha256-ohgn6DFJl0rdRJuri6Frs/uUlUsPxMvPHDuw4FS3qEE=";
+  };
+
+  patched-comment-headers = pkgs.runCommand "comment_headers.scm" { } ''
+    install -m 0644 ${comment-headers} "$out"
+
+    ${pkgs.python3}/bin/python3 - <<'PY'
+    from pathlib import Path
+    import os
+    import sys
+
+    p = Path(os.environ["out"])
+    s = p.read_text()
+
+    start_marker = "(define (get-block-delims)"
+    end_marker = "(define (delete_till_first_nonwhitespace!)"
+
+    try:
+        start = s.index(start_marker)
+        end = s.index(end_marker, start)
+    except ValueError as e:
+        sys.exit(f"failed to find function markers: {e}")
+
+    new_get_block_delims = """(define (get-block-delims)
+      (helix.static.open_above)
+      (helix.static.insert_string "test_string")
+      (helix.static.normal_mode)
+      (helix.static.extend_to_line_bounds)
+      (helix.static.trim_selections)
+      (helix.static.toggle_comments)
+      (let* ([commented-test-string (helix.static.current-highlighted-text!)]
+             [strings-without-whitespace (split-whitespace commented-test-string)])
+        (delete-line-noyank!)
+        (cond
+          [(and (> (length strings-without-whitespace) 1)
+                (equal? (last strings-without-whitespace) "test_string"))
+           (list (first strings-without-whitespace) "")]
+          [(> (length strings-without-whitespace) 2)
+           (list (first strings-without-whitespace) (last strings-without-whitespace))]
+          [else
+           (list "" "")])))
+
+    """
+
+    s = s[:start] + new_get_block_delims + s[end:]
+
+    old = "(make-line line-length fill-pattern #f padding-pattern)"
+    new = "(make-line line-length \"\" fill-pattern padding-pattern)"
+
+    if old not in s:
+        sys.exit("failed to find insert-divider make-line call")
+
+    s = s.replace(old, new)
+
+    p.write_text(s)
+    PY
+  '';
+in {
   programs.helix = {
     enable = true;
+    package = helixSteel;
     defaultEditor = true;
 
     settings = {
@@ -24,6 +94,39 @@
           select = "underline";
         };
       };
+
+      keys.normal = {
+        space.C-c = {
+          h = ":comment-h1";
+          j = ":comment-h2";
+          k = ":comment-h3";
+          d = ":comment-divider";
+        };
+      };
     };
+  };
+
+  xdg.configFile = {
+    "helix/cogs/comment_headers.scm".source = patched-comment-headers;
+    "helix/helix.scm".text = ''
+      (require (prefix-in div. "cogs/comment_headers.scm"))
+
+      (provide comment-h1 comment-h2 comment-h3 comment-divider)
+
+      (define (comment-h1)
+        (div.insert-h1!))
+
+      (define (comment-h2)
+        (div.insert-h2!))
+
+      (define (comment-h3)
+        (div.insert-h3!))
+
+      (define (comment-divider)
+        (div.insert-divider! 80 "~"))
+    '';
+    "helix/init.scm".text = ''
+      ;; Steel init file
+    '';
   };
 }
