@@ -3,6 +3,7 @@
     ./secrets/secrets.nix
     ./modules/grub.nix
     ./modules/syncthing.nix
+    ./modules/rgb.nix
     ../modules/gpu/nvidia.nix
 
     (import ../modules/common.nix {
