@@ -26,6 +26,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
     ags.url = "github:Aylur/ags/3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6";
+    helix-steel.url = "github:mattwparas/helix/steel-event-system";
 
     yazi.url = "github:sxyazi/yazi";
     yazi-plugins = {

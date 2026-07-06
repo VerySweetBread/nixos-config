@@ -9,7 +9,7 @@
   home.packages = with pkgs; [
     nautilus
     python3
-    pkgs-pinned.jetbrains.pycharm-community
+    pkgs-pinned.jetbrains.pycharm-oss
     aseprite
     krita
     google-chrome

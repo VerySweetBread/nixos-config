@@ -1,6 +1,7 @@
-{ lib, ... }: {
+{ pkgs-pinned, lib, ... }: {
   programs.clash-verge = {
     enable = true;
+    package = pkgs-pinned.clash-verge-rev;
     serviceMode = true;
     tunMode = true;
     autoStart = true;
