@@ -16,6 +16,7 @@ in {
     wl-clip-persist
     xclip
     awww
+    wifitui
   ];
 
   wayland.windowManager.hyprland = let
@@ -108,7 +109,7 @@ in {
         "match:class mpv,           float 1"
 
         "match:title Список друзей, float 1"
-        "match:title nmtui,         float 1"
+        "match:title wifitui,       float 1"
         "match:title pulsemixer,    float 1"
 
         "match:title clipse,        float 1"

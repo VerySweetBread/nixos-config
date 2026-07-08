@@ -163,7 +163,7 @@
         format-disconnected = "";
         tooltip-format = "{ipaddr}";
         max-length = 50;
-        on-click = "ghostty --title=nmtui -e nmtui";
+        on-click = "ghostty --title=wifitui -e wifitui";
       };
 
       "custom/weather" = {
