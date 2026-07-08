@@ -10,7 +10,7 @@
       "https://yazi.cachix.org"
     ];
     extra-trusted-public-keys = [
-      "main:kpwMe+9BsGJ/IUb7i3iadaV38y5/Yuqoct0mf7wI9ds="
+      "main:tR2gNhCBJHKAlVgohPNHBhGnWL55tB8SxXmMWJe5lo8="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
@@ -23,6 +23,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-pinned.url = "github:nixos/nixpkgs/ec942ba042dad5ef097e2ef3a3effc034241f011";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
     ags.url = "github:Aylur/ags/3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6";
@@ -63,6 +67,7 @@
       Senko = mkHost "Senko";
       Eclipse = mkHost "Eclipse";
       Impreza = mkHost "Impreza";
+      Inaho = mkHost "Inaho";
     };
   };
 }

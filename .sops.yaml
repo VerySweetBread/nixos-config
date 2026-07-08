@@ -5,7 +5,7 @@ creation_rules:
     key_groups:
       - age:
           - *primary
-  - path_regex: host/(Rias|Senko|Eclipse)/secrets/.+$
+  - path_regex: host/(Rias|Senko|Inaho|Eclipse)/secrets/.+$
     key_groups:
       - age:
           - *primary

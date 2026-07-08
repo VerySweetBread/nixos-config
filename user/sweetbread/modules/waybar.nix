@@ -3,13 +3,16 @@
     playerctl
     cava
     pulsemixer
+    libnotify
 
     monocraft
     font-awesome
     nerd-fonts.symbols-only
   ];
 
-  programs.waybar = {
+  programs.waybar = let
+    multibat = osConfig.networking.hostName == "Inaho";
+  in {
     enable = true;
     systemd.enable = true;
 
@@ -31,7 +34,7 @@
         "tray"
         "group/system"
         "pulseaudio"
-        "battery"
+        ( if multibat then "group/bat" else "battery" )
         "clock"
       ];
 
@@ -71,6 +74,19 @@
         dynamic-order = [ "title" "artist" "album" ];
       };
 
+      "group/bat" = lib.mkIf multibat {
+        orientation = "inherit";
+        drawer = {
+          transition-duration = 500;
+          transition-left-to-right = false;
+        };
+        modules = [
+          "battery"
+          "battery#int"
+          "battery#ext"
+        ];
+      };
+
       battery = {
         interval = 5;
         states = {
@@ -81,6 +97,33 @@
         format-icons = {
           default = ["󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹"];
           charging = ["󰢟" "󰢜" "󰂆" "󰂇" "󰂈" "󰢝" "󰂉" "󰢞" "󰂊" "󰂋" "󰂅"];
+        };
+        events = {
+          on-discharging-warning = "notify-send -u normal 'Low Battery'";
+          on-discharging-critical = "notify-send -u critical 'Very Low Battery'";
+        };
+      };
+
+      "battery#int" = lib.mkIf multibat {
+        bat = "BAT0";
+        interval = 5;
+        states = {
+          warning = 30;
+          critical = 15;
+        };
+        format = "I: {capacity}%";
+      };
+
+      "battery#ext" = lib.mkIf multibat {
+        bat = "BAT1";
+        interval = 5;
+        states = {
+          warning = 30;
+          critical = 15;
+        };
+        format = "E: {capacity}%";
+        events = {
+          on-discharging-critical = "notify-send -u normal 'External battery is critical";
         };
       };
 
@@ -249,8 +292,9 @@
           }
         }
 
-        #system .drawer-child > * {
-          margin-right: 4px
+        #system,
+        #bat {
+          & .drawer-child > * { margin-right: 4px }
         }
 
         #keyboard-state label.locked {
@@ -259,7 +303,6 @@
         }
 
         #battery {
-          &.plugged { color: ${colors.base0D}; }
           &.charging { color: ${accent}; }
           &:not(.charging) {
             &.warning {
@@ -279,6 +322,10 @@
           &.full {
             color: ${colors.base00};
             background: ${accent};
+          }
+          &.plugged {
+            color: ${colors.base00};
+            background: ${colors.base0D};
           }
         }
 
