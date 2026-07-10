@@ -31,4 +31,12 @@
 
   hardware.usb-modeswitch.enable = true;
   networking.modemmanager.enable = true;
+
+  programs.steam = {
+    enable = true;
+    gamescopeSession.enable = true;
+  };
+  environment.systemPackages = with pkgs; [
+    pkgs-stable.bottles
+  ];
 }
