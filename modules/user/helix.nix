@@ -68,10 +68,28 @@
     PY
   '';
 in {
+  home.packages = with pkgs; [
+    asm-lsp
+    fasm
+  ];
+
   programs.helix = {
     enable = true;
     package = helixSteel;
     defaultEditor = true;
+
+    languages = {
+      language-server.asm-lsp.command = "asm-lsp";
+
+      language = [
+        {
+          name = "nasm";
+          file-types = [ "asm" "inc" ];
+          comment-token = ";";
+          language-servers = [ "asm-lsp" ];
+        }
+      ];
+    };
 
     settings = {
       # theme = "catppuccin-mocha";
@@ -96,22 +114,48 @@ in {
       };
 
       keys.normal = {
-        space.C-c = {
-          h = ":comment-h1";
-          j = ":comment-h2";
-          k = ":comment-h3";
-          d = ":comment-divider";
+        space = {
+          C-a = {
+            b = ":fasm-build";
+            r = ":fasm-run";
+            c = ":fasm-clean";
+          };
+
+          C-c = {
+            h = ":comment-h1";
+            j = ":comment-h2";
+            k = ":comment-h3";
+            d = ":comment-divider";
+          };
         };
       };
     };
   };
 
   xdg.configFile = {
+    "asm-lsp/.asm-lsp.toml".text = ''
+      [default_config]
+      assembler = "fasm"
+      instruction_set = "x86/x86-64"
+
+      [opts]
+      compiler = "fasm"
+      diagnostics = true
+      default_diagnostics = true
+    '';
+
     "helix/cogs/comment_headers.scm".source = patched-comment-headers;
     "helix/helix.scm".text = ''
       (require (prefix-in div. "cogs/comment_headers.scm"))
+      (require (prefix-in helix. "helix/commands.scm"))
 
-      (provide comment-h1 comment-h2 comment-h3 comment-divider)
+      (provide comment-h1
+               comment-h2
+               comment-h3
+               comment-divider
+               fasm-build
+               fasm-run
+               fasm-clean)
 
       (define (comment-h1)
         (div.insert-h1!))
@@ -124,6 +168,17 @@ in {
 
       (define (comment-divider)
         (div.insert-divider! 80 "~"))
+
+      (define (fasm-build)
+        (helix.write)
+        (helix.run-shell-command "just" "build"))
+
+      (define (fasm-run)
+        (helix.write)
+        (helix.run-shell-command "just" "run"))
+
+      (define (fasm-clean)
+        (helix.run-shell-command "just" "clean"))
     '';
     "helix/init.scm".text = ''
       ;; Steel init file
