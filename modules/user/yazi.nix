@@ -261,7 +261,7 @@ in {
       };
 
       git = {
-        package = git;
+        package = yaziPlugin "git";
         setup = true;
       };
     };
