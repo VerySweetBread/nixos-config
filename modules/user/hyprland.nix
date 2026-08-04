@@ -186,8 +186,8 @@ in {
         "$mainMod SHIFT, F, fullscreen"
 
         # Scroll through existing workspaces with mainMod + scroll
-        "$mainMod, mouse_down, workspace, e+1"
-        "$mainMod, mouse_up, workspace, e-1"
+        "$mainMod, mouse_down, workspace, e-1"
+        "$mainMod, mouse_up,   workspace, e+1"
 
         # Keyboard backlight
         "$mainMod, F3, exec, ${lib.getExe pkgs.brightnessctl} -d *::kbd_backlight set +33%"
