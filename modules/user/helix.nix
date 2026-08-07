@@ -128,6 +128,9 @@ in {
             d = ":comment-divider";
           };
         };
+
+        S-down = ["extend_to_line_bounds" "delete_selection" "paste_after"];
+        S-up = ["extend_to_line_bounds" "delete_selection" "move_line_up" "paste_before"];
       };
     };
   };
