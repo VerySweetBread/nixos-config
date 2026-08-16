@@ -15,6 +15,7 @@
     ./host/virtmanager.nix
     ./host/vpn.nix
     ./host/yggdrasil.nix
+    ./host/mtp.nix
   ];
 
   programs = {
@@ -48,7 +49,6 @@
   };
 
   services = {
-    udisks2.enable = true;
     fstrim.enable = true;
     upower.enable = true;
   };

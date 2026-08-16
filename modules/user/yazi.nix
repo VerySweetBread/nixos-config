@@ -250,6 +250,11 @@ in {
         toggle-pane
       ;
 
+      gvfs = {
+        package = gvfs;
+        setup = true;
+      };
+
       full-border = {
         package = yaziPlugin "full-border";
         setup = true;
@@ -300,9 +305,39 @@ in {
           desc = "Chmod on selected files";
         }
         {
-          on = ["M"];
+          on = [ "M" "b" ];
           run = "plugin mount";
-          desc = "Open mount menu";
+          desc = "Open block-device mount menu";
+        }
+        {
+          on = [ "M" "m" ];
+          run = "plugin gvfs -- select-then-mount --jump";
+          desc = "Mount GVFS device and jump to it";
+        }
+        {
+          on = [ "M" "u" ];
+          run = "plugin gvfs -- select-then-unmount";
+          desc = "Unmount GVFS device";
+        }
+        {
+          on = [ "M" "U" ];
+          run = "plugin gvfs -- select-then-unmount --eject";
+          desc = "Unmount and eject GVFS device";
+        }
+        {
+          on = [ "M" "t" ];
+          run = "plugin gvfs -- automount-when-cd";
+          desc = "Enable GVFS automount when entering device";
+        }
+        {
+          on = [ "g" "m" ];
+          run = "plugin gvfs -- jump-to-device";
+          desc = "Jump to mounted GVFS device";
+        }
+        {
+          on = [ "`" "`" ];
+          run = "plugin gvfs -- jump-back-prev-cwd";
+          desc = "Jump back from GVFS device";
         }
         {
           on = [ "<C-n>" ];
