@@ -10,5 +10,6 @@
     thunderbird
     libreoffice
     pear-desktop
+    ( pkgs.callPackage ../../../drv/mumble.nix {} )
   ];
 }
