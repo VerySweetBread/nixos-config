@@ -9,7 +9,7 @@ lib.mkIf config.programs.gamemode.enable {
   environment.systemPackages = with pkgs; [
     mangohud
     protonup-ng
-    pkgs-stable.bottles
+    bottles
     pkgs-stable.heroic
     prismlauncher
   ];
