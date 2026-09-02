@@ -44,8 +44,8 @@
     fprintd.enable = true;
 
     logind.settings.Login = {
-      HandleLidSwitch = "suspend";
-      HandleLidSwitchExternalPower = "suspend";
+      HandleLidSwitch = "suspend-then-hibernate";
+      HandleLidSwitchExternalPower = "suspend-then-hibernate";
       HandlePowerKey = "poweroff";
     };
 
