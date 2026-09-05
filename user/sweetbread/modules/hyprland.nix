@@ -2,6 +2,7 @@
   wayland.windowManager.hyprland = let
     colors = config.lib.stylix.colors;
     accent = colors.${config.stylix.accent};
+    hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
 
     wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
       libraries = [ pkgs.python3Packages.requests ];
@@ -126,69 +127,83 @@
     '';
   in {
     settings = {
-      general = {
-        gaps_in = 2;
-        gaps_out = 10;
-        border_size = 3;
-        "col.active_border" = lib.mkForce "rgba(${colors.base0C}aa) rgba(${accent}aa) 45deg";
-
-        layout = "dwindle";
-      };
-
-      decoration = {
-        rounding = 10;
-
-        blur = {
-          enabled = true;
-          size = 16;
-          passes = 2;
-          new_optimizations = true;
+      config = {
+        general = {
+          gaps_in = 2;
+          gaps_out = 10;
+          border_size = 3;
+          "col.active_border" = lib.mkForce {
+            colors = [
+              "rgba(${colors.base0C}aa)"
+              "rgba(${accent}aa)"
+            ];
+            angle = 45;
+          };
+          layout = "dwindle";
         };
 
-        shadow.enabled = false;
+        decoration = {
+          rounding = 10;
+
+          blur = {
+            enabled = true;
+            size = 16;
+            passes = 2;
+            new_optimizations = true;
+          };
+
+          shadow.enabled = false;
+        };
+
+        animations.enabled = true;
+        dwindle.smart_split = true;
+        master.new_status = "master";
+
+        misc = {
+          animate_manual_resizes = true;
+          animate_mouse_windowdragging = true;
+          enable_swallow = true;
+        };
       };
 
-      animations = {
-        enabled = true;
-
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-
-        animation = [
-          "windows,     1, 7,  myBezier"
-          "windowsOut,  1, 7,  default, popin 80%"
-          "border,      1, 10, default"
-          "borderangle, 1, 8,  default"
-          "fade,        1, 7,  default"
-          "workspaces,  1, 6,  default"
+      curve = {
+        _args = [
+          "myBezier"
+          {
+            type = "bezier";
+            points = [
+              [ 0.05 0.9 ]
+              [ 0.1 1.05 ]
+            ];
+          }
         ];
       };
 
-      dwindle = {
-        smart_split = true;
-      };
-
-      master.new_status = "master";
-
-      misc = {
-        animate_manual_resizes = true;
-        animate_mouse_windowdragging = true;
-        enable_swallow = true;
-      };
-
-      exec-once = [
-        "${lib.getExe wallpaper_changer}"
+      animation = [
+        { leaf = "windows"; enabled = true; speed = 7; bezier = "myBezier"; }
+        { leaf = "windowsOut"; enabled = true; speed = 7; bezier = "default"; style = "popin 80%"; }
+        { leaf = "border"; enabled = true; speed = 10; bezier = "default"; }
+        { leaf = "borderangle"; enabled = true; speed = 8; bezier = "default"; }
+        { leaf = "fade"; enabled = true; speed = 7; bezier = "default"; }
+        { leaf = "workspaces"; enabled = true; speed = 6; bezier = "default"; }
       ];
 
-      workspace = [
-        "2, layout:scrolling"
+      on = [
+        (hyprLua.onStart [ "${lib.getExe wallpaper_changer}" ])
+      ];
+
+      workspace_rule = [
+        {
+          workspace = "2";
+          layout = "scrolling";
+        }
       ];
 
       bind = [
-        "    , Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m output"
-        "CTRL, Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m region"
-        "ALT , Print, exec, ${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m window"
-
-        "$mainMod, W, exec, ${lib.getExe wallpaper_changer}"
+        (hyprLua.bind "Print" (hyprLua.exec "${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m output"))
+        (hyprLua.bind "CTRL + Print" (hyprLua.exec "${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m region"))
+        (hyprLua.bind "ALT + Print" (hyprLua.exec "${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m window"))
+        (hyprLua.bind "SUPER + W" (hyprLua.exec "${lib.getExe wallpaper_changer}"))
       ];
     };
   };

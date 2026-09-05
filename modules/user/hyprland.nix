@@ -1,6 +1,26 @@
-{ pkgs, lib, config, osConfig, inputs, username, ... }: let
+{ pkgs, lib, config, osConfig, inputs, username, ... }:
+let
   optImport = path: lib.optional (builtins.pathExists path) path;
   hostname = osConfig.networking.hostName;
+  hyprLua = import ./hyprland/lua.nix { inherit lib; };
+  inherit (hyprLua) bind bindWithFlags exec onStart;
+
+  direction = {
+    left = "l";
+    right = "r";
+    up = "u";
+    down = "d";
+  };
+
+  workspaceBinds = lib.concatMap (workspace:
+    let
+      key = if workspace == 10 then "0" else toString workspace;
+      workspaceValue = toString workspace;
+    in [
+      (bind "SUPER + ${key}" "hl.dsp.focus({ workspace = ${workspaceValue} })")
+      (bind "SUPER + SHIFT + ${key}" "hl.dsp.window.move({ workspace = ${workspaceValue}, follow = false })")
+    ]
+  ) (lib.range 1 10);
 in {
   imports = [
     ./hyprland/zoom.nix
@@ -19,11 +39,9 @@ in {
     wifitui
   ];
 
-  wayland.windowManager.hyprland = let
-    colors = config.lib.stylix.colors;
-  in {
+  wayland.windowManager.hyprland = {
     enable = true;
-    configType = "hyprlang";
+    configType = "lua";
     xwayland.enable = true;
 
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
@@ -32,200 +50,158 @@ in {
     ];
 
     settings = {
-      "$mainMod" = "SUPER";
+      config = {
+        ecosystem = {
+          no_donation_nag = true;
+          no_update_news = true;
+        };
 
-      ecosystem = {
-        no_donation_nag = true;
-        no_update_news = true;
+        cursor.no_hardware_cursors = 1;
+
+        debug = {
+          disable_logs = false;
+          enable_stdout_logs = true;
+        };
+
+        general."col.inactive_border" = lib.mkForce "rgba(00000000)";
+
+        decoration = {
+          inactive_opacity = lib.mkDefault 0.95;
+          border_part_of_window = false;
+        };
+
+        misc.focus_on_activate = true;
+
+        input = {
+          kb_layout = "us,ru";
+          kb_options = "grp:caps_toggle";
+          numlock_by_default = true;
+          follow_mouse = 1;
+          touchpad.natural_scroll = false;
+          sensitivity = 0;
+        };
+
+        gestures = {
+          workspace_swipe_invert = true;
+          workspace_swipe_distance = 200;
+          workspace_swipe_forever = true;
+        };
       };
 
       env = [
-        "XDG_SESSION_TYPE,wayland"
-        "QT_QPA_PLATFORM,wayland"
-        "QT_QPA_PLATFORMTHEME,xdgdesktopportal"
-        "GTK_USE_PORTAL,1"
-        "TDESKTOP_USE_GTK_FILE_DIALOG,1"
-        "NIXOS_OZONE_WL,1"
-        "ELECTRON_OZONE_PLATFORM_HINT,auto"
-
-        "XDG_CURRENT_DESKTOP,Hyprland"
-        "XDG_SESSION_DESKTOP,Hyprland"
-
-        "XCURSOR_SIZE, ${toString config.stylix.cursor.size}"
-        "XCURSOR_THEME, ${config.stylix.cursor.name}"
-
-        "XDG_SCREENSHOTS_DIR,~/screens"
+        { _args = [ "XDG_SESSION_TYPE" "wayland" ]; }
+        { _args = [ "QT_QPA_PLATFORM" "wayland" ]; }
+        { _args = [ "QT_QPA_PLATFORMTHEME" "xdgdesktopportal" ]; }
+        { _args = [ "GTK_USE_PORTAL" "1" ]; }
+        { _args = [ "TDESKTOP_USE_GTK_FILE_DIALOG" "1" ]; }
+        { _args = [ "NIXOS_OZONE_WL" "1" ]; }
+        { _args = [ "ELECTRON_OZONE_PLATFORM_HINT" "auto" ]; }
+        { _args = [ "XDG_CURRENT_DESKTOP" "Hyprland" ]; }
+        { _args = [ "XDG_SESSION_DESKTOP" "Hyprland" ]; }
+        { _args = [ "XCURSOR_SIZE" (toString config.stylix.cursor.size) ]; }
+        { _args = [ "XCURSOR_THEME" config.stylix.cursor.name ]; }
+        { _args = [ "XDG_SCREENSHOTS_DIR" "~/screens" ]; }
       ];
-
-      cursor.no_hardware_cursors = true;
-
-      debug = {
-        disable_logs = false;
-        enable_stdout_logs = true;
-      };
-
-      general = {
-        "col.inactive_border" = lib.mkForce "rgba(00000000)";
-      };
-
-      decoration.inactive_opacity = lib.mkDefault .95;
-      decoration.border_part_of_window = false;
-
-      misc = {
-        focus_on_activate = true;
-      };
-
-      input = {
-        kb_layout = "us,ru";
-        kb_options = "grp:caps_toggle";
-        numlock_by_default = true;
-
-        follow_mouse = 1;
-
-        touchpad = {
-          natural_scroll = false;
-        };
-
-        sensitivity = 0;
-      };
-
-      gestures = {
-        workspace_swipe_invert = true;
-        workspace_swipe_distance = 200;
-        workspace_swipe_forever = true;
-      };
 
       gesture = [
-        "3, horizontal, workspace"
+        {
+          fingers = 3;
+          direction = "horizontal";
+          action = "workspace";
+        }
       ];
 
-      workspace = [
-        "w[t1], gapsout:0"
+      workspace_rule = [
+        {
+          workspace = "w[t1]";
+          gaps_out = 0;
+        }
       ];
 
-      windowrule = [
-        "match:class imv,           float 1"
-        "match:class feh,           float 1"
-        "match:class mpv,           float 1"
-
-        "match:title Список друзей, float 1"
-        "match:title wifitui,       float 1"
-        "match:title pulsemixer,    float 1"
-
-        "match:title clipse,        float 1"
-        "match:title clipse,   size 622 652"
-
-        "match:focus 1, rounding 0"
-        "match:float 0, match:workspace w[t1], border_size 0"
+      window_rule = [
+        { match.class = "imv"; float = true; }
+        { match.class = "feh"; float = true; }
+        { match.class = "mpv"; float = true; }
+        { match.title = "Список друзей"; float = true; }
+        { match.title = "wifitui"; float = true; }
+        { match.title = "pulsemixer"; float = true; }
+        { match.title = "clipse"; float = true; }
+        { match.title = "clipse"; size = [ 622 652 ]; }
+        { match.focus = true; rounding = 0; }
+        {
+          match = {
+            float = false;
+            workspace = "w[t1]";
+          };
+          border_size = 0;
+        }
       ];
 
-      exec-once = lib.mkBefore [
-        "systemctl --user start plasma-polkit-agent"
-        "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all"
-        "systemctl --user import-environment XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE WAYLAND_DISPLAY DISPLAY GTK_USE_PORTAL QT_QPA_PLATFORMTHEME TDESKTOP_USE_GTK_FILE_DIALOG NIXOS_OZONE_WL ELECTRON_OZONE_PLATFORM_HINT"
-        "awww-daemon"
-        "wl-clip-persist --clipboard both"
-        "clipse -listen"
-        "${lib.getExe' pkgs.udiskie "udiskie"}"
+      on = lib.mkBefore [
+        (onStart [
+          "systemctl --user start plasma-polkit-agent"
+          "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all"
+          "systemctl --user import-environment XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE WAYLAND_DISPLAY DISPLAY GTK_USE_PORTAL QT_QPA_PLATFORMTHEME TDESKTOP_USE_GTK_FILE_DIALOG NIXOS_OZONE_WL ELECTRON_OZONE_PLATFORM_HINT"
+          "awww-daemon"
+          "wl-clip-persist --clipboard both"
+          "clipse -listen"
+          "${lib.getExe' pkgs.udiskie "udiskie"}"
+        ])
       ];
 
       bind = [
-        "$mainMod, V, exec, ghostty --title=clipse -e clipse"
+        (bind "SUPER + V" (exec "ghostty --title=clipse -e clipse"))
+        (bind "SUPER + RETURN" (exec "ghostty"))
+        (bind "SUPER + Q" "hl.dsp.window.close()")
+        (bind "SUPER + M" "hl.dsp.exit()")
+        (bind "SUPER + E" (exec "ghostty -e sh -c yazi"))
+        (bind "SUPER + F" "hl.dsp.window.float({ action = \"toggle\" })")
+        (bind "SUPER + P" "hl.dsp.window.pseudo({ action = \"toggle\" })")
+        (bind "SUPER + J" "hl.dsp.layout(\"togglesplit\")")
+        (bind "SUPER + K" "hl.dsp.layout(\"swapsplit\")")
 
-        "$mainMod, Return, exec, ghostty"
-        "$mainMod, Q, killactive,"
-        "$mainMod, M, exit,"
-        "$mainMod, E, exec, ghostty -e sh -c yazi"
-        "$mainMod, F, togglefloating,"
-        "$mainMod, P, pseudo, # dwindle"
-        "$mainMod, J, layoutmsg, togglesplit"
-        "$mainMod, K, layoutmsg, swapsplit"
+        (bind "SUPER + LEFT" "hl.dsp.focus({ direction = \"${direction.left}\" })")
+        (bind "SUPER + RIGHT" "hl.dsp.focus({ direction = \"${direction.right}\" })")
+        (bind "SUPER + UP" "hl.dsp.focus({ direction = \"${direction.up}\" })")
+        (bind "SUPER + DOWN" "hl.dsp.focus({ direction = \"${direction.down}\" })")
 
-        # Move focus with mainMod + arrow keys
-        "$mainMod, left,  movefocus, l"
-        "$mainMod, right, movefocus, r"
-        "$mainMod, up,    movefocus, u"
-        "$mainMod, down,  movefocus, d"
+        (bind "SUPER + SHIFT + LEFT" "hl.dsp.window.swap({ direction = \"${direction.left}\" })")
+        (bind "SUPER + SHIFT + RIGHT" "hl.dsp.window.swap({ direction = \"${direction.right}\" })")
+        (bind "SUPER + SHIFT + UP" "hl.dsp.window.swap({ direction = \"${direction.up}\" })")
+        (bind "SUPER + SHIFT + DOWN" "hl.dsp.window.swap({ direction = \"${direction.down}\" })")
 
-        # Moving windows
-        "$mainMod SHIFT, left,  swapwindow, l"
-        "$mainMod SHIFT, right, swapwindow, r"
-        "$mainMod SHIFT, up,    swapwindow, u"
-        "$mainMod SHIFT, down,  swapwindow, d"
+        (bind "SUPER + CTRL + LEFT" "hl.dsp.window.resize({ x = -60, y = 0, relative = true })")
+        (bind "SUPER + CTRL + RIGHT" "hl.dsp.window.resize({ x = 60, y = 0, relative = true })")
+        (bind "SUPER + CTRL + UP" "hl.dsp.window.resize({ x = 0, y = -60, relative = true })")
+        (bind "SUPER + CTRL + DOWN" "hl.dsp.window.resize({ x = 0, y = 60, relative = true })")
+      ] ++ workspaceBinds ++ [
+        (bind "SUPER + SHIFT + F" "hl.dsp.window.fullscreen({ action = \"toggle\", mode = \"fullscreen\" })")
+        (bind "SUPER + mouse_down" "hl.dsp.focus({ workspace = \"e-1\" })")
+        (bind "SUPER + mouse_up" "hl.dsp.focus({ workspace = \"e+1\" })")
 
-        # Window resizing                     X  Y
-        "$mainMod CTRL, left,  resizeactive, -60 0"
-        "$mainMod CTRL, right, resizeactive,  60 0"
-        "$mainMod CTRL, up,    resizeactive,  0 -60"
-        "$mainMod CTRL, down,  resizeactive,  0  60"
+        (bind "SUPER + F3" (exec "${lib.getExe pkgs.brightnessctl} -d *::kbd_backlight set +33%"))
+        (bind "SUPER + F2" (exec "${lib.getExe pkgs.brightnessctl} -d *::kbd_backlight set 33%-"))
 
-        # Switch workspaces with mainMod + [0-9]
-        "$mainMod, 1, workspace, 1"
-        "$mainMod, 2, workspace, 2"
-        "$mainMod, 3, workspace, 3"
-        "$mainMod, 4, workspace, 4"
-        "$mainMod, 5, workspace, 5"
-        "$mainMod, 6, workspace, 6"
-        "$mainMod, 7, workspace, 7"
-        "$mainMod, 8, workspace, 8"
-        "$mainMod, 9, workspace, 9"
-        "$mainMod, 0, workspace, 10"
+        (bind "XF86AudioMute" (exec "pamixer -t"))
+        (bind "XF86AudioMicMute" (exec "pamixer --default-source -m"))
+        (bind "XF86AudioPlay" (exec "${lib.getExe pkgs.playerctl} play-pause"))
+        (bind "XF86Explorer" (exec "ghostty -e sh -c yazi"))
+        (bind "XF86Mail" (exec "thunderbird"))
+        (bind "XF86WWW" (exec "google-chrome-stable"))
 
-        # Move active window to a workspace with mainMod + SHIFT + [0-9]
-        "$mainMod SHIFT, 1, movetoworkspacesilent, 1"
-        "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
-        "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
-        "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
-        "$mainMod SHIFT, 5, movetoworkspacesilent, 5"
-        "$mainMod SHIFT, 6, movetoworkspacesilent, 6"
-        "$mainMod SHIFT, 7, movetoworkspacesilent, 7"
-        "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
-        "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
-        "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
+        (bind "XF86MonBrightnessDown" (exec "${lib.getExe pkgs.brightnessctl} set 5%-"))
+        (bind "XF86MonBrightnessUp" (exec "${lib.getExe pkgs.brightnessctl} set +5%"))
 
-        "$mainMod SHIFT, F, fullscreen"
+        (bindWithFlags "XF86AudioRaiseVolume" (exec "pamixer -i 5") { repeating = true; })
+        (bindWithFlags "XF86AudioLowerVolume" (exec "pamixer -d 5") { repeating = true; })
 
-        # Scroll through existing workspaces with mainMod + scroll
-        "$mainMod, mouse_down, workspace, e-1"
-        "$mainMod, mouse_up,   workspace, e+1"
+        (bindWithFlags "XF86AudioPrev" (exec "${lib.getExe pkgs.playerctl} position 5-") { click = true; })
+        (bindWithFlags "XF86AudioNext" (exec "${lib.getExe pkgs.playerctl} position 5+") { click = true; })
+        (bindWithFlags "XF86AudioPrev" (exec "${lib.getExe pkgs.playerctl} previous") { long_press = true; })
+        (bindWithFlags "XF86AudioNext" (exec "${lib.getExe pkgs.playerctl} next") { long_press = true; })
 
-        # Keyboard backlight
-        "$mainMod, F3, exec, ${lib.getExe pkgs.brightnessctl} -d *::kbd_backlight set +33%"
-        "$mainMod, F2, exec, ${lib.getExe pkgs.brightnessctl} -d *::kbd_backlight set 33%-"
-
-        # Volume and Media Control
-        ", XF86AudioMute, exec, pamixer -t"
-        ", XF86AudioMicMute, exec, pamixer --default-source -m"
-        ", XF86AudioPlay, exec, ${lib.getExe pkgs.playerctl} play-pause"
-
-        ", XF86Explorer, exec, ghostty -e sh -c yazi"
-        ", XF86Mail, exec, thunderbird"
-        ", XF86WWW, exec, google-chrome-stable"  # TODO: Replace hard-code to some variable
-
-        # Brightness control
-        ", XF86MonBrightnessDown, exec, ${lib.getExe pkgs.brightnessctl} set 5%- "
-        ", XF86MonBrightnessUp,   exec, ${lib.getExe pkgs.brightnessctl} set +5% "
-      ];
-
-      binde = [
-        ", XF86AudioRaiseVolume, exec, pamixer -i 5 "
-        ", XF86AudioLowerVolume, exec, pamixer -d 5 "
-      ];
-
-      bindc = [
-        ", XF86AudioPrev, exec, ${lib.getExe pkgs.playerctl} position 5-"
-        ", XF86AudioNext, exec, ${lib.getExe pkgs.playerctl} position 5+"
-      ];
-
-      bindo = [
-        ", XF86AudioPrev, exec, ${lib.getExe pkgs.playerctl} previous"
-        ", XF86AudioNext, exec, ${lib.getExe pkgs.playerctl} next"
-      ];
-
-      # Move/resize windows with mainMod + LMB/RMB and dragging
-      bindm = [
-        "$mainMod, mouse:272, movewindow"
-        "$mainMod, mouse:273, resizewindow"
+        (bindWithFlags "SUPER + mouse:272" "hl.dsp.window.drag()" { mouse = true; })
+        (bindWithFlags "SUPER + mouse:273" "hl.dsp.window.resize()" { mouse = true; })
       ];
     };
   };

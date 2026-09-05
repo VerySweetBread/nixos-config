@@ -343,7 +343,10 @@
     in builtins.readFile cssFile;
   };
 
-  wayland.windowManager.hyprland.settings.layerrule = [
-    "blur on, match:namespace waybar"
+  wayland.windowManager.hyprland.settings.layer_rule = [
+    {
+      match.namespace = "waybar";
+      blur = true;
+    }
   ];
 }

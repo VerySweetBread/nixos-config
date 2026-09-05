@@ -188,10 +188,22 @@ in {
     Exec=${lib.getExe fileManager1}
   '';
 
-  wayland.windowManager.hyprland.settings.windowrule = [
-    "match:class dragon-drop, move cursor_x-window_w/2 cursor_y-window_h/2"
-    "match:title Yazi File Picker, float 1"
-    "match:title Yazi File Picker, size 1200 800"
+  wayland.windowManager.hyprland.settings.window_rule = [
+    {
+      match.class = "dragon-drop";
+      move = [
+        "(cursor_x-(window_w*0.5))"
+        "(cursor_y-(window_h*0.5))"
+      ];
+    }
+    {
+      match.title = "Yazi File Picker";
+      float = true;
+    }
+    {
+      match.title = "Yazi File Picker";
+      size = [ 1200 800 ];
+    }
   ];
 
   programs.yazi = {

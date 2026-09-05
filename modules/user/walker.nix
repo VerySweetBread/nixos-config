@@ -1,4 +1,7 @@
-{
+{ lib, ... }:
+let
+  hyprLua = import ./hyprland/lua.nix { inherit lib; };
+in {
   services = {
     walker = {
       enable = true;
@@ -9,6 +12,6 @@
   };
 
   wayland.windowManager.hyprland.settings.bind = [
-    "$mainMod, D, exec, walker"
+    (hyprLua.bind "SUPER + D" (hyprLua.exec "walker"))
   ];
 }

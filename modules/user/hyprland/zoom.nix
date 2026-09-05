@@ -1,21 +1,32 @@
-{
-  wayland.windowManager.hyprland.settings = {
-    bind = [
-      # "$mainMod, mouse_down, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '.float * 1.1')"
-      # "$mainMod, mouse_up  , exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '(.float * 0.9) | if . < 1 then 1 else . end')"
+{ lib, ... }:
+let
+  hyprLua = import ./lua.nix { inherit lib; };
+  inherit (hyprLua) bind bindWithFlags;
 
-      "$mainMod SHIFT, mouse_up   , exec, hyprctl -q keyword cursor:zoom_factor 1"
-      "$mainMod SHIFT, mouse_down , exec, hyprctl -q keyword cursor:zoom_factor 1"
-      "$mainMod SHIFT, minus      , exec, hyprctl -q keyword cursor:zoom_factor 1"
-      "$mainMod SHIFT, KP_SUBTRACT, exec, hyprctl -q keyword cursor:zoom_factor 1"
-      "$mainMod SHIFT, 0          , exec, hyprctl -q keyword cursor:zoom_factor 1"
-    ];
+  resetZoom = ''function()
+    hl.config({ cursor = { zoom_factor = 1 } })
+  end'';
 
-    binde = [
-      "$mainMod, equal      , exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '.float * 1.1')"
-      "$mainMod, minus      , exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '(.float * 0.9) | if . < 1 then 1 else . end')"
-      "$mainMod, KP_ADD     , exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '.float * 1.1')"
-      "$mainMod, KP_SUBTRACT, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '(.float * 0.9) | if . < 1 then 1 else . end')"
-    ];
-  };
+  zoomIn = ''function()
+    local current = hl.get_config("cursor.zoom_factor")
+    hl.config({ cursor = { zoom_factor = current * 1.1 } })
+  end'';
+
+  zoomOut = ''function()
+    local current = hl.get_config("cursor.zoom_factor")
+    hl.config({ cursor = { zoom_factor = math.max(1, current * 0.9) } })
+  end'';
+in {
+  wayland.windowManager.hyprland.settings.bind = [
+    (bind "SUPER + SHIFT + mouse_up" resetZoom)
+    (bind "SUPER + SHIFT + mouse_down" resetZoom)
+    (bind "SUPER + SHIFT + minus" resetZoom)
+    (bind "SUPER + SHIFT + KP_SUBTRACT" resetZoom)
+    (bind "SUPER + SHIFT + 0" resetZoom)
+
+    (bindWithFlags "SUPER + equal" zoomIn { repeating = true; })
+    (bindWithFlags "SUPER + minus" zoomOut { repeating = true; })
+    (bindWithFlags "SUPER + KP_ADD" zoomIn { repeating = true; })
+    (bindWithFlags "SUPER + KP_SUBTRACT" zoomOut { repeating = true; })
+  ];
 }

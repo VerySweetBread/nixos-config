@@ -1,44 +1,50 @@
-{ pkgs, lib, ...}: {
-  wayland.windowManager.hyprland = let
-    monitor-switcher = pkgs.writers.writeBashBin "monitor_switcher" /*bash*/ ''
-      MODE=$1
+{ pkgs, lib, ... }:
+let
+  hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
 
-      case $MODE in
-        "tv")
-          hyprctl keyword monitor "DP-3, 1920x1080@60, 3840x0, 1"
-          hyprctl keyword monitor "HDMI-A-1, 3840x2160@60, 0x0, 1"
-          notify-send "TV mode"
-        ;;
+  monitor-switcher = pkgs.writers.writeBashBin "monitor_switcher" /*bash*/ ''
+    MODE=$1
 
-        "mirror")
-          hyprctl keyword monitor "HDMI-A-1, 3840x2160@60, 0x0, 1"
-          hyprctl keyword monitor "DP-3, preferred, auto, 1, mirror, HDMI-A-1"
-          notify-send "TV-only mode"
-        ;;
+    case $MODE in
+      "tv")
+        hyprctl eval 'hl.monitor({ output = "DP-3", mode = "1920x1080@60", position = "3840x0", scale = 1 })'
+        hyprctl eval 'hl.monitor({ output = "HDMI-A-1", mode = "3840x2160@60", position = "0x0", scale = 1 })'
+        notify-send "TV mode"
+      ;;
 
-        "display"|*)
-          hyprctl keyword monitor "HDMI-A-1, disable"
-          hyprctl keyword monitor "DP-3, 3440x1440@165, 0x0, 1"
-          notify-send "Display mode"
-        ;;
+      "mirror")
+        hyprctl eval 'hl.monitor({ output = "HDMI-A-1", mode = "3840x2160@60", position = "0x0", scale = 1 })'
+        hyprctl eval 'hl.monitor({ output = "DP-3", mode = "preferred", position = "auto", scale = 1, mirror = "HDMI-A-1" })'
+        notify-send "TV-only mode"
+      ;;
 
-      esac
-    '';
-  in {
-    settings = {
-      monitor = [
-        "DP-3, 3440x1440@165, auto-right, 1"
-        # "HDMI-A-1, 3840x2160@60, auto-left, 2"
-        "HDMI-A-1, disabled"
-      ];
+      "display"|*)
+        hyprctl eval 'hl.monitor({ output = "HDMI-A-1", disabled = true })'
+        hyprctl eval 'hl.monitor({ output = "DP-3", mode = "3440x1440@165", position = "0x0", scale = 1 })'
+        notify-send "Display mode"
+      ;;
+    esac
+  '';
+in {
+  wayland.windowManager.hyprland.settings = {
+    monitor = [
+      {
+        output = "DP-3";
+        mode = "3440x1440@165";
+        position = "auto-right";
+        scale = 1;
+      }
+      {
+        output = "HDMI-A-1";
+        disabled = true;
+      }
+    ];
 
-      bind = [
-        '', XF86Calculator, exec, ghostty --title=pulsemixer -e pulsemixer''
-
-        ''$mainMod, F1, exec, ${lib.getExe monitor-switcher} tv''
-        ''$mainMod, F2, exec, ${lib.getExe monitor-switcher} mirror''
-        ''$mainMod, F3, exec, ${lib.getExe monitor-switcher}''
-      ];
-    };
+    bind = [
+      (hyprLua.bind "XF86Calculator" (hyprLua.exec "ghostty --title=pulsemixer -e pulsemixer"))
+      (hyprLua.bind "SUPER + F1" (hyprLua.exec "${lib.getExe monitor-switcher} tv"))
+      (hyprLua.bind "SUPER + F2" (hyprLua.exec "${lib.getExe monitor-switcher} mirror"))
+      (hyprLua.bind "SUPER + F3" (hyprLua.exec "${lib.getExe monitor-switcher}"))
+    ];
   };
 }
