@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }: let
+{ inputs, pkgs, lib, config, ... }: let
   helixSteel =
     inputs.helix-steel.packages.${pkgs.system}.default.overrideAttrs (old: {
       cargoBuildFlags = (old.cargoBuildFlags or []) ++ [
@@ -71,7 +71,18 @@ in {
   home.packages = with pkgs; [
     asm-lsp
     fasm
+    steel
+    wakatime-cli
   ];
+
+  home.activation.installWakatimeHx = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    export PATH="${pkgs.steel}/bin:$PATH"
+    export STEEL_HOME="${config.xdg.dataHome}/steel"
+
+    if [ ! -f "$STEEL_HOME/cogs/wakatime/wakatime.scm" ]; then
+      forge pkg install --git https://github.com/Xerxes-2/wakatime.hx.git
+    fi
+  '';
 
   programs.helix = {
     enable = true;
@@ -185,6 +196,7 @@ in {
     '';
     "helix/init.scm".text = ''
       ;; Steel init file
+      (require "wakatime/wakatime.scm")
     '';
   };
 }
