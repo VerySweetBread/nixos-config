@@ -19,33 +19,24 @@
   };
 
   inputs = {
-    aagl.url = "github:ezKEa/aagl-gtk-on-nix";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
-    nixpkgs-pinned.url = "github:nixos/nixpkgs/ec942ba042dad5ef097e2ef3a3effc034241f011";
+    aagl = {
+      url = "github:ezKEa/aagl-gtk-on-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    ags = {
+      url = "github:Aylur/ags/3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sops-nix.url = "github:Mic92/sops-nix";
-    stylix.url = "github:danth/stylix";
-    ags.url = "github:Aylur/ags/3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6";
 
     helix-steel = {
       url = "github:mattwparas/helix/steel-event-system";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    yazi.url = "github:sxyazi/yazi";
-    yazi-plugins = {
-      url = "github:yazi-rs/plugins";
-      flake = false;
-    };
-
-    hyprland.url = "github:hyprwm/Hyprland/v0.56.1";
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
     };
 
     home-manager = {
@@ -53,9 +44,46 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprland = {
+      url = "github:hyprwm/Hyprland/v0.56.1";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs = {
+        hyprland.follows = "hyprland";
+      # nixpkgs.follows = "nixpkgs";
+      };
+    };
+
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-pinned.url = "github:nixos/nixpkgs/ec942ba042dad5ef097e2ef3a3effc034241f011";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     waybar = {
       url = "github:Alexays/Waybar";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    yazi = {
+      url = "github:sxyazi/yazi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    yazi-plugins = {
+      url = "github:yazi-rs/plugins";
+      flake = false;
     };
   };
 
