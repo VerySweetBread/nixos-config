@@ -7,6 +7,7 @@
       enableWidevine = true;
     })
     weechat
+    insomnia
   ];
 
   xdg.mimeApps = {
