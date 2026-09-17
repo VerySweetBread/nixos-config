@@ -26,6 +26,11 @@
           path = "/home/sweetbread/Documents/Obsidian";
           devices = [ "Rias" "Akeno" "Koneko" ];
         };
+
+        "Documents" = {
+          path = "/home/sweetbread/Documents";
+          devices = [ "Rias" ];
+        };
       };
     };
   };

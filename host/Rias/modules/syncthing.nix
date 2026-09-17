@@ -34,12 +34,17 @@
 
         "Music" = {
           path = "/home/sweetbread/Music";
-          devices = [ "Akeno" "Koneko" ];
+          devices = [ "Akeno" "Koneko" "Inaho" ];
         };
 
         "Obsidian" = {
           path = "/mnt/D/Obsidian";
           devices = [ "Koneko" "Inaho" ];
+        };
+
+        "Documents" = {
+          path = "/home/sweetbread/Documents";
+          devices = [ "Inaho" ];
         };
       };
     };
