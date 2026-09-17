@@ -1,4 +1,11 @@
-{ osConfig, config, pkgs, lib, ... }: {
+{
+  osConfig,
+  config,
+  inputs,
+  pkgs,
+  lib,
+  ...
+}: {
   home.packages = with pkgs; [
     playerctl
     cava
@@ -15,6 +22,7 @@
   in {
     enable = true;
     systemd.enable = true;
+    package = inputs.waybar.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
     settings.mainBar = {
       spacing = 8;
