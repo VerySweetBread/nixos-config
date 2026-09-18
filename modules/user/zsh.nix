@@ -74,6 +74,7 @@
         eval "$(zoxide init zsh)"
         source "$(fzf-share)/key-bindings.zsh"
         source "$(fzf-share)/completion.zsh"
+        nr() { nix run "nixpkgs#$1" -- "''${@:2}" }
       '';
 
       envExtra = ''
