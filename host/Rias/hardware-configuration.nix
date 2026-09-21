@@ -11,6 +11,10 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
+  environment.etc.crypttab.text = ''
+    storage UUID=9327148b-788a-4c23-ac73-28464ffabe1b none luks
+  '';
+
   fileSystems."/" = {
     device = "/dev/disk/by-label/NixOS";
     fsType = "ext4";
@@ -23,9 +27,9 @@
   };
 
   fileSystems."/mnt/D" = {
-    device = "/dev/disk/by-label/Data";
-    fsType = "ntfs3";
-    options = ["umask=0022" "gid=100" "uid=1000" "nofail" ];
+    device = "/dev/mapper/storage";
+    fsType = "ext4";
+    options = [ "noatime" "nofail" ];
   };
 
   swapDevices = [ ];
