@@ -1,4 +1,11 @@
-{ osConfig, config, pkgs, lib, ... }: {
+{
+  osConfig,
+  config,
+  inputs,
+  pkgs,
+  lib,
+  ...
+ }: {
   home.packages = with pkgs; [
     font-awesome
     nerd-fonts.symbols-only
@@ -10,6 +17,7 @@
   programs.waybar = {
     enable = true;
     systemd.enable = true;
+    package = inputs.waybar.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
     settings.mainBar = {
       modules-center = [
