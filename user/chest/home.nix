@@ -10,6 +10,7 @@
     nautilus
     vscode
     python3
+    python3Packages.pip
     pkgs-pinned.jetbrains.pycharm-oss
     aseprite
     krita
