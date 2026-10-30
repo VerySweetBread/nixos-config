@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, inputs, ... }: {
   imports = [
     ./host/bluetooth.nix
     ./host/bootloader.nix
@@ -21,6 +21,7 @@
   programs = {
     dconf.enable = true;
     hyprland.enable = true;
+    hyprland.package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
 
   xdg.portal = {
@@ -28,7 +29,6 @@
     xdgOpenUsePortal = true;
 
     extraPortals = with pkgs; [
-      xdg-desktop-portal-hyprland
       xdg-desktop-portal-gtk
       xdg-desktop-portal-termfilechooser
     ];

@@ -45,6 +45,7 @@ in {
     xwayland.enable = true;
 
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    portalPackage = null;
     plugins = with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}; [
       # hyprbars  # Version mismatch
     ];
@@ -206,26 +207,4 @@ in {
     };
   };
 
-  xdg.portal = {
-    enable = true;
-
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-termfilechooser
-    ];
-
-    config = {
-      common = {
-        default = [ "hyprland" "gtk" ];
-        "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" "gtk" ];
-        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
-      };
-
-      hyprland = {
-        default = [ "hyprland" "gtk" ];
-        "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" "gtk" ];
-        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
-      };
-    };
-  };
 }

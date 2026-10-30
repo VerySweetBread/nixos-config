@@ -45,7 +45,7 @@
     };
 
     hyprland = {
-      url = "github:hyprwm/Hyprland/v0.56.1";
+      url = "github:hyprwm/Hyprland/1256bd1";
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
