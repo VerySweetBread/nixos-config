@@ -11,7 +11,7 @@ in {
     monitor = [
       {
         output = "DP-3";
-        mode = "1920x1080@165";
+        mode = "2560x1440@100";
         position = "0x0";
         scale = 1;
       }
