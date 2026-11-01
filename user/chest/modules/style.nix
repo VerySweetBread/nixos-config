@@ -1,4 +1,29 @@
-{ pkgs, config, lib, ... }: let
+{ pkgs, config, lib, osConfig, inputs, ... }: let
+  mikuFrost = osConfig.networking.hostName == "Eclipse";
+  colors = config.lib.stylix.colors.withHashtag;
+  accent = colors.${config.stylix.accent};
+  # Render the same Stylix templates, changing only native translucency and accent.
+  kvantumConfig = config.lib.stylix.colors {
+    template = builtins.readFile "${inputs.stylix}/modules/qt/kvconfig.mustache";
+    extension = ".kvconfig";
+  };
+  kvantumSvg = config.lib.stylix.colors {
+    template = builtins.readFile "${inputs.stylix}/modules/qt/kvantum.svg.mustache";
+    extension = ".svg";
+  };
+  frostKvantum = pkgs.runCommandLocal "miku-frost-kvantum" {} ''
+    directory="$out/share/Kvantum/Base16Kvantum"
+    mkdir -p "$directory"
+    cp ${kvantumConfig} "$directory/Base16Kvantum.kvconfig"
+    cp ${kvantumSvg} "$directory/Base16Kvantum.svg"
+    substituteInPlace "$directory/Base16Kvantum.kvconfig" \
+      --replace-fail 'translucent_windows=false' 'translucent_windows=true' \
+      --replace-fail 'blurring=false' 'blurring=true' \
+      --replace-fail 'reduce_window_opacity=10' 'reduce_window_opacity=18' \
+      --replace-fail 'highlight.color=${colors.base0E}' 'highlight.color=${accent}'
+    substituteInPlace "$directory/Base16Kvantum.svg" \
+      --replace-fail '${colors.base0D}' '${accent}'
+  '';
   miku-cursor = pkgs.stdenv.mkDerivation {
     name = "Miku cursor";
 
@@ -86,10 +111,46 @@ in {
       hyprland.enable = false;
       waybar.enable = false;
       kitty.variant256Colors = true;
+      gtk.extraCss = lib.mkIf mikuFrost ''
+        /* Native background alpha keeps text and controls fully opaque. */
+        @define-color accent_color ${accent};
+        @define-color accent_bg_color ${accent};
+        @define-color theme_selected_bg_color ${accent};
+        @define-color window_bg_color alpha(${colors.base01}, 0.78);
+        @define-color view_bg_color alpha(${colors.base00}, 0.48);
+        @define-color headerbar_bg_color alpha(${colors.base01}, 0.76);
+        @define-color headerbar_backdrop_color @window_bg_color;
+        @define-color sidebar_bg_color alpha(${colors.base01}, 0.72);
+        @define-color sidebar_backdrop_color @window_bg_color;
+        @define-color dialog_bg_color alpha(${colors.base01}, 0.84);
+        @define-color popover_bg_color alpha(${colors.base01}, 0.90);
+        @define-color theme_bg_color @window_bg_color;
+        @define-color theme_base_color @view_bg_color;
+      '';
     };
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/eris.yaml";
-    accent = "base0E";
+    # Keep a file-backed scheme for consumers such as Neofetch.
+    base16Scheme = if mikuFrost then toString (pkgs.writeText "miku-frost.yaml" ''
+      scheme: "Miku Frost"
+      author: "chest"
+      base00: "101724"
+      base01: "192534"
+      base02: "253247"
+      base03: "47586B"
+      base04: "93A8BA"
+      base05: "E1EFF2"
+      base06: "F1F8F8"
+      base07: "F9FFFF"
+      base08: "EF829A"
+      base09: "F5AB82"
+      base0A: "EED69A"
+      base0B: "69DCC7"
+      base0C: "43D6CD"
+      base0D: "7BB9E8"
+      base0E: "B29DF4"
+      base0F: "E3A8D8"
+    '') else "${pkgs.base16-schemes}/share/themes/eris.yaml";
+    accent = if mikuFrost then "base0C" else "base0E";
     polarity = "dark";
 
     image = pkgs.fetchurl {
@@ -130,6 +191,59 @@ in {
       popups = .8;
       terminal = .5;
     };
+  };
+
+  qt.kvantum.themes = lib.mkIf mikuFrost (lib.mkForce [ frostKvantum ]);
+
+  # Notifications share the island's surface and rounded, borderless silhouette.
+  services.mako.settings = lib.mkIf mikuFrost {
+    background-color = lib.mkForce "${colors.base01}D9";
+    text-color = lib.mkForce colors.base05;
+    border-size = lib.mkForce 0;
+    border-radius = 22;
+    padding = "12";
+    progress-color = lib.mkForce "over ${accent}33";
+    "urgency=low".background-color = lib.mkForce "${colors.base01}D9";
+    "urgency=critical" = {
+      background-color = lib.mkForce "${colors.base01}F0";
+      text-color = lib.mkForce colors.base08;
+    };
+  };
+
+  # Yazi uses its own true-colour theme rather than the terminal ANSI palette.
+  programs.yazi.theme = lib.mkIf mikuFrost {
+    filetype.rules = lib.mkBefore [
+      { url = "*/"; fg = colors.base05; bold = false; }
+    ];
+    icon.conds = lib.mkBefore [
+      { "if" = "dir"; text = ""; fg = accent; }
+    ];
+    mgr.border_style.fg = lib.mkForce colors.base03;
+    indicator = {
+      current = { fg = colors.base05; bg = lib.mkForce colors.base02; };
+      preview = { fg = colors.base05; bg = lib.mkForce colors.base02; };
+    };
+    tabs = {
+      active = { fg = lib.mkForce colors.base00; bg = lib.mkForce accent; };
+      inactive = { fg = lib.mkForce colors.base04; bg = lib.mkForce colors.base01; };
+    };
+    mode = {
+      normal_main = { fg = lib.mkForce colors.base00; bg = lib.mkForce accent; };
+      normal_alt = { fg = lib.mkForce accent; bg = lib.mkForce colors.base01; };
+    };
+    input = {
+      border.fg = lib.mkForce accent;
+      selected.bg = lib.mkForce colors.base02;
+    };
+    pick.border.fg = lib.mkForce accent;
+    completion.border.fg = lib.mkForce accent;
+    tasks.border.fg = lib.mkForce accent;
+  };
+
+  # Keep the original terminal glass, with colours inherited from Stylix.
+  programs.ghostty.themes.stylix = lib.mkIf mikuFrost {
+    background = lib.mkForce config.lib.stylix.colors.base00;
+    cursor-color = lib.mkForce config.lib.stylix.colors.base0C;
   };
 
   dconf.settings = {
