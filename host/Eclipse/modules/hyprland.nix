@@ -8,6 +8,23 @@ let
   };
 in {
   wayland.windowManager.hyprland.settings = {
+    # Keep the animated wallpaper visible through the panel's translucent surface.
+    layer_rule = [
+      {
+        match.namespace = "^waybar$";
+        blur = true;
+        # Blur the glass, but exclude its low-alpha CSS shadow from the mask.
+        ignore_alpha = 0.2;
+        xray = true;
+      }
+      {
+        match.namespace = "^walker$";
+        blur = true;
+        ignore_alpha = 0.08;
+        xray = true;
+      }
+    ];
+
     monitor = [
       {
         output = "DP-3";

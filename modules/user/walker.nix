@@ -1,4 +1,4 @@
-{ config, lib, ... }: let
+{ config, lib, osConfig, ... }: let
   hyprLua = import ./hyprland/lua.nix { inherit lib; };
   colors = config.lib.stylix.colors.withHashtag;
   accent = colors.${config.stylix.accent};
@@ -140,6 +140,40 @@ in {
           .preview-content.dnfpackages,
           .preview-content.aptpackages {
             font-family: "${config.stylix.fonts.monospace.name}";
+          }
+        '' + lib.optionalString (config.home.username == "chest" && osConfig.networking.hostName == "Eclipse") ''
+          /* Keep the existing layout; let the compositor blur the wallpaper. */
+          window { background: transparent; }
+          .box-wrapper {
+            background: alpha(@surface_color, 0.62);
+            border: 2px solid alpha(@accent_bg_color, 0.38);
+            padding: 19px;
+            box-shadow: none;
+          }
+          .input {
+            background: alpha(${colors.base02}, 0.42);
+            border-radius: 10px;
+          }
+          popover {
+            background: alpha(@surface_color, 0.86);
+            border: 2px solid alpha(@accent_bg_color, 0.38);
+            padding: 9px;
+          }
+
+          /* Paint only the rounded item, never both its row and child. */
+          child, row,
+          child:hover, row:hover,
+          child:selected, row:selected {
+            background: transparent;
+            border-radius: 10px;
+          }
+          child:hover .item-box,
+          row:hover .item-box {
+            background: alpha(@accent_bg_color, 0.12);
+          }
+          child:selected .item-box,
+          row:selected .item-box {
+            background: alpha(@accent_bg_color, 0.25);
           }
         '';
       };
