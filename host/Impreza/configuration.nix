@@ -23,6 +23,7 @@
 
   nix.settings.cores = 3;
   nixpkgs.config.allowBroken = true;
+  time.timeZone = "Europe/Berlin";
   programs.gamemode.enable = true;
   hardware.bluetooth.enable = true;
   host.laptop = true;
