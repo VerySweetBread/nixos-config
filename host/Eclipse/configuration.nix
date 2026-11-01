@@ -24,6 +24,7 @@
   ];
 
   nixpkgs.config.allowBroken = true;
+  time.timeZone = "Europe/Berlin";
   programs.gamemode.enable = true;
   services.printing.enable = true;
   virtualisation.virtualbox.host.enable = true;
