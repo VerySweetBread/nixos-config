@@ -17,7 +17,11 @@
   programs.waybar = {
     enable = true;
     systemd.enable = true;
-    package = inputs.waybar.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    package = inputs.waybar.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+      postPatch = (old.postPatch or "") + ''
+        mv subprojects/cava-1.0.0 subprojects/libcava
+      '';
+    });
 
     settings.mainBar = {
       modules-center = [
