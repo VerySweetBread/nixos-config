@@ -1,6 +1,17 @@
 { inputs, pkgs, lib, config, ... }: let
   helixSteel =
-    inputs.helix-steel.packages.${pkgs.system}.default.overrideAttrs (old: {
+    (inputs.helix-steel.packages.${pkgs.system}.default.override {
+      grammarOverlays = [
+        (_: prev: {
+          perl = prev.perl.overrideAttrs (old: {
+            postPatch = (old.postPatch or "") + ''
+              substituteInPlace src/bsearch.c --replace-fail 'void *bsearch(' 'void *tsp_bsearch('
+              substituteInPlace src/tsp_unicode.h --replace-fail 'return bsearch(' 'return tsp_bsearch('
+            '';
+          });
+        })
+      ];
+    }).overrideAttrs (old: {
       cargoBuildFlags = (old.cargoBuildFlags or []) ++ [
         "--features"
         "steel,git"
