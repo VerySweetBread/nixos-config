@@ -148,6 +148,12 @@ in {
     elephant.enable = true;
   };
 
+  xdg.configFile = lib.optionalAttrs (config.home.username == "chest") {
+    "elephant/desktopapplications.toml".text = ''
+      history_when_empty = true
+    '';
+  };
+
   wayland.windowManager.hyprland.settings.bind = [
     (hyprLua.bind "SUPER + D" (hyprLua.exec "walker"))
   ];
