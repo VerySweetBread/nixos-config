@@ -44,6 +44,8 @@
   ];
 
   programs.zsh.enable = true;
+  programs.kdeconnect.enable = true;
+  home-manager.users.${name}.services.kdeconnect.enable = true;
 
   users = {
     defaultUserShell = pkgs.zsh;

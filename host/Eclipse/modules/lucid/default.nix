@@ -1,0 +1,4 @@
+{ ... }:
+{
+  lucid.liveDecoder = "cuda";
+}

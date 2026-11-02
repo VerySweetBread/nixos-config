@@ -188,7 +188,7 @@ in {
     '';
   };
 
-  wayland.windowManager.hyprland.settings.bind = [
-    (hyprLua.bind "SUPER + D" (hyprLua.exec "walker"))
+  lucidHyprlandBinds = [
+    (hyprLua.bind "SUPER + D" (hyprLua.execLauncher "qs ipc call launcher toggle"))
   ];
 }

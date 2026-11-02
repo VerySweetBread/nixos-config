@@ -71,9 +71,9 @@ in {
       { leaf = "fade"; enabled = true; speed = 7; bezier = "default"; }
       { leaf = "workspaces"; enabled = true; speed = 6; bezier = "default"; }
     ];
-
-    bind = [
-      (hyprLua.bind "SUPER + SHIFT + S" (hyprLua.exec ''${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" - | ${lib.getExe pkgs.swappy} -f -''))
-    ];
   };
+
+  lucidHyprlandBinds = [
+    (hyprLua.bind "SUPER + SHIFT + S" (hyprLua.exec ''${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" - | ${lib.getExe pkgs.swappy} -f -''))
+  ];
 }

@@ -1,0 +1,145 @@
+{
+  "nextId": 11,
+  "boardFull": true,
+  "laidScale": 1.05,
+  "preset": "",
+  "saved": [],
+  "last": [],
+  "stash": [],
+  "instances": [
+    {
+      "uid": "w1",
+      "type": "system",
+      "variant": "compact",
+      "wx": 42,
+      "wy": 773,
+      "bw": 300,
+      "bh": 80,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 46,
+      "screenName": "",
+      "opts": {
+        "showCpu": true,
+        "showRam": true,
+        "showDisk": true,
+        "showTemp": false,
+        "showGpu": false,
+        "interval": "2",
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w2",
+      "type": "media",
+      "variant": "card",
+      "wx": 2218,
+      "wy": 137,
+      "bw": 288,
+      "bh": 435,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 52,
+      "screenName": "",
+      "opts": {
+        "artTint": true,
+        "showProgress": true,
+        "scroll": true,
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w3",
+      "type": "weather",
+      "variant": "forecast",
+      "wx": 32,
+      "wy": 137,
+      "bw": 320,
+      "bh": 232,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 49,
+      "screenName": "",
+      "opts": {
+        "tone": "surface"
+      }
+    },
+    {
+      "uid": "w4",
+      "type": "kdeconnect",
+      "variant": "remote",
+      "wx": 2211,
+      "wy": 927,
+      "bw": 300,
+      "bh": 214,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 51,
+      "screenName": "",
+      "opts": {
+        "showShare": true,
+        "showRing": true,
+        "showClipboard": true,
+        "showBrowse": true,
+        "deviceId": "",
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w8",
+      "type": "photo",
+      "variant": "frame",
+      "wx": 56,
+      "wy": 443,
+      "bw": 300,
+      "bh": 220,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 48,
+      "screenName": "",
+      "opts": {
+        "source": "pictures",
+        "every": "60",
+        "shape": "circle",
+        "showDate": false,
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w9",
+      "type": "photo",
+      "variant": "shape",
+      "wx": 2253,
+      "wy": 640,
+      "bw": 220,
+      "bh": 220,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 53,
+      "screenName": "",
+      "opts": {
+        "source": "pictures",
+        "every": "15",
+        "shape": "cookie12",
+        "showDate": true,
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w10",
+      "type": "fetch",
+      "variant": "card",
+      "wx": 26,
+      "wy": 927,
+      "bw": 330,
+      "bh": 344,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 47,
+      "screenName": "",
+      "opts": {
+        "tone": "auto"
+      }
+    }
+  ]
+}

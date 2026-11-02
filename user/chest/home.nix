@@ -1,6 +1,14 @@
-{ pkgs, pkgs-pinned, host, ... }: {
+{ pkgs, pkgs-pinned, lib, osConfig, ... }: {
   imports = [
     ../../modules/user/packages/cs_utils.nix
+    ../../modules/user/lucid
+    ./modules/lucid
+  ] ++ lib.optionals (osConfig.networking.hostName == "Impreza") [
+    ../../host/Impreza/modules/lucid
+  ] ++ lib.optionals (osConfig.networking.hostName == "Rias") [
+    ../../host/Rias/modules/lucid
+  ] ++ lib.optionals (osConfig.networking.hostName == "Eclipse") [
+    ../../host/Eclipse/modules/lucid
   ];
   disabledModules = [
     ../../modules/user/packages/art.nix

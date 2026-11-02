@@ -1,5 +1,5 @@
 { pkgs, config, lib, osConfig, inputs, ... }: let
-  mikuFrost = osConfig.networking.hostName == "Eclipse";
+  mikuFrost = builtins.elem osConfig.networking.hostName [ "Eclipse" "Impreza" ];
   colors = config.lib.stylix.colors.withHashtag;
   accent = colors.${config.stylix.accent};
   # Render the same Stylix templates, changing only native translucency and accent.

@@ -1,0 +1,483 @@
+{
+  "version": 1,
+  "binds": [
+    {
+      "id": "wallpaper-picker",
+      "keys": "SUPER + W",
+      "desc": "Wallpaper picker",
+      "category": "Lucid"
+    },
+    {
+      "id": "wallpaper-random",
+      "keys": "SUPER + SHIFT + W",
+      "desc": "Set a random wallpaper",
+      "category": "Desktop"
+    },
+    {
+      "id": "calculator-volume",
+      "keys": "XF86Calculator",
+      "desc": "Open volume mixer",
+      "category": "Apps"
+    },
+    {
+      "id": "zoom-reset-scroll-up",
+      "keys": "SUPER + SHIFT + mouse_up",
+      "desc": "Reset cursor zoom",
+      "category": "Accessibility"
+    },
+    {
+      "id": "zoom-reset-scroll-down",
+      "keys": "SUPER + SHIFT + mouse_down",
+      "desc": "Reset cursor zoom",
+      "category": "Accessibility"
+    },
+    {
+      "id": "zoom-reset-minus",
+      "keys": "SUPER + SHIFT + minus",
+      "desc": "Reset cursor zoom",
+      "category": "Accessibility"
+    },
+    {
+      "id": "zoom-reset-kp-subtract",
+      "keys": "SUPER + SHIFT + KP_SUBTRACT",
+      "desc": "Reset cursor zoom",
+      "category": "Accessibility"
+    },
+    {
+      "id": "zoom-reset-zero",
+      "keys": "SUPER + SHIFT + 0",
+      "desc": "Reset cursor zoom",
+      "category": "Accessibility"
+    },
+    {
+      "id": "zoom-in-equal",
+      "keys": "SUPER + equal",
+      "desc": "Zoom in",
+      "category": "Accessibility",
+      "opts": {
+        "repeating": true
+      }
+    },
+    {
+      "id": "zoom-out-minus",
+      "keys": "SUPER + minus",
+      "desc": "Zoom out",
+      "category": "Accessibility",
+      "opts": {
+        "repeating": true
+      }
+    },
+    {
+      "id": "zoom-in-kp-add",
+      "keys": "SUPER + KP_ADD",
+      "desc": "Zoom in",
+      "category": "Accessibility",
+      "opts": {
+        "repeating": true
+      }
+    },
+    {
+      "id": "zoom-out-kp-subtract",
+      "keys": "SUPER + KP_SUBTRACT",
+      "desc": "Zoom out",
+      "category": "Accessibility",
+      "opts": {
+        "repeating": true
+      }
+    },
+    {
+      "id": "widgets-panel",
+      "keys": "SUPER + SHIFT + G",
+      "desc": "Toggle widgets panel",
+      "category": "Lucid"
+    },
+    {
+      "id": "launcher",
+      "keys": "SUPER + D",
+      "desc": "App launcher",
+      "category": "Lucid"
+    },
+    {
+      "id": "vaultwarden-password",
+      "keys": "SUPER + X",
+      "desc": "Type a password from Vaultwarden",
+      "category": "Apps"
+    },
+    {
+      "id": "clipse",
+      "keys": "SUPER + V",
+      "desc": "Clipboard manager",
+      "category": "Apps"
+    },
+    {
+      "id": "clipboard",
+      "keys": "SUPER + SHIFT + V",
+      "desc": "Clipboard history",
+      "category": "Lucid"
+    },
+    {
+      "id": "screenshot",
+      "keys": "Print",
+      "desc": "Full screenshot",
+      "category": "Screenshots"
+    },
+    {
+      "id": "screenshot-full",
+      "keys": "SUPER + Print",
+      "desc": "Full screenshot",
+      "category": "Screenshots"
+    },
+    {
+      "id": "screenshot-region",
+      "keys": "CTRL + Print",
+      "desc": "Region screenshot",
+      "category": "Screenshots"
+    },
+    {
+      "id": "screenshot-window",
+      "keys": "ALT + Print",
+      "desc": "Window screenshot",
+      "category": "Screenshots"
+    },
+    {
+      "id": "terminal",
+      "keys": "SUPER + RETURN",
+      "desc": "Terminal",
+      "category": "Apps"
+    },
+    {
+      "id": "close-window",
+      "keys": "SUPER + Q",
+      "desc": "Close window",
+      "category": "Windows"
+    },
+    {
+      "id": "exit-hyprland",
+      "keys": "SUPER + M",
+      "desc": "Exit Hyprland",
+      "category": "Session"
+    },
+    {
+      "id": "file-manager",
+      "keys": "SUPER + E",
+      "desc": "File manager",
+      "category": "Apps"
+    },
+    {
+      "id": "toggle-float",
+      "keys": "SUPER + F",
+      "desc": "Toggle floating window",
+      "category": "Windows"
+    },
+    {
+      "id": "toggle-pseudo",
+      "keys": "SUPER + P",
+      "desc": "Toggle pseudo-tile",
+      "category": "Windows"
+    },
+    {
+      "id": "toggle-split",
+      "keys": "SUPER + J",
+      "desc": "Toggle split direction",
+      "category": "Windows"
+    },
+    {
+      "id": "swap-split",
+      "keys": "SUPER + K",
+      "desc": "Swap split direction",
+      "category": "Windows"
+    },
+    {
+      "id": "focus-left",
+      "keys": "SUPER + LEFT",
+      "desc": "Focus left",
+      "category": "Windows"
+    },
+    {
+      "id": "focus-right",
+      "keys": "SUPER + RIGHT",
+      "desc": "Focus right",
+      "category": "Windows"
+    },
+    {
+      "id": "focus-up",
+      "keys": "SUPER + UP",
+      "desc": "Focus up",
+      "category": "Windows"
+    },
+    {
+      "id": "focus-down",
+      "keys": "SUPER + DOWN",
+      "desc": "Focus down",
+      "category": "Windows"
+    },
+    {
+      "id": "swap-left",
+      "keys": "SUPER + SHIFT + LEFT",
+      "desc": "Move window left",
+      "category": "Windows"
+    },
+    {
+      "id": "swap-right",
+      "keys": "SUPER + SHIFT + RIGHT",
+      "desc": "Move window right",
+      "category": "Windows"
+    },
+    {
+      "id": "swap-up",
+      "keys": "SUPER + SHIFT + UP",
+      "desc": "Move window up",
+      "category": "Windows"
+    },
+    {
+      "id": "swap-down",
+      "keys": "SUPER + SHIFT + DOWN",
+      "desc": "Move window down",
+      "category": "Windows"
+    },
+    {
+      "id": "resize-left",
+      "keys": "SUPER + CTRL + LEFT",
+      "desc": "Resize window left",
+      "category": "Windows"
+    },
+    {
+      "id": "resize-right",
+      "keys": "SUPER + CTRL + RIGHT",
+      "desc": "Resize window right",
+      "category": "Windows"
+    },
+    {
+      "id": "resize-up",
+      "keys": "SUPER + CTRL + UP",
+      "desc": "Resize window up",
+      "category": "Windows"
+    },
+    {
+      "id": "resize-down",
+      "keys": "SUPER + CTRL + DOWN",
+      "desc": "Resize window down",
+      "category": "Windows"
+    },
+    {
+      "id": "workspace-focus",
+      "keys": "SUPER + {key}",
+      "desc": "Focus workspace {n}",
+      "category": "Workspaces",
+      "each": "workspace"
+    },
+    {
+      "id": "workspace-move",
+      "keys": "SUPER + SHIFT + {key}",
+      "desc": "Move window to workspace {n}",
+      "category": "Workspaces",
+      "each": "workspace"
+    },
+    {
+      "id": "scratchpad",
+      "keys": "SUPER + ALT + P",
+      "desc": "Toggle scratchpad",
+      "category": "Workspaces",
+      "type": "lua",
+      "lua": "specials.scratchpad()"
+    },
+    {
+      "id": "scratchpad-stash",
+      "keys": "SUPER + ALT + S",
+      "desc": "Stash or restore the focused window",
+      "category": "Workspaces",
+      "type": "lua",
+      "lua": "specials.stash()"
+    },
+    {
+      "id": "special-music",
+      "keys": "SUPER + ALT + M",
+      "desc": "Toggle Music workspace",
+      "category": "Workspaces",
+      "type": "lua",
+      "lua": "specials.toggle('music')"
+    },
+    {
+      "id": "special-comms",
+      "keys": "SUPER + ALT + C",
+      "desc": "Toggle Comms workspace",
+      "category": "Workspaces",
+      "type": "lua",
+      "lua": "specials.toggle('comms')"
+    },
+    {
+      "id": "special-todo",
+      "keys": "SUPER + ALT + T",
+      "desc": "Toggle To-do workspace",
+      "category": "Workspaces",
+      "type": "lua",
+      "lua": "specials.toggle('todo')"
+    },
+    {
+      "id": "special-sysmon",
+      "keys": "SUPER + ALT + B",
+      "desc": "Toggle system monitor workspace",
+      "category": "Workspaces",
+      "type": "lua",
+      "lua": "specials.toggle('sysmon')"
+    },
+    {
+      "id": "daemons-workspace",
+      "keys": "SUPER + ALT + D",
+      "desc": "Daemons workspace",
+      "category": "Workspaces",
+      "type": "lua",
+      "lua": "specials.toggle('daemons')"
+    },
+    {
+      "id": "fullscreen",
+      "keys": "SUPER + SHIFT + F",
+      "desc": "Toggle fullscreen",
+      "category": "Windows"
+    },
+    {
+      "id": "workspace-next-scroll",
+      "keys": "SUPER + mouse_down",
+      "desc": "Next workspace",
+      "category": "Workspaces"
+    },
+    {
+      "id": "workspace-previous-scroll",
+      "keys": "SUPER + mouse_up",
+      "desc": "Previous workspace",
+      "category": "Workspaces"
+    },
+    {
+      "id": "keyboard-brightness-up",
+      "keys": "SUPER + F3",
+      "desc": "Keyboard backlight up",
+      "category": "Displays"
+    },
+    {
+      "id": "keyboard-brightness-down",
+      "keys": "SUPER + F2",
+      "desc": "Keyboard backlight down",
+      "category": "Displays"
+    },
+    {
+      "id": "audio-mute",
+      "keys": "XF86AudioMute",
+      "desc": "Toggle audio mute",
+      "category": "Media"
+    },
+    {
+      "id": "microphone-mute",
+      "keys": "XF86AudioMicMute",
+      "desc": "Toggle microphone mute",
+      "category": "Media"
+    },
+    {
+      "id": "play-pause",
+      "keys": "XF86AudioPlay",
+      "desc": "Play or pause media",
+      "category": "Media"
+    },
+    {
+      "id": "file-manager-media",
+      "keys": "XF86Explorer",
+      "desc": "File manager",
+      "category": "Apps"
+    },
+    {
+      "id": "email",
+      "keys": "XF86Mail",
+      "desc": "Email",
+      "category": "Apps"
+    },
+    {
+      "id": "browser",
+      "keys": "XF86WWW",
+      "desc": "Web browser",
+      "category": "Apps"
+    },
+    {
+      "id": "display-brightness-down",
+      "keys": "XF86MonBrightnessDown",
+      "desc": "Brightness down",
+      "category": "Displays"
+    },
+    {
+      "id": "display-brightness-up",
+      "keys": "XF86MonBrightnessUp",
+      "desc": "Brightness up",
+      "category": "Displays"
+    },
+    {
+      "id": "volume-up",
+      "keys": "XF86AudioRaiseVolume",
+      "desc": "Volume up",
+      "category": "Media",
+      "opts": {
+        "repeating": true
+      }
+    },
+    {
+      "id": "volume-down",
+      "keys": "XF86AudioLowerVolume",
+      "desc": "Volume down",
+      "category": "Media",
+      "opts": {
+        "repeating": true
+      }
+    },
+    {
+      "id": "previous-seek",
+      "keys": "XF86AudioPrev",
+      "desc": "Seek backward",
+      "category": "Media",
+      "opts": {
+        "click": true
+      }
+    },
+    {
+      "id": "next-seek",
+      "keys": "XF86AudioNext",
+      "desc": "Seek forward",
+      "category": "Media",
+      "opts": {
+        "click": true
+      }
+    },
+    {
+      "id": "previous-track",
+      "keys": "XF86AudioPrev",
+      "desc": "Previous track",
+      "category": "Media",
+      "opts": {
+        "long_press": true
+      }
+    },
+    {
+      "id": "next-track",
+      "keys": "XF86AudioNext",
+      "desc": "Next track",
+      "category": "Media",
+      "opts": {
+        "long_press": true
+      }
+    },
+    {
+      "id": "move-window-drag",
+      "keys": "SUPER + mouse:272",
+      "desc": "Move window with mouse",
+      "category": "Windows",
+      "opts": {
+        "mouse": true
+      }
+    },
+    {
+      "id": "resize-window-drag",
+      "keys": "SUPER + mouse:273",
+      "desc": "Resize window with mouse",
+      "category": "Windows",
+      "opts": {
+        "mouse": true
+      }
+    }
+  ]
+}

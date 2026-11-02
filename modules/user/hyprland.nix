@@ -28,13 +28,23 @@ in {
     optImport ../../host/${hostname}/modules/hyprland.nix ++
     optImport ../../user/${username}/modules/hyprland.nix;
 
+  options.lucidHyprlandBinds = lib.mkOption {
+    type = lib.types.listOf lib.types.attrs;
+    default = [];
+    internal = true;
+  };
+
+  config = {
   home.packages = with pkgs; [
     ghostty
     pamixer
     clipse
+    cliphist
     wl-clipboard
     wl-clip-persist
     xclip
+    rbw
+    wtype
     awww
     wifitui
   ];
@@ -104,7 +114,10 @@ in {
         { _args = [ "XDG_SCREENSHOTS_DIR" "~/screens" ]; }
       ];
 
-      gesture = [
+      # Lucid's Rias integration loads support/hypr/modules/gestures.lua,
+      # which defines this workspace swipe (and a four-finger variant).
+      # Avoid registering the same 3-finger gesture twice in Hyprland.
+      gesture = lib.optionals (hostname != "Rias") [
         {
           fingers = 3;
           direction = "horizontal";
@@ -115,6 +128,7 @@ in {
       workspace_rule = [
         {
           workspace = "w[t1]";
+          gaps_in = 0;
           gaps_out = 0;
         }
       ];
@@ -150,8 +164,18 @@ in {
         ])
       ];
 
-      bind = [
+      bind = lib.mkIf (username != "chest") config.lucidHyprlandBinds;
+    };
+  };
+
+  lucidHyprlandBinds = [
         (bind "SUPER + V" (exec "ghostty --title=clipse -e clipse"))
+        (bind "SUPER + X" (exec "qs ipc call -- launcher search '>vault'"))
+        (hyprLua.bind "SUPER + SHIFT + V" (hyprLua.execLauncher "qs ipc call launcher clipboard"))
+        (bind "Print" (exec "qs ipc call screenshot full"))
+        (bind "SUPER + Print" (exec "qs ipc call screenshot full"))
+        (bind "CTRL + Print" (exec "qs ipc call snap region"))
+        (bind "ALT + Print" (exec "qs ipc call snap window"))
         (bind "SUPER + RETURN" (exec "ghostty"))
         (bind "SUPER + Q" "hl.dsp.window.close()")
         (bind "SUPER + M" "hl.dsp.exit()")
@@ -204,7 +228,5 @@ in {
         (bindWithFlags "SUPER + mouse:272" "hl.dsp.window.drag()" { mouse = true; })
         (bindWithFlags "SUPER + mouse:273" "hl.dsp.window.resize()" { mouse = true; })
       ];
-    };
   };
-
 }

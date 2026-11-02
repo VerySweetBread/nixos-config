@@ -13,7 +13,6 @@
     ./user/sops.nix
     ./user/ssh.nix
     ./user/walker.nix
-    ./user/wob.nix
     ./user/yazi.nix
     ./user/zsh.nix
 

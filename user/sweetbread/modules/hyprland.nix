@@ -1,16 +1,14 @@
-{ pkgs, lib, config, osConfig, inputs, ... }: {
-  wayland.windowManager.hyprland = let
+{ pkgs, lib, config, osConfig, ... }:
+let
     colors = config.lib.stylix.colors;
     accent = colors.${config.stylix.accent};
-    hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
-
     wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
       libraries = [ pkgs.python3Packages.requests ];
       flakeIgnore = [ "E111" "E121" "E241" "E501" "E701" "E731" ];
     } /*py*/ ''
       import requests as requests
       from random import choice
-      from os import listdir, makedirs, remove, replace, system
+      from os import listdir, makedirs, remove, replace
       from os.path import exists
       from subprocess import run
 
@@ -123,9 +121,15 @@
       finally:
         if filename is not None:
           notify("Applying wallpaper", 100)
-          system(f"awww img {folder}/{filename} --transition-type center")
+          run([
+            "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper/set-wallpaper.sh",
+            f"{folder}/{filename}",
+          ], check=False)
     '';
-  in {
+in {
+  home.packages = [ wallpaper_changer ];
+
+  wayland.windowManager.hyprland = {
     settings = {
       config = {
         general = {
@@ -188,10 +192,6 @@
         { leaf = "workspaces"; enabled = true; speed = 6; bezier = "default"; }
       ];
 
-      on = [
-        (hyprLua.onStart [ "${lib.getExe wallpaper_changer}" ])
-      ];
-
       workspace_rule = [
         {
           workspace = "2";
@@ -199,12 +199,6 @@
         }
       ];
 
-      bind = [
-        (hyprLua.bind "Print" (hyprLua.exec "${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m output"))
-        (hyprLua.bind "CTRL + Print" (hyprLua.exec "${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m region"))
-        (hyprLua.bind "ALT + Print" (hyprLua.exec "${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m window"))
-        (hyprLua.bind "SUPER + W" (hyprLua.exec "${lib.getExe wallpaper_changer}"))
-      ];
     };
   };
 }

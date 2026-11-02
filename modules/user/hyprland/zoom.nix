@@ -17,7 +17,7 @@ let
     hl.config({ cursor = { zoom_factor = math.max(1, current * 0.9) } })
   end'';
 in {
-  wayland.windowManager.hyprland.settings.bind = [
+  lucidHyprlandBinds = [
     (bind "SUPER + SHIFT + mouse_up" resetZoom)
     (bind "SUPER + SHIFT + mouse_down" resetZoom)
     (bind "SUPER + SHIFT + minus" resetZoom)
