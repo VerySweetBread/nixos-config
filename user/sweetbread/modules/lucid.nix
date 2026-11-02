@@ -1,5 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, osConfig, pkgs, ... }:
 let
+  liveDecoder = if builtins.elem osConfig.networking.hostName [ "Rias" "Eclipse" ] then "cuda" else "vaapi";
   source = pkgs.fetchgit {
     url = "https://github.com/Sn3akyy1/lucid.git";
     rev = "bdd7f79da18efd837f79dcecbe5d2ec178abc10c";
@@ -36,6 +37,7 @@ from pathlib import Path
 
 output, scheme_path, scripts, accent_key = sys.argv[1:]
 sys.path.insert(0, scripts)
+from lucid_palette import at_tone
 importer = runpy.run_path(str(Path(scripts) / "add-theme.py"))
 scheme = importer["parse_base16"](scheme_path, Path(scheme_path).read_text())
 if scheme is None:
@@ -48,6 +50,28 @@ hints["tertiary"] = scheme["colors"]["base0c" if accent_key == "base0b" else "ba
 palette = importer["build_palette"](
     bg, fg, accents, hints, mode="dark" if importer["is_dark"](bg) else "light"
 )
+if importer["is_dark"](bg):
+    colors = scheme["colors"]
+    # Keep the Base16 dark surface ladder. Lucid's built-in Mocha uses base00
+    # for its main panels, with base01/base02 as the raised surfaces; the
+    # generic Material builder starts at base02 and makes the whole shell pale.
+    background_tone = importer["tone"](bg)
+    darkest = importer["hx"](at_tone(bg, background_tone - 4))
+    near_background = importer["hx"](at_tone(bg, background_tone - 2))
+    palette.update({
+        "surface": colors["base00"],
+        "surface_dim": darkest,
+        "surface_bright": importer["hx"](at_tone(bg, background_tone + 8)),
+        "surface_container_lowest": darkest,
+        "surface_container_low": near_background,
+        "surface_container": colors["base00"],
+        "surface_container_high": colors["base01"],
+        "surface_container_highest": colors["base02"],
+        "surface_variant": colors["base01"],
+        "on_surface_variant": colors["base04"],
+        "outline": colors["base03"],
+        "outline_variant": colors["base01"],
+    })
 Path(output).write_text(json.dumps(palette, indent=2) + "\n")
 PY
   '';
@@ -140,7 +164,8 @@ in {
       prefs_tmp=$(${pkgs.coreutils}/bin/mktemp "$target/lucidprefs/prefs.json.XXXXXX")
       if ${pkgs.jq}/bin/jq --arg font ${lib.escapeShellArg config.stylix.fonts.sansSerif.name} \
         --arg wallpaperDir ${lib.escapeShellArg wallpaperDir} \
-        '.barEnabled = true | .widgetOnTop = false | .widgetHideFullscreen = true | .fontFamily = $font | .wallpaperFolder = $wallpaperDir' \
+        --arg decoder ${lib.escapeShellArg liveDecoder} \
+        '.barEnabled = true | .widgetOnTop = false | .widgetHideFullscreen = true | .fontFamily = $font | .wallpaperFolder = $wallpaperDir | .liveDecoder = $decoder' \
         "$target/lucidprefs/prefs.json" > "$prefs_tmp"; then
         ${pkgs.coreutils}/bin/chmod 644 "$prefs_tmp"
         ${pkgs.coreutils}/bin/mv "$prefs_tmp" "$target/lucidprefs/prefs.json"

@@ -5,6 +5,7 @@
     ./user/helix.nix
     ./user/hyprland.nix
     ./user/hyprlock.nix
+    ../user/sweetbread/modules/lucid.nix
     ./user/mako.nix
     ./user/neofetch.nix
     ./user/qt.nix
