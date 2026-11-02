@@ -23,48 +23,48 @@ let
   defaultWallpaper = "${wallpaperDir}/bluehour.jpg";
   hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
   colors = config.lib.stylix.colors.withHashtag;
-  accent = colors.${config.stylix.accent};
-  palette = {
-    primary = accent;
-    on_primary = colors.base00;
-    primary_container = accent;
-    on_primary_container = colors.base05;
-    secondary = colors.base0D;
-    secondary_container = colors.base02;
-    tertiary = colors.base0E;
-    on_tertiary = colors.base00;
-    error = colors.base08;
-    on_error = colors.base00;
-    error_container = colors.base03;
-    surface = colors.base00;
-    on_surface = colors.base05;
-    surface_variant = colors.base02;
-    on_surface_variant = colors.base07;
-    surface_dim = colors.base01;
-    surface_container_lowest = colors.base01;
-    surface_container_low = colors.base00;
-    surface_container = colors.base00;
-    surface_container_high = colors.base02;
-    surface_container_highest = colors.base03;
-    outline = colors.base04;
-    outline_variant = colors.base02;
-    inverse_surface = colors.base05;
-    shadow = "#000000";
-    scrim = "#000000";
-    source_color = accent;
-  };
-  paletteFile = pkgs.writeText "lucid-stylix-palette.json" (builtins.toJSON palette);
+  paletteFile = pkgs.runCommand "lucid-stylix-palette.json" {
+    nativeBuildInputs = [ pkgs.python3 ];
+  } ''
+    python3 - "$out" ${lib.escapeShellArg config.stylix.base16Scheme} \
+      ${lib.escapeShellArg "${source}/support/lucid"} \
+      ${lib.escapeShellArg config.stylix.accent} <<'PY'
+import json
+import runpy
+import sys
+from pathlib import Path
+
+output, scheme_path, scripts, accent_key = sys.argv[1:]
+sys.path.insert(0, scripts)
+importer = runpy.run_path(str(Path(scripts) / "add-theme.py"))
+scheme = importer["parse_base16"](scheme_path, Path(scheme_path).read_text())
+if scheme is None:
+    raise SystemExit("Stylix scheme is not valid Base16")
+bg, fg, accents, hints = importer["to_palette"](scheme)
+accent_key = accent_key.lower()
+hints["primary"] = scheme["colors"][accent_key]
+hints["secondary"] = scheme["colors"]["base0d" if accent_key != "base0d" else "base0e"]
+hints["tertiary"] = scheme["colors"]["base0c" if accent_key == "base0b" else "base0b"]
+palette = importer["build_palette"](
+    bg, fg, accents, hints, mode="dark" if importer["is_dark"](bg) else "light"
+)
+Path(output).write_text(json.dumps(palette, indent=2) + "\n")
+PY
+  '';
   themeMeta = pkgs.writeText "lucid-stylix-meta.json" (builtins.toJSON {
     id = "stylix";
     name = "Stylix";
     desc = "Active Stylix palette";
     swatchBg = colors.base00;
-    swatchAccent = accent;
+    swatchAccent = colors.${config.stylix.accent};
     source = "Home Manager";
     detected = "base16";
     user = true;
   });
   themeName = pkgs.writeText "lucid-current-theme" "stylix\n";
+  applyTheme = pkgs.writeShellScript "lucid-apply-theme" ''
+    exec "$HOME/.config/lucid/apply-theme-upstream.sh" --shell-only "$@"
+  '';
   qmlPackages = with pkgs.qt6; [ qt5compat qtmultimedia ];
   lucid = pkgs.writeShellScript "lucid" ''
     export NIXPKGS_QT6_QML_IMPORT_PATH="${lib.makeSearchPath "lib/qt-6/qml" qmlPackages}:''${NIXPKGS_QT6_QML_IMPORT_PATH:-}"
@@ -121,6 +121,18 @@ in {
     $DRY_RUN_CMD install -m755 "${source}/support/wallpaper/set-wallpaper.sh" \
       "${wallpaperScript}"
 
+    lucid_dir="${config.home.homeDirectory}/.config/lucid"
+    $DRY_RUN_CMD mkdir -p "$lucid_dir/themes"
+    $DRY_RUN_CMD ${pkgs.rsync}/bin/rsync -rltp --chmod=Du+rwx,Fu+rw --ignore-existing \
+      "${source}/support/lucid/themes/" "$lucid_dir/themes/"
+    for script in palette-edit.py lucid_palette.py add-theme.py scheme-gallery.py gen-light-palette.py; do
+      $DRY_RUN_CMD install -m644 "${source}/support/lucid/$script" "$lucid_dir/$script"
+    done
+    $DRY_RUN_CMD install -m755 "${source}/support/lucid/apply-theme.sh" \
+      "$lucid_dir/apply-theme-upstream.sh"
+    $DRY_RUN_CMD install -m755 ${applyTheme} \
+      "$lucid_dir/apply-theme.sh"
+
     if [ ! -e "$target/lucidprefs/prefs.json" ]; then
       $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-prefs.json} "$target/lucidprefs/prefs.json"
     fi
@@ -165,10 +177,15 @@ in {
       "${config.home.homeDirectory}/.config/lucid/themes/stylix/quickshell.json"
     $DRY_RUN_CMD install -m644 ${themeMeta} \
       "${config.home.homeDirectory}/.config/lucid/themes/stylix/meta.json"
-    $DRY_RUN_CMD install -m644 ${paletteFile} \
-      "${config.home.homeDirectory}/.cache/quickshell/matugen.json"
-    $DRY_RUN_CMD install -m644 ${themeName} \
-      "${config.home.homeDirectory}/.cache/current_theme"
+    if [ ! -e "${config.home.homeDirectory}/.cache/current_theme" ]; then
+      $DRY_RUN_CMD install -m644 ${themeName} \
+        "${config.home.homeDirectory}/.cache/current_theme"
+    fi
+    if [ ! -e "${config.home.homeDirectory}/.cache/current_theme" ] || \
+        [ "$(${pkgs.coreutils}/bin/cat "${config.home.homeDirectory}/.cache/current_theme")" = stylix ]; then
+      $DRY_RUN_CMD install -m644 ${paletteFile} \
+        "${config.home.homeDirectory}/.cache/quickshell/matugen.json"
+    fi
   '';
 
   systemd.user.services.lucid = {
