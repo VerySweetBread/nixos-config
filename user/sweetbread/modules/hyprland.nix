@@ -199,9 +199,6 @@
       ];
 
       bind = [
-        (hyprLua.bind "Print" (hyprLua.exec "${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m output"))
-        (hyprLua.bind "CTRL + Print" (hyprLua.exec "${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m region"))
-        (hyprLua.bind "ALT + Print" (hyprLua.exec "${lib.getExe pkgs.hyprshot} -z -o ~/Screenshots -m active -m window"))
         (hyprLua.bind "SUPER + W" (hyprLua.exec "qs ipc call launcher wallpaper"))
         (hyprLua.bind "SUPER + SHIFT + W" (hyprLua.exec "${lib.getExe wallpaper_changer}"))
       ];

@@ -90,10 +90,11 @@ PY
     exec "$HOME/.config/lucid/apply-theme-upstream.sh" --shell-only "$@"
   '';
   qmlPackages = with pkgs.qt6; [ qt5compat qtmultimedia ];
+  tesseract = pkgs.tesseract4.override { enableLanguages = [ "eng" "rus" ]; };
   lucid = pkgs.writeShellScript "lucid" ''
     export NIXPKGS_QT6_QML_IMPORT_PATH="${lib.makeSearchPath "lib/qt-6/qml" qmlPackages}:''${NIXPKGS_QT6_QML_IMPORT_PATH:-}"
     export QT_PLUGIN_PATH="${lib.makeSearchPath "lib/qt-6/plugins" qmlPackages}:''${QT_PLUGIN_PATH:-}"
-    export PATH="${lib.makeBinPath (with pkgs; [ bash coreutils curl jq pulseaudio python3 xdg-utils ])}:$PATH"
+    export PATH="${lib.makeBinPath (with pkgs; [ bash cliphist coreutils curl ffmpeg grim imagemagick jq libnotify pulseaudio python3 wf-recorder wl-clipboard xdg-utils ])}:${tesseract}/bin:$PATH"
     exec ${pkgs.quickshell}/bin/qs --no-duplicate --path "${config.home.homeDirectory}/.config/quickshell"
   '';
   startWallpaper = pkgs.writeShellScript "lucid-wallpaper-start" ''
@@ -116,7 +117,7 @@ PY
 in {
   programs.waybar.enable = lib.mkForce false;
   services.mako.enable = lib.mkForce false;
-  home.packages = with pkgs; [ ffmpeg imagemagick ];
+  home.packages = with pkgs; [ cliphist ffmpeg grim imagemagick libnotify wf-recorder tesseract ];
 
   home.activation.installLucid = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     target="${config.home.homeDirectory}/.config/quickshell"

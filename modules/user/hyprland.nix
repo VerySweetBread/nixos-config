@@ -32,6 +32,7 @@ in {
     ghostty
     pamixer
     clipse
+    cliphist
     wl-clipboard
     wl-clip-persist
     xclip
@@ -152,6 +153,11 @@ in {
 
       bind = [
         (bind "SUPER + V" (exec "ghostty --title=clipse -e clipse"))
+        (bind "SUPER + SHIFT + V" (exec "qs ipc call launcher clipboard"))
+        (bind "Print" (exec "qs ipc call snap toggle"))
+        (bind "SUPER + Print" (exec "qs ipc call screenshot full"))
+        (bind "CTRL + Print" (exec "qs ipc call snap region"))
+        (bind "ALT + Print" (exec "qs ipc call snap window"))
         (bind "SUPER + RETURN" (exec "ghostty"))
         (bind "SUPER + Q" "hl.dsp.window.close()")
         (bind "SUPER + M" "hl.dsp.exit()")
