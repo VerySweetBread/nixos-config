@@ -24,6 +24,10 @@
     hyprland.package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
 
+  environment.systemPackages = [
+    inputs.hyprland.inputs.hyprland-guiutils.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
+
   security.wrappers.Hyprland.source = lib.mkForce
     "${config.programs.hyprland.package}/bin/.Hyprland-wrapped";
 
