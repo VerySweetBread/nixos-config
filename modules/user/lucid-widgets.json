@@ -1,0 +1,20 @@
+{
+  "nextId": 3,
+  "boardFull": true,
+  "instances": [
+    {
+      "uid": "w1",
+      "type": "clock",
+      "variant": "digital",
+      "wx": 40,
+      "wy": 70
+    },
+    {
+      "uid": "w2",
+      "type": "system",
+      "variant": "rings",
+      "wx": 40,
+      "wy": 250
+    }
+  ]
+}

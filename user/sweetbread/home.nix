@@ -1,4 +1,6 @@
 { pkgs, ... }: {
+  imports = [ ./modules/lucid.nix ];
+
   programs.hyprlock.enable = true;
   home.packages = with pkgs; [
     android-studio

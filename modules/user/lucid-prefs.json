@@ -1,0 +1,11 @@
+{
+  "barEnabled": true,
+  "dockEnabled": true,
+  "widgetsEnabled": true,
+  "widgetOnTop": false,
+  "widgetHideFullscreen": true,
+  "desktopIcons": false,
+  "toastEnabled": true,
+  "liveWallpapers": true,
+  "fontFamily": "Pixeloid Sans"
+}
