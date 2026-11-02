@@ -11,6 +11,16 @@ let
     ];
     nonConeMode = true;
   };
+  wallpapers = pkgs.fetchgit {
+    url = "https://github.com/Sn3akyy1/lucid.git";
+    rev = "bdd7f79da18efd837f79dcecbe5d2ec178abc10c";
+    hash = "sha256-rXEYlr2bSe6EP6vxyayK7iXHk+Mmqs7duiE0pweIozI=";
+    sparseCheckout = [ "/wallpapers/catppuccin-mocha/*" ];
+    nonConeMode = true;
+  };
+  wallpaperDir = "${config.home.homeDirectory}/Pictures/wallpapers/stylix";
+  wallpaperScript = "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper/set-wallpaper.sh";
+  defaultWallpaper = "${wallpaperDir}/bluehour.jpg";
   hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
   colors = config.lib.stylix.colors.withHashtag;
   accent = colors.${config.stylix.accent};
@@ -62,9 +72,27 @@ let
     export PATH="${lib.makeBinPath (with pkgs; [ bash coreutils curl jq pulseaudio python3 xdg-utils ])}:$PATH"
     exec ${pkgs.quickshell}/bin/qs --no-duplicate --path "${config.home.homeDirectory}/.config/quickshell"
   '';
+  startWallpaper = pkgs.writeShellScript "lucid-wallpaper-start" ''
+    export PATH="${lib.makeBinPath (with pkgs; [ awww bash coreutils ffmpeg imagemagick jq util-linux ])}:$PATH"
+    selected="${defaultWallpaper}"
+    if [ -s "${config.home.homeDirectory}/.cache/current_live_wallpaper" ]; then
+      saved=$(${pkgs.coreutils}/bin/head -n1 "${config.home.homeDirectory}/.cache/current_live_wallpaper")
+      if [ -f "$saved" ]; then
+        selected="$saved"
+      fi
+    fi
+    if [ -s "${config.home.homeDirectory}/.cache/current_wallpaper" ]; then
+      saved=$(${pkgs.coreutils}/bin/cat "${config.home.homeDirectory}/.cache/current_wallpaper")
+      if [ "$selected" = "${defaultWallpaper}" ] && [ -f "$saved" ]; then
+        selected="$saved"
+      fi
+    fi
+    exec "${wallpaperScript}" "$selected"
+  '';
 in {
   programs.waybar.enable = lib.mkForce false;
   services.mako.enable = lib.mkForce false;
+  home.packages = with pkgs; [ ffmpeg imagemagick ];
 
   home.activation.installLucid = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     target="${config.home.homeDirectory}/.config/quickshell"
@@ -86,14 +114,21 @@ in {
       "${source}/" "$target/"
     $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-shell.qml} "$target/shell.qml"
     $DRY_RUN_CMD install -m644 ${../../../modules/user/LucidBar.qml} "$target/LucidBar.qml"
+    $DRY_RUN_CMD mkdir -p "${wallpaperDir}" \
+      "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper"
+    $DRY_RUN_CMD ${pkgs.rsync}/bin/rsync -rltp --chmod=Du+rwx,Fu+rw --ignore-existing \
+      "${wallpapers}/wallpapers/catppuccin-mocha/" "${wallpaperDir}/"
+    $DRY_RUN_CMD install -m755 "${source}/support/wallpaper/set-wallpaper.sh" \
+      "${wallpaperScript}"
 
     if [ ! -e "$target/lucidprefs/prefs.json" ]; then
       $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-prefs.json} "$target/lucidprefs/prefs.json"
     fi
     if [ -z "''${DRY_RUN_CMD:-}" ] && [ -f "$target/lucidprefs/prefs.json" ]; then
       prefs_tmp=$(${pkgs.coreutils}/bin/mktemp "$target/lucidprefs/prefs.json.XXXXXX")
-      if ${pkgs.jq}/bin/jq --arg font '${config.stylix.fonts.sansSerif.name}' \
-        '.barEnabled = true | .widgetOnTop = false | .widgetHideFullscreen = true | .fontFamily = $font' \
+      if ${pkgs.jq}/bin/jq --arg font ${lib.escapeShellArg config.stylix.fonts.sansSerif.name} \
+        --arg wallpaperDir ${lib.escapeShellArg wallpaperDir} \
+        '.barEnabled = true | .widgetOnTop = false | .widgetHideFullscreen = true | .fontFamily = $font | .wallpaperFolder = $wallpaperDir' \
         "$target/lucidprefs/prefs.json" > "$prefs_tmp"; then
         ${pkgs.coreutils}/bin/chmod 644 "$prefs_tmp"
         ${pkgs.coreutils}/bin/mv "$prefs_tmp" "$target/lucidprefs/prefs.json"
@@ -143,6 +178,7 @@ in {
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
+      ExecStartPre = "${startWallpaper}";
       ExecStart = "${lucid}";
       Restart = "on-failure";
       RestartSec = 2;

@@ -7,5 +7,6 @@
   "desktopIcons": false,
   "toastEnabled": true,
   "liveWallpapers": true,
+  "wallpaperFolder": "/home/sweetbread/Wallpapers",
   "fontFamily": "Pixeloid Sans"
 }
