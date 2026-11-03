@@ -189,7 +189,9 @@ in {
   };
 
   wayland.windowManager.hyprland.settings.bind = [
-    (hyprLua.bind "SUPER + D" (hyprLua.exec
-      (if config.home.username == "sweetbread" then "qs ipc call launcher toggle" else "walker")))
+    (hyprLua.bind "SUPER + D"
+      (if config.home.username == "sweetbread"
+      then hyprLua.execLauncher "qs ipc call launcher toggle"
+      else hyprLua.exec "walker"))
   ];
 }

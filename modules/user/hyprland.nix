@@ -153,7 +153,7 @@ in {
 
       bind = [
         (bind "SUPER + V" (exec "ghostty --title=clipse -e clipse"))
-        (bind "SUPER + SHIFT + V" (exec "qs ipc call launcher clipboard"))
+        (hyprLua.bind "SUPER + SHIFT + V" (hyprLua.execLauncher "qs ipc call launcher clipboard"))
         (bind "Print" (exec "qs ipc call snap toggle"))
         (bind "SUPER + Print" (exec "qs ipc call screenshot full"))
         (bind "CTRL + Print" (exec "qs ipc call snap region"))

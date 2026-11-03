@@ -146,6 +146,25 @@ in {
       echo "Lucid launcher application scan pattern changed; refusing to skip Nix profiles" >&2
       exit 1
     fi
+    keyboard_focus='WlrLayershell.keyboardFocus: dockWindow.menuOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None'
+    keyboard_focus_fixed='WlrLayershell.keyboardFocus: dockWindow.menuOpen ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None'
+    if grep -Fq "$keyboard_focus" "$dock_qml"; then
+      $DRY_RUN_CMD sed -i \
+        's/WlrLayershell.keyboardFocus: dockWindow.menuOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None/WlrLayershell.keyboardFocus: dockWindow.menuOpen ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None/' \
+        "$dock_qml"
+    elif ! grep -Fq "$keyboard_focus_fixed" "$dock_qml"; then
+      echo "Lucid launcher keyboard focus pattern changed; refusing to skip focus fix" >&2
+      exit 1
+    fi
+    if ! grep -Fq 'Nix focus workaround for Hyprland 0.57' "$dock_qml"; then
+      if [ "$(grep -Fxc '    onMenuOpenChanged: {' "$dock_qml")" -ne 1 ]; then
+        echo "Lucid menu-open handler changed; refusing to skip focus workaround" >&2
+        exit 1
+      fi
+      $DRY_RUN_CMD sed -i '/    onMenuOpenChanged: {/a\
+        // Nix focus workaround for Hyprland 0.57: detach pointer and keyboard focus while menus are open.\
+        Quickshell.execDetached(["hyprctl", "eval", "hl.config({ input = { follow_mouse = " + (dockWindow.menuOpen ? 2 : 1) + " } })"]);' "$dock_qml"
+    fi
     $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-shell.qml} "$target/shell.qml"
     $DRY_RUN_CMD install -m644 ${../../../modules/user/LucidBar.qml} "$target/LucidBar.qml"
     $DRY_RUN_CMD mkdir -p "${wallpaperDir}" \
