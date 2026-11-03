@@ -170,6 +170,10 @@ in {
     fi
     $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-shell.qml} "$target/shell.qml"
     $DRY_RUN_CMD install -m644 ${../../../modules/user/LucidBar.qml} "$target/LucidBar.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/Agenda.qml} "$target/Agenda.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/CalendarSource.qml} "$target/CalendarSource.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/ClockCalendar.qml} "$target/lucidbar/ClockCalendar.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/thunderbird-calendar.py} "$target/thunderbird-calendar.py"
     $DRY_RUN_CMD mkdir -p "${wallpaperDir}" \
       "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper"
     $DRY_RUN_CMD ${pkgs.rsync}/bin/rsync -rltp --chmod=Du+rwx,Fu+rw --ignore-existing \
