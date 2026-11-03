@@ -19,7 +19,7 @@ let
     sparseCheckout = [ "/wallpapers/catppuccin-mocha/*" ];
     nonConeMode = true;
   };
-  wallpaperDir = "${config.home.homeDirectory}/Pictures/wallpapers/stylix";
+  wallpaperDir = "${config.home.homeDirectory}/Wallpapers";
   wallpaperScript = "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper/set-wallpaper.sh";
   defaultWallpaper = "${wallpaperDir}/bluehour.jpg";
   hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
@@ -137,6 +137,15 @@ in {
       --exclude='/lucidkeys/state.json' \
       --exclude='/lucidwidgets/widgets.json' \
       "${source}/" "$target/"
+    dock_qml="$target/luciddocks/Dock.qml"
+    if grep -Fq '/var/lib/snapd/desktop/applications; do' "$dock_qml"; then
+      $DRY_RUN_CMD sed -i \
+        's#/var/lib/snapd/desktop/applications; do#/var/lib/snapd/desktop/applications $HOME/.nix-profile/share/applications $HOME/.local/state/nix/profile/share/applications /etc/profiles/per-user/$USER/share/applications /nix/profile/share/applications /nix/var/nix/profiles/default/share/applications /run/current-system/sw/share/applications; do#' \
+        "$dock_qml"
+    elif ! grep -Fq '/etc/profiles/per-user/$USER/share/applications; do' "$dock_qml"; then
+      echo "Lucid launcher application scan pattern changed; refusing to skip Nix profiles" >&2
+      exit 1
+    fi
     $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-shell.qml} "$target/shell.qml"
     $DRY_RUN_CMD install -m644 ${../../../modules/user/LucidBar.qml} "$target/LucidBar.qml"
     $DRY_RUN_CMD mkdir -p "${wallpaperDir}" \
