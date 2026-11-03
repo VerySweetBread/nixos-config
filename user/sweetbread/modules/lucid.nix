@@ -12,13 +12,6 @@ let
     ];
     nonConeMode = true;
   };
-  wallpapers = pkgs.fetchgit {
-    url = "https://github.com/Sn3akyy1/lucid.git";
-    rev = "bdd7f79da18efd837f79dcecbe5d2ec178abc10c";
-    hash = "sha256-rXEYlr2bSe6EP6vxyayK7iXHk+Mmqs7duiE0pweIozI=";
-    sparseCheckout = [ "/wallpapers/catppuccin-mocha/*" ];
-    nonConeMode = true;
-  };
   wallpaperDir = "${config.home.homeDirectory}/Wallpapers";
   wallpaperScript = "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper/set-wallpaper.sh";
   widgetLayout = if osConfig.networking.hostName == "Rias"
@@ -115,6 +108,10 @@ PY
         selected="$saved"
       fi
     fi
+    if [ ! -f "$selected" ]; then
+      echo "Lucid startup wallpaper not found; leaving the current wallpaper unchanged" >&2
+      exit 0
+    fi
     exec "${wallpaperScript}" "$selected"
   '';
 in {
@@ -177,8 +174,6 @@ in {
     $DRY_RUN_CMD install -m644 ${../../../modules/user/WidgetLayer.qml} "$target/lucidwidgets/WidgetLayer.qml"
     $DRY_RUN_CMD mkdir -p "${wallpaperDir}" \
       "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper"
-    $DRY_RUN_CMD ${pkgs.rsync}/bin/rsync -rltp --chmod=Du+rwx,Fu+rw --ignore-existing \
-      "${wallpapers}/wallpapers/catppuccin-mocha/" "${wallpaperDir}/"
     $DRY_RUN_CMD install -m755 "${source}/support/wallpaper/set-wallpaper.sh" \
       "${wallpaperScript}"
 
