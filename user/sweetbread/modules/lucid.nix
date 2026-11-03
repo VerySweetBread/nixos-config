@@ -21,6 +21,9 @@ let
   };
   wallpaperDir = "${config.home.homeDirectory}/Wallpapers";
   wallpaperScript = "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper/set-wallpaper.sh";
+  widgetLayout = if osConfig.networking.hostName == "Rias"
+    then ../../../modules/user/lucid-widgets-rias.json
+    else ../../../modules/user/lucid-widgets.json;
   defaultWallpaper = "${wallpaperDir}/bluehour.jpg";
   hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
   colors = config.lib.stylix.colors.withHashtag;
@@ -207,7 +210,7 @@ in {
       $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-pinned.json} "$target/luciddocks/pinned.json"
     fi
     if [ ! -e "$target/lucidwidgets/widgets.json" ]; then
-      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-widgets.json} "$target/lucidwidgets/widgets.json"
+      $DRY_RUN_CMD install -m644 ${widgetLayout} "$target/lucidwidgets/widgets.json"
     fi
 
     for pair in \

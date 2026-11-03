@@ -1,0 +1,350 @@
+{
+  "nextId": 31,
+  "boardFull": true,
+  "laidScale": 1.1,
+  "preset": "",
+  "saved": [
+    {
+      "id": "user-mvzmbsn0",
+      "name": "Mine",
+      "refW": 3440,
+      "refH": 1440,
+      "refScale": 1.1,
+      "saved": 1793656367208,
+      "cards": [
+        {
+          "uid": "w1",
+          "type": "clock",
+          "variant": "poster",
+          "at": "tr",
+          "x": 3122,
+          "y": 93,
+          "w": 216,
+          "h": 272,
+          "zoom": 1.25,
+          "stretch": false,
+          "pinned": false,
+          "opts": {
+            "hourMode": "auto",
+            "seconds": false,
+            "dot": true,
+            "showDate": true,
+            "shape": "cookie9",
+            "zones": "eu",
+            "tone": "auto"
+          }
+        },
+        {
+          "uid": "w2",
+          "type": "system",
+          "variant": "tiles",
+          "at": "bl",
+          "x": 20,
+          "y": 1057,
+          "w": 280,
+          "h": 220,
+          "zoom": 1.5,
+          "stretch": false,
+          "pinned": false,
+          "opts": {
+            "showCpu": true,
+            "showRam": true,
+            "showDisk": true,
+            "showTemp": true,
+            "showGpu": false,
+            "interval": "5",
+            "tone": "auto"
+          }
+        },
+        {
+          "uid": "w3",
+          "type": "progress",
+          "variant": "dots",
+          "at": "tr",
+          "x": 3007,
+          "y": 483,
+          "w": 300,
+          "h": 212,
+          "zoom": 1.25,
+          "stretch": false,
+          "pinned": false,
+          "opts": {
+            "span": "day",
+            "tone": "auto"
+          }
+        },
+        {
+          "uid": "w4",
+          "type": "network",
+          "variant": "graph",
+          "at": "bl",
+          "x": 20,
+          "y": 836,
+          "w": 308,
+          "h": 186,
+          "zoom": 1,
+          "stretch": false,
+          "pinned": false,
+          "opts": {
+            "units": "bytes",
+            "showAddress": true,
+            "interval": "1",
+            "tone": "auto"
+          }
+        },
+        {
+          "uid": "w5",
+          "type": "media",
+          "variant": "card",
+          "at": "tl",
+          "x": 20,
+          "y": 93,
+          "w": 288,
+          "h": 435,
+          "zoom": 1,
+          "stretch": false,
+          "pinned": false,
+          "opts": {
+            "artTint": true,
+            "showProgress": true,
+            "scroll": true,
+            "tone": "auto"
+          }
+        },
+        {
+          "uid": "w7",
+          "type": "games",
+          "variant": "list",
+          "at": "br",
+          "x": 2925,
+          "y": 958,
+          "w": 300,
+          "h": 280,
+          "zoom": 1.5,
+          "stretch": false,
+          "pinned": false,
+          "opts": {
+            "order": "recent",
+            "gameModeOnLaunch": false,
+            "tone": "auto"
+          }
+        },
+        {
+          "uid": "w8",
+          "type": "kdeconnect",
+          "variant": "remote",
+          "at": "tr",
+          "x": 2713,
+          "y": 93,
+          "w": 300,
+          "h": 214,
+          "zoom": 1,
+          "stretch": false,
+          "pinned": false,
+          "opts": {
+            "showShare": true,
+            "showRing": true,
+            "showClipboard": true,
+            "showBrowse": true,
+            "deviceId": "",
+            "tone": "auto"
+          }
+        },
+        {
+          "uid": "w9",
+          "type": "fetch",
+          "variant": "card",
+          "at": "tl",
+          "x": 375,
+          "y": 105,
+          "w": 330,
+          "h": 344,
+          "zoom": 1,
+          "stretch": false,
+          "pinned": false,
+          "opts": {
+            "tone": "auto"
+          }
+        }
+      ]
+    }
+  ],
+  "last": [],
+  "stash": [
+    {
+      "uid": "w19",
+      "type": "notes",
+      "variant": "sticky",
+      "wx": 53,
+      "wy": 515,
+      "bw": 244,
+      "bh": 244,
+      "pinned": false,
+      "zoom": 1.33,
+      "zOrder": 66,
+      "screenName": "",
+      "opts": {
+        "tint": "tertiary",
+        "edited": 0,
+        "text": "",
+        "tone": "auto"
+      }
+    }
+  ],
+  "instances": [
+    {
+      "uid": "w24",
+      "type": "clock",
+      "variant": "poster",
+      "wx": 3122,
+      "wy": 93,
+      "bw": 216,
+      "bh": 272,
+      "pinned": false,
+      "zoom": 1.25,
+      "zOrder": 80,
+      "screenName": "",
+      "opts": {
+        "hourMode": "auto",
+        "seconds": false,
+        "dot": true,
+        "showDate": true,
+        "shape": "cookie9",
+        "zones": "eu",
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w26",
+      "type": "progress",
+      "variant": "dots",
+      "wx": 3007,
+      "wy": 483,
+      "bw": 300,
+      "bh": 212,
+      "pinned": false,
+      "zoom": 1.25,
+      "zOrder": 82,
+      "screenName": "",
+      "opts": {
+        "span": "day",
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w2",
+      "type": "system",
+      "variant": "tiles",
+      "wx": 20,
+      "wy": 1057,
+      "bw": 280,
+      "bh": 220,
+      "pinned": false,
+      "zoom": 1.5,
+      "zOrder": 81,
+      "screenName": "",
+      "opts": {
+        "showCpu": true,
+        "showRam": true,
+        "showDisk": true,
+        "showTemp": true,
+        "showGpu": false,
+        "interval": "5",
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w4",
+      "type": "network",
+      "variant": "graph",
+      "wx": 20,
+      "wy": 836,
+      "bw": 308,
+      "bh": 186,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 88,
+      "screenName": "",
+      "opts": {
+        "units": "bytes",
+        "showAddress": true,
+        "interval": "1",
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w5",
+      "type": "media",
+      "variant": "card",
+      "wx": 20,
+      "wy": 93,
+      "bw": 288,
+      "bh": 435,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 89,
+      "screenName": "",
+      "opts": {
+        "artTint": true,
+        "showProgress": true,
+        "scroll": true,
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w7",
+      "type": "games",
+      "variant": "list",
+      "wx": 2925,
+      "wy": 958,
+      "bw": 300,
+      "bh": 280,
+      "pinned": false,
+      "zoom": 1.5,
+      "zOrder": 85,
+      "screenName": "",
+      "opts": {
+        "order": "recent",
+        "gameModeOnLaunch": false,
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w8",
+      "type": "kdeconnect",
+      "variant": "remote",
+      "wx": 2713,
+      "wy": 93,
+      "bw": 300,
+      "bh": 214,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 86,
+      "screenName": "",
+      "opts": {
+        "showShare": true,
+        "showRing": true,
+        "showClipboard": true,
+        "showBrowse": true,
+        "deviceId": "",
+        "tone": "auto"
+      }
+    },
+    {
+      "uid": "w9",
+      "type": "fetch",
+      "variant": "terminal",
+      "wx": 353,
+      "wy": 93,
+      "bw": 380,
+      "bh": 318,
+      "pinned": false,
+      "zoom": 1,
+      "zOrder": 90,
+      "screenName": "",
+      "opts": {
+        "tone": "auto"
+      }
+    }
+  ]
+}

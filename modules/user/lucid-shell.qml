@@ -107,6 +107,9 @@ ShellRoot {
         id: toastMod
     }
 
+    Osd {
+    }
+
     ToastEvents {
         toast: toastMod
     }
