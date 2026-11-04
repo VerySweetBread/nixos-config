@@ -56,7 +56,7 @@
     { "id": "keyboard-brightness-up", "keys": "SUPER + F3", "desc": "Keyboard backlight up", "category": "Displays", "type": "exec", "cmd": "brightnessctl -d *::kbd_backlight set +33%" },
     { "id": "keyboard-brightness-down", "keys": "SUPER + F2", "desc": "Keyboard backlight down", "category": "Displays", "type": "exec", "cmd": "brightnessctl -d *::kbd_backlight set 33%-" },
     { "id": "audio-mute", "keys": "XF86AudioMute", "desc": "Toggle audio mute", "category": "Media", "type": "exec", "cmd": "pamixer -t" },
-    { "id": "microphone-mute", "keys": "XF86AudioMicMute", "desc": "Toggle microphone mute", "category": "Media", "type": "exec", "cmd": "pamixer --default-source -m" },
+    { "id": "microphone-mute", "keys": "XF86AudioMicMute", "desc": "Toggle microphone mute", "category": "Media", "type": "exec", "cmd": "pamixer --default-source -t" },
     { "id": "play-pause", "keys": "XF86AudioPlay", "desc": "Play or pause media", "category": "Media", "type": "exec", "cmd": "playerctl play-pause" },
     { "id": "file-manager-media", "keys": "XF86Explorer", "desc": "File manager", "category": "Apps", "type": "exec", "cmd": "ghostty -e sh -c yazi" },
     { "id": "email", "keys": "XF86Mail", "desc": "Email", "category": "Apps", "type": "exec", "cmd": "thunderbird" },

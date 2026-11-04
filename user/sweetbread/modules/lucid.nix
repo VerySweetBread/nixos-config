@@ -3,16 +3,38 @@ let
   host = osConfig.networking.hostName;
   isRias = host == "Rias";
   liveDecoder = if builtins.elem osConfig.networking.hostName [ "Rias" "Eclipse" ] then "cuda" else "vaapi";
-  source = pkgs.fetchgit {
-    url = "https://github.com/Sn3akyy1/lucid.git";
-    rev = "bdd7f79da18efd837f79dcecbe5d2ec178abc10c";
-    hash = "sha256-b6qylKjCGYy2Yo64i1w9g4oGrYgcXf502jY9qNNWhSI=";
-    sparseCheckout = [
-      "/*"
-      "!/wallpapers/*"
-      "!/assets/*.webp"
-    ];
-    nonConeMode = true;
+  source = pkgs.applyPatches {
+    src = pkgs.fetchgit {
+      url = "https://github.com/Sn3akyy1/lucid.git";
+      rev = "bdd7f79da18efd837f79dcecbe5d2ec178abc10c";
+      hash = "sha256-b6qylKjCGYy2Yo64i1w9g4oGrYgcXf502jY9qNNWhSI=";
+      sparseCheckout = [
+        "/*"
+        "!/wallpapers/*"
+        "!/assets/*.webp"
+      ];
+      nonConeMode = true;
+    };
+    patches = [ (pkgs.writeText "lucid-scratchpad-target.patch" ''
+      diff --git a/support/hypr/modules/specials.lua b/support/hypr/modules/specials.lua
+      --- a/support/hypr/modules/specials.lua
+      +++ b/support/hypr/modules/specials.lua
+      @@ -176,8 +176,11 @@
+       function M.scratchpad()
+           return function()
+               if space(config(), "special").enabled == false then return end
+      -        local shown = hl.get_active_special_workspace()
+      -        local name = shown and (shown.name:gsub("^special:", "")) or "special"
+      -        hl.dispatch(hl.dsp.workspace.toggle_special(name))
+      +        local shown = hl.get_active_special_workspace()
+      +        if shown and shown.name == "special:special" then
+      +            hl.dispatch(hl.dsp.workspace.toggle_special("special"))
+      +        else
+      +            hl.dispatch(hl.dsp.focus({ workspace = "special:special" }))
+      +        end
+           end
+       end
+    '') ];
   };
   wallpaperDir = "${config.home.homeDirectory}/Wallpapers";
   wallpaperScript = "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper/set-wallpaper.sh";
