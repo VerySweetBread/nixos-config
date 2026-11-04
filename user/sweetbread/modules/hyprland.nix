@@ -150,8 +150,8 @@
 
           blur = {
             enabled = true;
-            size = 16;
-            passes = 2;
+            size = 8;
+            passes = 1;
             new_optimizations = true;
           };
 

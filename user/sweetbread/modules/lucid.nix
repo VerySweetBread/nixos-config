@@ -15,8 +15,8 @@ let
   wallpaperDir = "${config.home.homeDirectory}/Wallpapers";
   wallpaperScript = "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper/set-wallpaper.sh";
   widgetLayout = if osConfig.networking.hostName == "Rias"
-    then ../../../modules/user/lucid-widgets-rias.json
-    else ../../../modules/user/lucid-widgets.json;
+    then ../../../modules/user/lucid/lucid-widgets-rias.json
+    else ../../../modules/user/lucid/lucid-widgets.json;
   defaultWallpaper = "${wallpaperDir}/bluehour.jpg";
   hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
   colors = config.lib.stylix.colors.withHashtag;
@@ -83,6 +83,10 @@ PY
   });
   themeName = pkgs.writeText "lucid-current-theme" "stylix\n";
   applyTheme = pkgs.writeShellScript "lucid-apply-theme" ''
+    case "''${1:-}" in
+      --apps-only) exit 0 ;;
+      --shell-only) shift ;;
+    esac
     exec "$HOME/.config/lucid/apply-theme-upstream.sh" --shell-only "$@"
   '';
   qmlPackages = with pkgs.qt6; [ qt5compat qtmultimedia ];
@@ -90,11 +94,11 @@ PY
   lucid = pkgs.writeShellScript "lucid" ''
     export NIXPKGS_QT6_QML_IMPORT_PATH="${lib.makeSearchPath "lib/qt-6/qml" qmlPackages}:''${NIXPKGS_QT6_QML_IMPORT_PATH:-}"
     export QT_PLUGIN_PATH="${lib.makeSearchPath "lib/qt-6/plugins" qmlPackages}:''${QT_PLUGIN_PATH:-}"
-    export PATH="${lib.makeBinPath (with pkgs; [ bash cliphist coreutils curl ffmpeg grim imagemagick jq libnotify pulseaudio python3 wf-recorder wl-clipboard xdg-utils ])}:${tesseract}/bin:$PATH"
+    export PATH="${lib.makeBinPath (with pkgs; [ bash cliphist coreutils curl ffmpeg grim imagemagick jq libnotify pulseaudio python3 pywal16 wf-recorder wl-clipboard xdg-utils ])}:${tesseract}/bin:$PATH"
     exec ${pkgs.quickshell}/bin/qs --no-duplicate --path "${config.home.homeDirectory}/.config/quickshell"
   '';
   startWallpaper = pkgs.writeShellScript "lucid-wallpaper-start" ''
-    export PATH="${lib.makeBinPath (with pkgs; [ awww bash coreutils ffmpeg imagemagick jq util-linux ])}:$PATH"
+    export PATH="${lib.makeBinPath (with pkgs; [ awww bash coreutils ffmpeg imagemagick jq python3 pywal16 util-linux ])}:$PATH"
     selected="${defaultWallpaper}"
     if [ -s "${config.home.homeDirectory}/.cache/current_live_wallpaper" ]; then
       saved=$(${pkgs.coreutils}/bin/head -n1 "${config.home.homeDirectory}/.cache/current_live_wallpaper")
@@ -117,7 +121,7 @@ PY
 in {
   programs.waybar.enable = lib.mkForce false;
   services.mako.enable = lib.mkForce false;
-  home.packages = with pkgs; [ cliphist ffmpeg grim imagemagick libnotify wf-recorder tesseract ];
+  home.packages = with pkgs; [ cliphist ffmpeg grim imagemagick libnotify pywal16 wf-recorder tesseract ];
 
   home.activation.installLucid = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     target="${config.home.homeDirectory}/.config/quickshell"
@@ -137,6 +141,7 @@ in {
       --exclude='/lucidkeys/state.json' \
       --exclude='/lucidwidgets/widgets.json' \
       "${source}/" "$target/"
+    $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch -p1 -d "$target" < ${../../../modules/user/lucid/idle-work.patch}
     dock_qml="$target/luciddocks/Dock.qml"
     if grep -Fq '/var/lib/snapd/desktop/applications; do' "$dock_qml"; then
       $DRY_RUN_CMD sed -i \
@@ -165,13 +170,14 @@ in {
         // Nix focus workaround for Hyprland 0.57: detach pointer and keyboard focus while menus are open.\
         Quickshell.execDetached(["hyprctl", "eval", "hl.config({ input = { follow_mouse = " + (dockWindow.menuOpen ? 2 : 1) + " } })"]);' "$dock_qml"
     fi
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-shell.qml} "$target/shell.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/LucidBar.qml} "$target/LucidBar.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/Agenda.qml} "$target/Agenda.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/CalendarSource.qml} "$target/CalendarSource.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/ClockCalendar.qml} "$target/lucidbar/ClockCalendar.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/thunderbird-calendar.py} "$target/thunderbird-calendar.py"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/WidgetLayer.qml} "$target/lucidwidgets/WidgetLayer.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-shell.qml} "$target/shell.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/LucidBar.qml} "$target/LucidBar.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/Agenda.qml} "$target/Agenda.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/CalendarSource.qml} "$target/CalendarSource.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/ClockCalendar.qml} "$target/lucidbar/ClockCalendar.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/thunderbird-calendar.py} "$target/thunderbird-calendar.py"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/WidgetLayer.qml} "$target/lucidwidgets/WidgetLayer.qml"
+    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/WidgetsPage.qml} "$target/lucidprefs/WidgetsPage.qml"
     $DRY_RUN_CMD mkdir -p "${wallpaperDir}" \
       "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper"
     $DRY_RUN_CMD install -m755 "${source}/support/wallpaper/set-wallpaper.sh" \
@@ -184,13 +190,16 @@ in {
     for script in palette-edit.py lucid_palette.py add-theme.py scheme-gallery.py gen-light-palette.py; do
       $DRY_RUN_CMD install -m644 "${source}/support/lucid/$script" "$lucid_dir/$script"
     done
+    for script in gen-pywal-palette.py set-mode.sh wallpaper-mode.sh; do
+      $DRY_RUN_CMD install -m755 "${source}/support/lucid/$script" "$lucid_dir/$script"
+    done
     $DRY_RUN_CMD install -m755 "${source}/support/lucid/apply-theme.sh" \
       "$lucid_dir/apply-theme-upstream.sh"
     $DRY_RUN_CMD install -m755 ${applyTheme} \
       "$lucid_dir/apply-theme.sh"
 
     if [ ! -e "$target/lucidprefs/prefs.json" ]; then
-      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-prefs.json} "$target/lucidprefs/prefs.json"
+      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-prefs.json} "$target/lucidprefs/prefs.json"
     fi
     if [ -z "''${DRY_RUN_CMD:-}" ] && [ -f "$target/lucidprefs/prefs.json" ]; then
       prefs_tmp=$(${pkgs.coreutils}/bin/mktemp "$target/lucidprefs/prefs.json.XXXXXX")
@@ -207,7 +216,7 @@ in {
       fi
     fi
     if [ ! -e "$target/luciddocks/pinned.json" ]; then
-      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid-pinned.json} "$target/luciddocks/pinned.json"
+      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-pinned.json} "$target/luciddocks/pinned.json"
     fi
     if [ ! -e "$target/lucidwidgets/widgets.json" ]; then
       $DRY_RUN_CMD install -m644 ${widgetLayout} "$target/lucidwidgets/widgets.json"

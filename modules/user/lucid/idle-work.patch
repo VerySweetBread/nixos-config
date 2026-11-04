@@ -1,0 +1,218 @@
+--- a/lucidbar/Clock.qml
++++ b/lucidbar/Clock.qml
+@@ -94,7 +94,7 @@
+     Timer {
+         interval: 1000
+         repeat: true
+-        running: true
++        running: root.visible && root.hostWindow !== null && root.hostWindow.visible
+         triggeredOnStart: true
+         onTriggered: root.now = Loc.now()
+     }
+@@ -477,36 +477,7 @@
+                 color: Theme.accent
+                 transformOrigin: Item.Top
+ 
+-                SequentialAnimation on rotation {
+-                    loops: Animation.Infinite
+-                    running: bell.visible
+-
+-                    NumberAnimation {
+-                        from: 0
+-                        to: -14
+-                        duration: Theme.barMs(100)
+-                        easing.type: Easing.OutQuad
+-                    }
+-
+-                    NumberAnimation {
+-                        from: -14
+-                        to: 14
+-                        duration: Theme.barMs(160)
+-                        easing.type: Easing.InOutQuad
+-                    }
+-
+-                    NumberAnimation {
+-                        from: 14
+-                        to: 0
+-                        duration: Theme.barMs(140)
+-                        easing.type: Easing.OutQuad
+-                    }
+-
+-                    PauseAnimation {
+-                        duration: Theme.barMs(2800)
+-                    }
+-
+-                }
++
+ 
+             }
+ 
+--- a/lucidbar/Mpris.qml
++++ b/lucidbar/Mpris.qml
+@@ -649,7 +649,7 @@
+     // media card, both closed most of the time. a per-frame interpolation behind
+     // a closed panel measured ~18% of a core, so it waits until something shows it
+     FrameAnimation {
+-        running: root.isPlaying && !trackHitArea.dragging && (root.expanded || root.posWanted)
++        running: root.visible && root.hostWindow !== null && root.hostWindow.visible && root.isPlaying && !trackHitArea.dragging && (root.expanded || root.posWanted)
+         onTriggered: root.livePosSec = Math.min(root.lenSec, root.posBase + (Date.now() - root.posTimestamp) / 1000)
+     }
+ 
+@@ -731,7 +731,7 @@
+ 
+         // silence costs the same as sound to capture and parse, so only listen
+         // while the pill's bars can dance or the panel is open on the waveform
+-        running: (root.isPlaying && compactBars.visible) || root.expanded
++        running: root.visible && root.hostWindow !== null && root.hostWindow.visible && ((root.isPlaying && compactBars.visible) || root.expanded)
+         command: ["cava", "-p", Quickshell.env('HOME') + "/.config/cava/quickshell.conf"]
+         onRunningChanged: {
+             if (!cavaProc.running && root.bars.length > 0)
+@@ -948,7 +948,7 @@
+                         to: 360
+                         duration: 14000
+                         loops: Animation.Infinite
+-                        running: root.isPlaying && compactArt.visible
++                        running: root.isPlaying && compactArt.visible && root.hostWindow !== null && root.hostWindow.visible
+                     }
+ 
+                 }
+@@ -2906,7 +2906,7 @@
+         readonly property real segmentWidth: measure.implicitWidth
+         readonly property real naturalWidth: bare.implicitWidth
+         readonly property bool overflowing: mq.naturalWidth > mq.width
+-        readonly property bool animating: mq.scrolling && mq.overflowing
++        readonly property bool animating: mq.scrolling && mq.overflowing && mq.visible && mq.opacity > 0
+         property real currentX: 0
+ 
+         function updateScroll() {
+--- a/lucidwidgets/WidgetFrame.qml
++++ b/lucidwidgets/WidgetFrame.qml
+@@ -4,6 +4,8 @@
+ 
+ Item {
+     id: frame
++
++    property bool updatesEnabled: true
+ 
+     required property string uid
+     required property string wtype
+--- a/lucidwidgets/WidgetBody.qml
++++ b/lucidwidgets/WidgetBody.qml
+@@ -6,6 +6,7 @@
+ 
+     // set by the frame once the loader is ready
+     property var host: null
++    readonly property bool updatesEnabled: !body.host || (body.host.updatesEnabled !== false && body.host.onThisScreen !== false)
+     // a variant that draws straight onto the wallpaper with no container behind it
+     property bool bare: false
+     // a body with nothing worth showing right now: the frame fades the whole card
+--- a/lucidwidgets/ClockWidget.qml
++++ b/lucidwidgets/ClockWidget.qml
+@@ -43,7 +43,7 @@
+     Timer {
+         interval: 1000
+         repeat: true
+-        running: true
++        running: w.updatesEnabled && w.visible
+         triggeredOnStart: true
+         onTriggered: w.now = Loc.now()
+     }
+--- a/lucidwidgets/SystemWidget.qml
++++ b/lucidwidgets/SystemWidget.qml
+@@ -127,17 +127,23 @@
+         return w.inkAccent;
+     }
+ 
+-    Component.onCompleted: {
+-        if (!w.preview)
+-            Sys.hold(w.uid || "w", true, w.pollMs);
+-
+-    }
+-    Component.onDestruction: Sys.hold(w.uid || "w", false)
+-    onPollMsChanged: {
+-        if (!w.preview)
+-            Sys.hold(w.uid || "w", true, w.pollMs);
+-
+-    }
++    property string pollingTag: ""
++
++    function syncPolling() {
++        const tag = w.uid;
++        if (w.pollingTag !== "" && w.pollingTag !== tag)
++            Sys.hold(w.pollingTag, false);
++        w.pollingTag = tag;
++        if (tag !== "")
++            Sys.hold(tag, !w.preview && w.updatesEnabled, w.pollMs);
++    }
++
++    Component.onCompleted: w.syncPolling()
++    Component.onDestruction: Sys.hold(w.pollingTag, false)
++    onUidChanged: w.syncPolling()
++    onPollMsChanged: w.syncPolling()
++    onUpdatesEnabledChanged: w.syncPolling()
++    onPreviewChanged: w.syncPolling()
+ 
+     // rings: one thick m3 ring per reading, the icon inside, the number under it
+     Row {
+--- a/lucidwidgets/FetchWidget.qml
++++ b/lucidwidgets/FetchWidget.qml
+@@ -49,12 +49,22 @@
+     readonly property var swatches: [Theme.primary, Theme.secondary, Theme.tertiary, Theme.error, Theme.primaryContainer, Theme.secondaryContainer, Theme.tertiaryContainer, Theme.surfaceHighest]
+ 
+     defaultTone: "surface"
+-    Component.onCompleted: {
+-        if (!w.preview)
+-            Sys.hold("fetch-" + w.uid, true, 5000);
+-
+-    }
+-    Component.onDestruction: Sys.hold("fetch-" + w.uid, false)
++    property string pollingTag: ""
++
++    function syncPolling() {
++        const tag = w.uid === "" ? "" : "fetch-" + w.uid;
++        if (w.pollingTag !== "" && w.pollingTag !== tag)
++            Sys.hold(w.pollingTag, false);
++        w.pollingTag = tag;
++        if (tag !== "")
++            Sys.hold(tag, !w.preview && w.updatesEnabled, 5000);
++    }
++
++    Component.onCompleted: w.syncPolling()
++    Component.onDestruction: Sys.hold(w.pollingTag, false)
++    onUidChanged: w.syncPolling()
++    onUpdatesEnabledChanged: w.syncPolling()
++    onPreviewChanged: w.syncPolling()
+ 
+     // card: the mark and who you are, then a labelled list
+     Item {
+--- a/lucidwidgets/VisualiserWidget.qml
++++ b/lucidwidgets/VisualiserWidget.qml
+@@ -50,6 +50,11 @@
+         if (w.preview || w.uid === "")
+             return ;
+ 
++        if (!w.updatesEnabled) {
++            Cava.drop(w.filed);
++            w.filed = "";
++            return;
++        }
+         Cava.want(w.uid, w.barCount);
+         w.filed = w.uid;
+     }
+@@ -124,6 +129,7 @@
+     onWantCountChanged: w.refreshCount()
+     onResizingChanged: w.refreshCount()
+     onBarCountChanged: w.file()
++    onUpdatesEnabledChanged: w.file()
+     onUidChanged: {
+         if (w.filed !== "" && w.filed !== w.uid)
+             Cava.drop(w.filed);
+@@ -158,7 +164,7 @@
+     Timer {
+         interval: 55
+         repeat: true
+-        running: w.preview
++        running: w.preview && w.updatesEnabled && w.visible
+         onTriggered: w.phase += 0.055
+     }
+ 

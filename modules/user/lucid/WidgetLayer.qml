@@ -21,18 +21,23 @@ Variants {
                 active: layer.visible
             }
 
-            readonly property bool suppressed: Prefs.widgetHideFullscreen && layer.fullscreenUp
+            readonly property bool suppressed: Prefs.widgetHideFullscreen && layer.windowUp
             readonly property var workspaceMonitor: Hyprland.monitorFor(layer.screen)
             readonly property var activeWorkspace: workspaceMonitor ? workspaceMonitor.activeWorkspace : null
-            readonly property bool fullscreenUp: {
+            readonly property bool windowUp: {
                 const workspace = layer.activeWorkspace;
                 if (!workspace)
                     return false;
 
                 return Hyprland.toplevels.values.some((t) => {
                     const o = t.lastIpcObject || {};
-                    return o.workspace && o.workspace.id === workspace.id &&
-                        (o.fullscreen || 0) > 0 && o.mapped !== false;
+                    if (!o.workspace || o.workspace.id !== workspace.id || o.mapped === false || o.hidden === true)
+                        return false;
+
+                    if (o.size && (o.size[0] <= 0 || o.size[1] <= 0))
+                        return false;
+
+                    return (o.fullscreen || 0) > 0 || o.floating === false;
                 });
             }
 
@@ -54,12 +59,12 @@ Variants {
                 right: true
             }
 
-            // lastIpcObject only moves when something asks it to, so nudge it on the
-            // events that can change whether a window is fullscreen
+            // lastIpcObject only moves when something asks it to, so nudge it on
+            // the events that can change whether a tiled or fullscreen window exists.
             Connections {
                 function onRawEvent(event) {
-                    if (event.name === "fullscreen" || event.name === "activewindowv2" || event.name === "closewindow" || event.name === "workspace" || event.name === "focusedmon")
-                        fullscreenPoll.restart();
+                    if (event.name === "fullscreen" || event.name === "activewindowv2" || event.name === "closewindow" || event.name === "openwindow" || event.name === "workspace" || event.name === "focusedmon" || event.name === "movewindow" || event.name === "changefloatingmode")
+                        windowPoll.restart();
 
                 }
 
@@ -74,7 +79,7 @@ Variants {
             }
 
             Timer {
-                id: fullscreenPoll
+                id: windowPoll
 
                 interval: 120
                 onTriggered: Hyprland.refreshToplevels()
@@ -266,6 +271,7 @@ Variants {
 
                         WidgetFrame {
                             board: deck
+                            updatesEnabled: layer.visible
                         }
 
                     }
