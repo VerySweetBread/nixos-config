@@ -6,6 +6,8 @@
         mode = "3440x1440@165";
         position = "auto-right";
         scale = 1;
+        cm = "srgb";
+        supports_hdr = -1;
       }
       {
         output = "HDMI-A-1";

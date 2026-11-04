@@ -105,7 +105,10 @@ in {
         { _args = [ "XDG_SCREENSHOTS_DIR" "~/screens" ]; }
       ];
 
-      gesture = [
+      # Lucid's Rias integration loads support/hypr/modules/gestures.lua,
+      # which defines this workspace swipe (and a four-finger variant).
+      # Avoid registering the same 3-finger gesture twice in Hyprland.
+      gesture = lib.optionals (hostname != "Rias") [
         {
           fingers = 3;
           direction = "horizontal";

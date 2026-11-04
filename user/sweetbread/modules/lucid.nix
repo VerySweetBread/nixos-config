@@ -190,6 +190,11 @@ in {
     if [ "${host}" = Rias ] && [ ! -s "$lucid_dir/keybinds.json" ]; then
       $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-keybinds-rias.json} "$lucid_dir/keybinds.json"
     fi
+    monitor_file="${config.home.homeDirectory}/.config/hypr/lucid-monitors.lua"
+    if [ "${host}" = Rias ] && { [ ! -s "$monitor_file" ] || ! grep -qE 'output[[:space:]]*=' "$monitor_file"; } && \
+       ! grep -qE 'workspace[[:space:]]*=' "$monitor_file" 2>/dev/null; then
+      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-monitors-rias.lua} "$monitor_file"
+    fi
     $DRY_RUN_CMD ${pkgs.rsync}/bin/rsync -rltp --chmod=Du+rwx,Fu+rw --ignore-existing \
       "${source}/support/lucid/themes/" "$lucid_dir/themes/"
     for script in palette-edit.py lucid_palette.py add-theme.py scheme-gallery.py gen-light-palette.py; do
@@ -279,9 +284,58 @@ in {
       on = [ (hyprLua.onStart [ "systemctl --user start lucid.service" ]) ];
       bind = lib.mkIf isRias (lib.mkForce []);
     };
+    # Home Manager autoloads these before its generated settings. Lucid's
+    # stateful UI modules are installed too, then required after the Nix base
+    # config below so saved UI choices take effect without losing that base.
     extraLuaFiles = lib.mkIf isRias {
       "modules/binds.lua" = builtins.toPath "${source}/support/hypr/modules/binds.lua";
       "modules/json.lua" = builtins.toPath "${source}/support/hypr/modules/json.lua";
+      "modules/decorations.lua" = builtins.toPath "${source}/support/hypr/modules/decorations.lua";
+      "modules/gestures.lua" = builtins.toPath "${source}/support/hypr/modules/gestures.lua";
+      "modules/input.lua" = builtins.toPath "${source}/support/hypr/modules/input.lua";
+      "modules/layout.lua" = builtins.toPath "${source}/support/hypr/modules/layout.lua";
+      "modules/layerrules.lua" = builtins.toPath "${source}/support/hypr/modules/layerrules.lua";
+      "modules/lumen.lua" = builtins.toPath "${source}/support/hypr/modules/lumen.lua";
+      "modules/misc.lua" = builtins.toPath "${source}/support/hypr/modules/misc.lua";
+      "modules/plugins.lua" = builtins.toPath "${source}/support/hypr/modules/plugins.lua";
+      "modules/windowrules.lua" = builtins.toPath "${source}/support/hypr/modules/windowrules.lua";
+      "modules/glass.lua" = {
+        content = builtins.toPath "${source}/support/hypr/modules/glass.lua";
+        autoLoad = false;
+      };
+      "modules/monitors.lua" = {
+        content = builtins.toPath "${source}/support/hypr/modules/monitors.lua";
+        autoLoad = false;
+      };
+      "modules/settings.lua" = {
+        content = builtins.toPath "${source}/support/hypr/modules/settings.lua";
+        autoLoad = false;
+      };
+      "modules/specials.lua" = {
+        content = builtins.toPath "${source}/support/hypr/modules/specials.lua";
+        autoLoad = false;
+      };
+      "modules/startup.lua" = {
+        content = builtins.toPath "${source}/support/hypr/modules/startup.lua";
+        autoLoad = false;
+      };
     };
+    # Nix owns session startup and environment exports; don't load Lucid's
+    # generic autostart/env defaults on top of the existing host setup.
+    extraConfig = lib.mkIf isRias ''
+      local config_home = os.getenv("XDG_CONFIG_HOME") or ${builtins.toJSON config.xdg.configHome}
+      package.path = config_home .. "/hypr/?.lua;" .. config_home .. "/hypr/?/init.lua;" .. package.path
+      require("modules.specials")
+      require("modules.monitors")
+      local lucid_monitor_apply = LucidMonitors.apply
+      LucidMonitors.apply = function(...)
+        lucid_monitor_apply(...)
+        hl.monitor({ output = "DP-3", cm = "srgb", supports_hdr = -1 })
+      end
+      LucidMonitors.apply()
+      require("modules.settings")
+      require("modules.glass")
+      require("modules.startup")
+    '';
   };
 }
