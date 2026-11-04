@@ -442,6 +442,12 @@ in {
         hl.monitor({ output = "desc:Huawei Technologies Co. Inc. ZQE-CAA 0xC080F622", cm = "srgb", supports_hdr = -1 })
       end
       LucidMonitors.apply()
+      -- Lucid previously left empty workspaces 3-6 persistent on this host.
+      -- Retire those stale rules after applying the monitor layout so they do
+      -- not return on the next Hyprland reload.
+      for _, workspace in ipairs({ "3", "4", "5", "6" }) do
+        hl.workspace_rule({ workspace = workspace, persistent = false })
+      end
       require("modules.settings")
       require("modules.glass")
       require("modules.startup")
