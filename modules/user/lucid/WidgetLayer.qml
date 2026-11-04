@@ -26,12 +26,12 @@ Variants {
             readonly property var activeWorkspace: workspaceMonitor ? workspaceMonitor.activeWorkspace : null
             readonly property bool windowUp: {
                 const workspace = layer.activeWorkspace;
-                if (!workspace)
+                if (!workspace || !workspace.toplevels)
                     return false;
 
-                return Hyprland.toplevels.values.some((t) => {
+                return workspace.toplevels.values.some((t) => {
                     const o = t.lastIpcObject || {};
-                    if (!o.workspace || o.workspace.id !== workspace.id || o.mapped === false || o.hidden === true)
+                    if (o.mapped === false || o.hidden === true)
                         return false;
 
                     if (o.size && (o.size[0] <= 0 || o.size[1] <= 0))

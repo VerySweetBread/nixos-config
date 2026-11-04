@@ -1,9 +1,7 @@
-{ pkgs, lib, config, osConfig, ... }: {
-  wayland.windowManager.hyprland = let
+{ pkgs, lib, config, osConfig, ... }:
+let
     colors = config.lib.stylix.colors;
     accent = colors.${config.stylix.accent};
-    hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
-
     wallpaper_changer = pkgs.writers.writePython3Bin "wallpaper_changer" {
       libraries = [ pkgs.python3Packages.requests ];
       flakeIgnore = [ "E111" "E121" "E241" "E501" "E701" "E731" ];
@@ -128,7 +126,10 @@
             f"{folder}/{filename}",
           ], check=False)
     '';
-  in {
+in {
+  home.packages = [ wallpaper_changer ];
+
+  wayland.windowManager.hyprland = {
     settings = {
       config = {
         general = {
@@ -150,8 +151,8 @@
 
           blur = {
             enabled = true;
-            size = 8;
-            passes = 1;
+            size = 16;
+            passes = 2;
             new_optimizations = true;
           };
 
@@ -198,10 +199,6 @@
         }
       ];
 
-      bind = [
-        (hyprLua.bind "SUPER + W" (hyprLua.execLauncher "qs ipc call launcher wallpaper"))
-        (hyprLua.bind "SUPER + SHIFT + W" (hyprLua.exec "${lib.getExe wallpaper_changer}"))
-      ];
     };
   };
 }

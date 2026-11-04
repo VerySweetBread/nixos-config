@@ -215,4 +215,39 @@
 +        running: w.preview && w.updatesEnabled && w.visible
          onTriggered: w.phase += 0.055
      }
- 
+
+--- a/lucidprefs/ThemePage.qml
++++ b/lucidprefs/ThemePage.qml
+@@ -770,6 +770,9 @@
+                     "key": "any",
+                     "label": "Any window"
+                 }, {
++                    "key": "non-float",
++                    "label": "Non-float"
++                }, {
+                     "key": "fullscreen",
+                     "label": "Fullscreen"
+                 }, {
+
+--- a/LiveWall.qml
++++ b/LiveWall.qml
+@@ -42,13 +42,18 @@
+         const out = {};
+         const mons = Hyprland.monitors.values;
+         for (let i = 0; i < mons.length; i++) {
+             const ws = mons[i].activeWorkspace;
+-            const windows = ws ? ws.toplevels.values.length : 0;
++            const windows = ws ? ws.toplevels.values : [];
+             let still = Lockscreen.locked || (root.gameMode && Prefs.liveGameMode === "pause");
+             if (Prefs.livePauseUnder === "any")
+-                still = still || windows > 0;
++                still = still || windows.length > 0;
++            else if (Prefs.livePauseUnder === "non-float")
++                still = still || windows.some((t) => {
++                    const o = t && t.lastIpcObject;
++                    return o && o.mapped !== false && o.hidden !== true && o.floating !== true;
++                });
+             else if (Prefs.livePauseUnder === "fullscreen")
+                 still = still || (ws !== null && ws.hasFullscreen);
+             out[mons[i].name] = !still;
+         }

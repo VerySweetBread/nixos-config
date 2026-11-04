@@ -1,5 +1,7 @@
 { config, lib, osConfig, pkgs, ... }:
 let
+  host = osConfig.networking.hostName;
+  isRias = host == "Rias";
   liveDecoder = if builtins.elem osConfig.networking.hostName [ "Rias" "Eclipse" ] then "cuda" else "vaapi";
   source = pkgs.fetchgit {
     url = "https://github.com/Sn3akyy1/lucid.git";
@@ -185,6 +187,9 @@ in {
 
     lucid_dir="${config.home.homeDirectory}/.config/lucid"
     $DRY_RUN_CMD mkdir -p "$lucid_dir/themes"
+    if [ "${host}" = Rias ] && [ ! -s "$lucid_dir/keybinds.json" ]; then
+      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-keybinds-rias.json} "$lucid_dir/keybinds.json"
+    fi
     $DRY_RUN_CMD ${pkgs.rsync}/bin/rsync -rltp --chmod=Du+rwx,Fu+rw --ignore-existing \
       "${source}/support/lucid/themes/" "$lucid_dir/themes/"
     for script in palette-edit.py lucid_palette.py add-theme.py scheme-gallery.py gen-light-palette.py; do
@@ -269,10 +274,14 @@ in {
     Install.WantedBy = [ "hyprland-session.target" ];
   };
 
-  wayland.windowManager.hyprland.settings = {
-    on = [ (hyprLua.onStart [ "systemctl --user start lucid.service" ]) ];
-    bind = [
-      (hyprLua.bind "SUPER + SHIFT + G" (hyprLua.exec "qs ipc call widgets panel"))
-    ];
+  wayland.windowManager.hyprland = {
+    settings = {
+      on = [ (hyprLua.onStart [ "systemctl --user start lucid.service" ]) ];
+      bind = lib.mkIf isRias (lib.mkForce []);
+    };
+    extraLuaFiles = lib.mkIf isRias {
+      "modules/binds.lua" = builtins.toPath "${source}/support/hypr/modules/binds.lua";
+      "modules/json.lua" = builtins.toPath "${source}/support/hypr/modules/json.lua";
+    };
   };
 }
