@@ -12,6 +12,9 @@
       {
         output = "desc:Samsung Electric Company SAMSUNG 0x01000E00";
         disabled = true;
+        mode = "1920x1080@60";
+        position = "0x0";
+        scale = 1;
       }
     ];
 
