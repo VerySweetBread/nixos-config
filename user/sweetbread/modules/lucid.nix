@@ -84,6 +84,101 @@ PY
     user = true;
   });
   themeName = pkgs.writeText "lucid-current-theme" "stylix\n";
+  themeAutoPatch = pkgs.writeText "lucid-theme-auto.patch" ''
+    --- a/Prefs.qml
+    +++ b/Prefs.qml
+    @@ -455,5 +455,12 @@
+         function setColorMode(mode) {
+    +        if (mode === "auto") {
+    +            root.setAutoColorMode(true);
+    +            return;
+    +        }
+    -        if ((mode !== "dark" && mode !== "light") || mode === root.colorMode)
+    +        if (mode !== "dark" && mode !== "light")
+                 return;
+     
+    +        root.setAutoColorMode(false);
+    +        if (mode === root.colorMode)
+    +            return;
+             // set straight away so the control answers the click; the cache file is
+    @@ -484,2 +491,4 @@
+         function setAutoColorMode(on) {
+    +        if (on && root.currentTheme !== "matugen" && root.currentTheme !== "pywal")
+    +            return;
+             root.autoColorMode = on;
+    @@ -1669,1 +1678,5 @@
+    -        onLoaded: root.currentTheme = text().trim() || "matugen"
+    +        onLoaded: {
+    +            root.currentTheme = text().trim() || "matugen";
+    +            if (root.currentTheme !== "matugen" && root.currentTheme !== "pywal" && root.autoColorMode)
+    +                root.setAutoColorMode(false);
+    +        }
+    --- a/lucidprefs/ThemePage.qml
+    +++ b/lucidprefs/ThemePage.qml
+    @@ -11,9 +11,14 @@
+         readonly property string home: Quickshell.env("HOME")
+         readonly property string currentTheme: Prefs.currentTheme
+    -    readonly property var modeOptions: [{
+    +    readonly property bool wallpaperDerivedTheme: page.currentTheme === "matugen" || page.currentTheme === "pywal"
+    +    readonly property var modeOptions: [{
+             "key": "dark",
+             "label": "Dark"
+         }, {
+             "key": "light",
+             "label": "Light"
+         }]
+    +    readonly property var autoModeOptions: page.modeOptions.concat([{
+    +        "key": "auto",
+    +        "label": "Auto"
+    +    }])
+    @@ -22,1 +27,1 @@
+    -    readonly property string modeHint: page.currentTheme === "matugen" || page.currentTheme === "pywal" ? "Re-derives the palette from your wallpaper in the mode you pick. Applications are asked to match." : (page.currentTheme === "colour" ? "Builds the palette from your colour again in the mode you pick. Applications are asked to match." : "Builds a light palette from this theme's own colours. Applications are asked to match.")
+    +    readonly property string modeHint: page.wallpaperDerivedTheme ? "Auto follows the wallpaper brightness whenever you change the wallpaper. Dark and Light stay fixed until you choose another mode." : (page.currentTheme === "colour" ? "Builds the palette from your colour again in the mode you pick. Applications are asked to match." : "Builds a light palette from this theme's own colours. Applications are asked to match.")
+    @@ -273,6 +278,6 @@
+                 M3Segmented {
+    -                width: Theme.dp(200)
+    -                current: Prefs.colorMode
+    -                options: page.modeOptions
+    +                width: Theme.dp(page.wallpaperDerivedTheme ? 300 : 200)
+    +                current: Prefs.autoColorMode && page.wallpaperDerivedTheme ? "auto" : Prefs.colorMode
+    +                options: page.wallpaperDerivedTheme ? page.autoModeOptions : page.modeOptions
+                     onChosen: (key) => {
+                         return Prefs.setColorMode(key);
+    @@ -284,13 +289,0 @@
+    -        SettingRow {
+    -            title: "Follow the wallpaper"
+    -            description: "Picks light for a bright wallpaper and dark for a dark one, every time the wallpaper changes. A hand-picked mode holds until the wallpaper changes next."
+    -
+    -            M3Switch {
+    -                checked: Prefs.autoColorMode
+    -                onToggled: (v) => {
+    -                    return Prefs.setAutoColorMode(v);
+    -                }
+    -            }
+    -
+    -        }
+    -
+  '';
+  settingsScreenPatch = pkgs.writeText "lucid-settings-screen.patch" ''
+    --- a/lucidprefs/Settings.qml
+    +++ b/lucidprefs/Settings.qml
+    @@ -9,2 +9,4 @@
+     FloatingWindow {
+         id: win
+    +    property var preferredScreen: null
+    +    screen: win.preferredScreen || Monitors.mainScreen
+  '';
+  wallpaperAutoPatch = pkgs.writeText "lucid-wallpaper-auto.patch" ''
+    --- a/set-wallpaper.sh
+    +++ b/set-wallpaper.sh
+    @@ -32,4 +32,5 @@
+     MODE="''${2:-}"
+     if [[ -z "$MODE" ]]; then
+    -    if grep -qE '"autoColorMode"[[:space:]]*:[[:space:]]*true' "$HOME/.config/quickshell/lucidprefs/prefs.json" 2>/dev/null; then
+    +    if [[ "$CURRENT_THEME" == matugen || "$CURRENT_THEME" == pywal ]] && \
+    +        grep -qE '"autoColorMode"[[:space:]]*:[[:space:]]*true' "$HOME/.config/quickshell/lucidprefs/prefs.json" 2>/dev/null; then
+             MODE=auto
+  '';
   kdeConnectBridgePython = pkgs.python3.withPackages (ps: [ ps.pygobject3 ]);
   applyTheme = pkgs.writeShellScript "lucid-apply-theme" ''
     case "''${1:-}" in
@@ -145,6 +240,16 @@ in {
       --exclude='/lucidwidgets/widgets.json' \
       "${source}/" "$target/"
     $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch -p1 -d "$target" < ${../../../modules/user/lucid/idle-work.patch}
+    if ! grep -Fq 'mode === "auto"' "$target/Prefs.qml"; then
+      $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch --forward -p1 -d "$target" < ${themeAutoPatch}
+    fi
+    if ! grep -Fq 'property var preferredScreen: null' "$target/lucidprefs/Settings.qml"; then
+      $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch --forward -p1 -d "$target" < ${settingsScreenPatch}
+    fi
+    settings_qml="$target/lucidprefs/Settings.qml"
+    if ! grep -Fq 'win.preferredScreen = Monitors.focusedScreen || Monitors.mainScreen;' "$settings_qml"; then
+      $DRY_RUN_CMD sed -i '/if (win.visible) {/a\            win.preferredScreen = Monitors.focusedScreen || Monitors.mainScreen;' "$settings_qml"
+    fi
     dock_qml="$target/luciddocks/Dock.qml"
     if grep -Fq '/var/lib/snapd/desktop/applications; do' "$dock_qml"; then
       $DRY_RUN_CMD sed -i \
@@ -185,6 +290,9 @@ in {
       "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper"
     $DRY_RUN_CMD install -m755 "${source}/support/wallpaper/set-wallpaper.sh" \
       "${wallpaperScript}"
+    if ! grep -Fq 'CURRENT_THEME" == matugen' "${wallpaperScript}"; then
+      $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch --forward -p1 -d "$(dirname ${lib.escapeShellArg wallpaperScript})" < ${wallpaperAutoPatch}
+    fi
 
     lucid_dir="${config.home.homeDirectory}/.config/lucid"
     $DRY_RUN_CMD mkdir -p "$lucid_dir/themes"
@@ -331,7 +439,7 @@ in {
       local lucid_monitor_apply = LucidMonitors.apply
       LucidMonitors.apply = function(...)
         lucid_monitor_apply(...)
-        hl.monitor({ output = "DP-3", cm = "srgb", supports_hdr = -1 })
+        hl.monitor({ output = "desc:Huawei Technologies Co. Inc. ZQE-CAA 0xC080F622", cm = "srgb", supports_hdr = -1 })
       end
       LucidMonitors.apply()
       require("modules.settings")

@@ -133,6 +133,9 @@ ShellRoot {
     SettingsHost {
     }
 
+    DisplayTrial {
+    }
+
     Binding {
         target: Monitors
         property: "barWindows"
