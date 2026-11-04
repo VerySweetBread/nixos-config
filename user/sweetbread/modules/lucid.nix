@@ -84,6 +84,7 @@ PY
     user = true;
   });
   themeName = pkgs.writeText "lucid-current-theme" "stylix\n";
+  kdeConnectBridgePython = pkgs.python3.withPackages (ps: [ ps.pygobject3 ]);
   applyTheme = pkgs.writeShellScript "lucid-apply-theme" ''
     case "''${1:-}" in
       --apps-only) exit 0 ;;
@@ -96,7 +97,7 @@ PY
   lucid = pkgs.writeShellScript "lucid" ''
     export NIXPKGS_QT6_QML_IMPORT_PATH="${lib.makeSearchPath "lib/qt-6/qml" qmlPackages}:''${NIXPKGS_QT6_QML_IMPORT_PATH:-}"
     export QT_PLUGIN_PATH="${lib.makeSearchPath "lib/qt-6/plugins" qmlPackages}:''${QT_PLUGIN_PATH:-}"
-    export PATH="${lib.makeBinPath (with pkgs; [ bash cliphist coreutils curl ffmpeg grim imagemagick jq libnotify pulseaudio python3 pywal16 wf-recorder wl-clipboard xdg-utils ])}:${tesseract}/bin:$PATH"
+    export PATH="${lib.makeBinPath (with pkgs; [ bash cliphist coreutils curl ffmpeg grim imagemagick jq libnotify pulseaudio kdeConnectBridgePython pywal16 wf-recorder wl-clipboard xdg-utils ])}:${tesseract}/bin:$PATH"
     exec ${pkgs.quickshell}/bin/qs --no-duplicate --path "${config.home.homeDirectory}/.config/quickshell"
   '';
   startWallpaper = pkgs.writeShellScript "lucid-wallpaper-start" ''
