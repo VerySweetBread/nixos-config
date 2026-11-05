@@ -28,6 +28,13 @@ in {
     optImport ../../host/${hostname}/modules/hyprland.nix ++
     optImport ../../user/${username}/modules/hyprland.nix;
 
+  options.lucidHyprlandBinds = lib.mkOption {
+    type = lib.types.listOf lib.types.attrs;
+    default = [];
+    internal = true;
+  };
+
+  config = {
   home.packages = with pkgs; [
     ghostty
     pamixer
@@ -154,7 +161,11 @@ in {
         ])
       ];
 
-      bind = [
+      bind = lib.mkIf (username != "chest") config.lucidHyprlandBinds;
+    };
+  };
+
+  lucidHyprlandBinds = [
         (bind "SUPER + V" (exec "ghostty --title=clipse -e clipse"))
         (hyprLua.bind "SUPER + SHIFT + V" (hyprLua.execLauncher "qs ipc call launcher clipboard"))
         (bind "Print" (exec "qs ipc call screenshot full"))
@@ -213,7 +224,5 @@ in {
         (bindWithFlags "SUPER + mouse:272" "hl.dsp.window.drag()" { mouse = true; })
         (bindWithFlags "SUPER + mouse:273" "hl.dsp.window.resize()" { mouse = true; })
       ];
-    };
   };
-
 }

@@ -3,6 +3,188 @@ let
   host = osConfig.networking.hostName;
   isChest = config.home.username == "chest";
   isRias = host == "Rias";
+  specialBindIds = [ "scratchpad" "scratchpad-stash" "special-music" "special-comms" "special-todo" "special-sysmon" "daemons-workspace" ];
+  specialSeed = pkgs.writeText "lucid-special-bindings.json" (builtins.toJSON {
+    version = 1;
+    binds = builtins.filter (entry: builtins.elem entry.id specialBindIds)
+      (builtins.fromJSON (builtins.readFile ./lucid-keybinds-rias.json)).binds;
+  });
+  chestBindingsScript = pkgs.writeText "lucid-chest-bindings.py" ''
+import hashlib
+import json
+import re
+import sys
+from collections import Counter
+
+source, reference, special, output = sys.argv[1:]
+binds = json.loads(source)
+refs = json.load(open(reference))["binds"]
+specials = json.load(open(special))["binds"]
+counts = Counter()
+result = []
+for entry in binds:
+    args = entry["_args"]
+    if not 2 <= len(args) <= 3 or args[1].get("_type") != "lua-inline":
+        raise ValueError(f"Unsupported Hyprland binding: {entry}")
+    keys, expr = args[0], args[1]["expr"]
+    opts = args[2] if len(args) == 3 else {}
+    signature = json.dumps([keys.upper().replace(" ", ""), opts], sort_keys=True)
+    counts[signature] += 1
+    identifier = hashlib.sha256(signature.encode()).hexdigest()[:12]
+    b = {"id": f"chest-{identifier}-{counts[signature]}", "keys": keys}
+    match = next((r for r in refs if r.get("keys", "").upper().replace(" ", "") == keys.upper().replace(" ", "") and r.get("opts", {}) == opts), None)
+    b["desc"] = match.get("desc", keys) if match else keys
+    b["category"] = match.get("category", "Other") if match else "Other"
+    workspace = re.search(r"workspace = (\d+)", expr)
+    if workspace and expr.startswith("hl.dsp.focus("):
+        b.update(desc=f"Focus workspace {workspace.group(1)}", category="Workspaces")
+    elif workspace and expr.startswith("hl.dsp.window.move("):
+        b.update(desc=f"Move window to workspace {workspace.group(1)}", category="Workspaces")
+    if keys.upper().replace(" ", "") == "SUPER+SHIFT+S":
+        b.update(desc="Region screenshot and edit", category="Screenshots")
+    m = re.fullmatch(r'hl\.dsp\.exec_cmd\(("(?:\\.|[^"\\])*")\)\s*', expr, re.S)
+    if m:
+        cmd = json.loads(m.group(1))
+        cmd = re.sub(r'/nix/store/[0-9a-z]{32}-[^/\s"\\]+/bin/([A-Za-z0-9_.+-]+)', r'\1', cmd)
+        b.update(type="exec", cmd=cmd)
+    else:
+        b.update(type="lua", lua=expr)
+    if opts:
+        b["opts"] = opts
+    result.append(b)
+json.dump({"version": 1, "binds": result + specials}, open(output, "w"), indent=2)
+  '';
+  chestSeed = pkgs.runCommand "lucid-chest-bindings.json" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+    python3 ${chestBindingsScript} ${lib.escapeShellArg (builtins.toJSON config.lucidHyprlandBinds)} \
+      ${./lucid-keybinds-rias.json} ${specialSeed} "$out"
+  '';
+  mergeChestBinds = pkgs.writeText "lucid-merge-chest-bindings.jq" ''
+def normlua: (. // "") | gsub("\\s+"; "") | gsub("\u0027"; "\"");
+def normkeys: (. // "") | ascii_upcase | gsub("\\s+"; "") | split("+")
+  | map(if . == "WIN" or . == "LOGO" or . == "MOD4" then "SUPER"
+        elif . == "CONTROL" then "CTRL" else . end) | sort | join("+");
+def combos:
+  if .each == "workspace" then .keys as $k | [range(1;11) as $i | ($k | gsub("\\{key\\}"; (($i % 10) | tostring)) | normkeys)]
+  else [(.keys | normkeys)] end;
+def trigger: {click: (.opts.click // false), long_press: (.opts.long_press // false), release: (.opts.release // false), mouse: (.opts.mouse // false)};
+if (.binds | type) != "array" then error("keybinds.json has no binds array") else . end
+| . as $old
+| .binds += [$seed[0].binds[] as $b
+  | select([$old.binds[] | select(
+      .id == $b.id
+      or ((["scratchpad", "scratchpad-stash", "special-music", "special-comms", "special-todo", "special-sysmon", "daemons-workspace"] | index($b.id)) != null and .type == "lua" and $b.type == "lua" and ((.lua | normlua) == ($b.lua | normlua)))
+      or ((trigger == ($b | trigger)) and ((combos - ($b | combos) | length) < (combos | length)))
+    )] | length == 0) | $b]
+  '';
+  mergeSpecialBinds = pkgs.writeText "lucid-merge-special-binds.jq" ''
+    def normlua: (. // "") | gsub("\\s+"; "") | gsub("\u0027"; "\"");
+    def normkeys: (. // "") | ascii_upcase | gsub("\\s+"; "") | split("+")
+      | map(if . == "WIN" or . == "LOGO" or . == "MOD4" then "SUPER"
+            elif . == "CONTROL" then "CTRL" else . end) | sort | join("+");
+    if (.binds | type) != "array" then error("keybinds.json has no binds array") else . end
+    | . as $old
+    | .binds += [ $seed[0].binds[] as $b
+        | select([$old.binds[] | select(.id == $b.id or (.type == "lua" and ((.lua | normlua) == ($b.lua | normlua))))] | length == 0)
+        | if ([$old.binds[] | select(.enabled != false and ((.keys | normkeys) == ($b.keys | normkeys)))] | length) > 0
+          then $b + { enabled: false } else $b end ]
+  '';
+  mergeSpecialPrefs = pkgs.writeText "lucid-merge-special-prefs.jq" ''
+    .specialCustom = ((.specialCustom // "[]" | fromjson)
+      | if type != "array" then error("specialCustom is not an array") else . end
+      | if any(.[]; .key == "daemons") then .
+        else . + [{key: "daemons", label: "Daemons", glyph: "build", on: true, apps: ""}] end
+      | tojson)
+  '';
+  staticBindKeys = map (entry: builtins.elemAt entry._args 0) config.wayland.windowManager.hyprland.settings.bind;
+  nonRiasBinds = pkgs.runCommand "lucid-nix-binds.lua" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+    python3 - ${source}/support/hypr/modules/binds.lua "$out" ${lib.escapeShellArg (builtins.toJSON staticBindKeys)} <<'PY'
+import json
+import pathlib
+import sys
+
+source = pathlib.Path(sys.argv[1]).read_text()
+keys = json.loads(sys.argv[3])
+lua_keys = "{ " + ", ".join(json.dumps(key, ensure_ascii=True) for key in keys) + " }"
+guard = r"""
+local function normalize_nix_bind(keys)
+    local mods, key = {}, ""
+    for part in tostring(keys or ""):gmatch("[^+]+") do
+        local token = (part:match("^%s*(.-)%s*$") or ""):upper()
+        if token == "CONTROL" then token = "CTRL" end
+        if token == "WIN" or token == "LOGO" or token == "MOD4" then token = "SUPER" end
+        if token == "SUPER" or token == "CTRL" or token == "ALT" or token == "SHIFT" then
+            mods[token] = true
+        else
+            key = token
+        end
+    end
+    local out = {}
+    for _, mod in ipairs({"ALT", "CTRL", "SHIFT", "SUPER"}) do
+        if mods[mod] then out[#out + 1] = mod end
+    end
+    return table.concat(out, "+") .. "+" .. key
+end
+local nix_binds = {}
+for _, key in ipairs(NIX_BIND_KEYS) do nix_binds[normalize_nix_bind(key)] = true end
+""".replace("NIX_BIND_KEYS", lua_keys)
+marker = "-- several dispatchers on one key, in order"
+binding = '    if type(keys) ~= "string" or keys == "" then error("no keys", 0) end'
+fallback = '    for _, entry in ipairs(EMERGENCY) do apply(entry) end'
+fallback_source = '    status.source = "emergency"'
+fallback_text = 'Emergency binds are active - SUPER+S opens Settings.'
+for needle in (marker, binding, fallback, fallback_source, fallback_text):
+    if source.count(needle) != 1:
+        raise SystemExit("Lucid bind loader changed; refusing to skip conflict protection")
+source = source.replace(marker, guard + "\n" + marker, 1)
+source = source.replace(binding, binding + '\n    if nix_binds[normalize_nix_bind(keys)] then error("Already bound by Nix: " .. keys, 0) end', 1)
+source = source.replace(fallback, '    -- Nix supplies the fallback keys on these hosts.', 1)
+source = source.replace(fallback_source, '    status.source = "nix"', 1)
+source = source.replace(fallback_text, 'Nix bindings remain active.', 1)
+pathlib.Path(sys.argv[2]).write_text(source)
+PY
+  '';
+  chestBinds = pkgs.runCommand "lucid-chest-loader.lua" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+    python3 - ${source}/support/hypr/modules/binds.lua "$out" <<'PYCODE'
+import pathlib
+import sys
+source = pathlib.Path(sys.argv[1]).read_text()
+old = '{ id = "terminal", keys = "F9", type = "exec", cmd = "kitty" }'
+new = '{ id = "terminal", keys = "SUPER + RETURN", type = "exec", cmd = "ghostty" }'
+if source.count(old) != 1:
+    raise SystemExit("Lucid emergency bindings changed")
+pathlib.Path(sys.argv[2]).write_text(source.replace(old, new, 1))
+PYCODE
+  '';
+  chestMonitors = pkgs.runCommand "lucid-chest-monitors.lua" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+    python3 - ${source}/support/hypr/modules/monitors.lua "$out" <<'PY'
+import pathlib
+import sys
+
+source = pathlib.Path(sys.argv[1]).read_text()
+default_rule = """hl.monitor({
+    output   = "",
+    mode     = M.defaults.mode,
+    position = M.defaults.position,
+    scale    = M.defaults.scale,
+})
+"""
+if source.count(default_rule) != 1:
+    raise SystemExit("Lucid monitor defaults changed; refusing to replace host monitor rules")
+pathlib.Path(sys.argv[2]).write_text(source.replace(default_rule, "", 1))
+PY
+  '';
+  chestBorders = pkgs.runCommand "lucid-chest-decorations.lua" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+    python3 - ${source}/support/hypr/modules/decorations.lua "$out" <<'PY'
+import pathlib
+import sys
+
+source = pathlib.Path(sys.argv[1]).read_text()
+marker = "local active_border, inactive_border = borders()"
+if source.count(marker) != 1:
+    raise SystemExit("Lucid border module changed; refusing to replace host appearance settings")
+pathlib.Path(sys.argv[2]).write_text(source.split(marker, 1)[0])
+PY
+  '';
   liveDecoder = if builtins.elem osConfig.networking.hostName [ "Rias" "Eclipse" ] then "cuda" else "vaapi";
   source = pkgs.applyPatches {
     src = pkgs.fetchgit {
@@ -263,19 +445,15 @@ PY
   tesseract = pkgs.tesseract4.override { enableLanguages = [ "eng" "rus" ]; };
   shellFile = if isChest then pkgs.writeText "lucid-chest-shell.qml" (builtins.replaceStrings [
     ''import "./lucidlock"''
-    "    WidgetLayer {\n    }\n"
-    "    WidgetIpc {\n    }\n"
     "    Lock {\n    }\n"
     "        void Clip.probed;"
   ] [
     ""
     ""
-    ""
-    ""
-    "        void Notifs.count;\n        void KdeConnect.installed;\n        void Clip.probed;"
+    "        void Notifs.count;\n        void KdeConnect.installed;\n        void HyprConfig.moduleProbed;\n        void Monitors.moduleProbed;\n        void Glass.moduleProbed;\n        void Startup.moduleProbed;\n        void Clip.probed;"
   ] (builtins.readFile ./lucid-shell.qml)) else ./lucid-shell.qml;
   prefsFilter = if isChest then
-    ''.barEnabled = true | .fontFamily = $font | .liveWallpapers = false | .idleLock = false | .idleLockBeforeSleep = false | .launcherPowerButtons = "suspend,reboot,shutdown" | .powerModuleActions = "suspend,hibernate,logout,reboot,shutdown"''
+    ''.barEnabled = true | .widgetOnTop = false | .widgetHideFullscreen = true | .fontFamily = $font | .liveWallpapers = false | .idleLock = false | .idleLockBeforeSleep = false | .launcherPowerButtons = "suspend,reboot,shutdown" | .powerModuleActions = "suspend,hibernate,logout,reboot,shutdown"''
   else
     ''.barEnabled = true | .widgetOnTop = false | .widgetHideFullscreen = true | .fontFamily = $font | .wallpaperFolder = $wallpaperDir | .liveDecoder = $decoder'';
   lucid = pkgs.writeShellScript "lucid" ''
@@ -308,7 +486,8 @@ PY
 in {
   programs.waybar.enable = lib.mkForce false;
   services.mako.enable = lib.mkForce false;
-  home.packages = with pkgs; [ cliphist ffmpeg grim imagemagick libnotify pywal16 wf-recorder tesseract ];
+  home.packages = with pkgs; [ cliphist ffmpeg grim imagemagick libnotify pywal16 wf-recorder tesseract ]
+    ++ lib.optionals isChest [ brightnessctl playerctl slurp swappy ];
 
   home.activation.installLucid = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     target="${config.home.homeDirectory}/.config/quickshell"
@@ -412,6 +591,52 @@ in {
     if [ "${host}" = Rias ] && [ ! -s "$lucid_dir/keybinds.json" ]; then
       $DRY_RUN_CMD install -m644 ${./lucid-keybinds-rias.json} "$lucid_dir/keybinds.json"
     fi
+    ${lib.optionalString (!isRias) ''
+    special_migration="$lucid_dir/special-workspaces-v1"
+    if [ -z "''${DRY_RUN_CMD:-}" ] && [ ! -e "$special_migration" ]; then
+      if [ -f "${config.home.homeDirectory}/.config/hypr/lucid-specials.lua" ] && \
+         [ ! -e "${config.home.homeDirectory}/.config/hypr/lucid-specials.before-special-workspaces-v1.lua" ]; then
+        cp -p "${config.home.homeDirectory}/.config/hypr/lucid-specials.lua" \
+          "${config.home.homeDirectory}/.config/hypr/lucid-specials.before-special-workspaces-v1.lua"
+      fi
+      if [ ! -s "$lucid_dir/keybinds.json" ]; then
+        install -m644 ${specialSeed} "$lucid_dir/keybinds.json"
+      else
+        binds_tmp=$(${pkgs.coreutils}/bin/mktemp "$lucid_dir/keybinds.json.XXXXXX")
+        if ${pkgs.jq}/bin/jq --slurpfile seed ${specialSeed} -f ${mergeSpecialBinds} \
+          "$lucid_dir/keybinds.json" > "$binds_tmp"; then
+          chmod 644 "$binds_tmp"
+          mv "$binds_tmp" "$lucid_dir/keybinds.json"
+        else
+          rm -f "$binds_tmp"
+          echo "Could not merge Lucid special workspace bindings" >&2
+          exit 1
+        fi
+      fi
+    fi
+    ''}
+    ${lib.optionalString isChest ''
+    chest_migration="$lucid_dir/chest-keybinds-v1"
+    if [ -z "''${DRY_RUN_CMD:-}" ] && [ ! -e "$chest_migration" ]; then
+      if [ ! -s "$lucid_dir/keybinds.json" ]; then
+        install -m644 ${chestSeed} "$lucid_dir/keybinds.json"
+      else
+        if [ ! -e "$lucid_dir/keybinds.before-chest-migration.json" ]; then
+          cp -p "$lucid_dir/keybinds.json" "$lucid_dir/keybinds.before-chest-migration.json"
+        fi
+        binds_tmp=$(${pkgs.coreutils}/bin/mktemp "$lucid_dir/keybinds.json.XXXXXX")
+        if ${pkgs.jq}/bin/jq --slurpfile seed ${chestSeed} -f ${mergeChestBinds} "$lucid_dir/keybinds.json" > "$binds_tmp"; then
+          chmod 644 "$binds_tmp"
+          mv "$binds_tmp" "$lucid_dir/keybinds.json"
+        else
+          rm -f "$binds_tmp"
+          echo "Could not migrate chest keybindings to Lucid" >&2
+          exit 1
+        fi
+      fi
+      touch "$chest_migration"
+    fi
+    ''}
     monitor_file="${config.home.homeDirectory}/.config/hypr/lucid-monitors.lua"
     if [ "${host}" = Rias ] && { [ ! -s "$monitor_file" ] || ! grep -qE 'output[[:space:]]*=' "$monitor_file"; } && \
        ! grep -qE 'workspace[[:space:]]*=' "$monitor_file" 2>/dev/null; then
@@ -447,10 +672,24 @@ in {
         exit 1
       fi
     fi
+    ${lib.optionalString (!isRias) ''
+    if [ -z "''${DRY_RUN_CMD:-}" ] && [ ! -e "$special_migration" ]; then
+      prefs_tmp=$(${pkgs.coreutils}/bin/mktemp "$target/lucidprefs/prefs.json.XXXXXX")
+      if ${pkgs.jq}/bin/jq -f ${mergeSpecialPrefs} "$target/lucidprefs/prefs.json" > "$prefs_tmp"; then
+        chmod 644 "$prefs_tmp"
+        mv "$prefs_tmp" "$target/lucidprefs/prefs.json"
+        touch "$special_migration"
+      else
+        rm -f "$prefs_tmp"
+        echo "Could not merge Lucid special workspace settings" >&2
+        exit 1
+      fi
+    fi
+    ''}
     if [ ! -e "$target/luciddocks/pinned.json" ]; then
       $DRY_RUN_CMD install -m644 ${./lucid-pinned.json} "$target/luciddocks/pinned.json"
     fi
-    if [ "${if isChest then "false" else "true"}" = true ] && [ ! -e "$target/lucidwidgets/widgets.json" ]; then
+    if [ ! -e "$target/lucidwidgets/widgets.json" ]; then
       $DRY_RUN_CMD install -m644 ${widgetLayout} "$target/lucidwidgets/widgets.json"
     fi
 
@@ -503,14 +742,37 @@ in {
   wayland.windowManager.hyprland = {
     settings = {
       on = [ (hyprLua.onStart [ "systemctl --user start lucid.service" ]) ];
-      bind = lib.mkIf isRias (lib.mkForce []);
+      bind = lib.mkIf (isRias || isChest) (lib.mkForce []);
+      window_rule = lib.mkIf isChest [
+        {
+          name = "float-lucid-settings";
+          match = { class = "org.quickshell"; title = "Lucid Settings"; };
+          float = true;
+          size = [ 1180 800 ];
+          center = true;
+        }
+        {
+          name = "float-lucid-choosers";
+          match = {
+            class = "^(org\\.gnome\\.Nautilus|xdg-desktop-portal-gtk|xdg-desktop-portal-gnome|zenity|org\\.kde\\.kdialog|kdialog)$";
+            title = "^(Choose an account picture|Choose a template|Choose a colour scheme|Export the palette|Save received files to|Send files|Send to .+)$";
+          };
+          float = true;
+          center = true;
+        }
+      ];
     };
     # Home Manager autoloads these before its generated settings. Lucid's
     # stateful UI modules are installed too, then required after the Nix base
     # config below so saved UI choices take effect without losing that base.
-    extraLuaFiles = lib.mkIf isRias {
-      "modules/binds.lua" = builtins.toPath "${source}/support/hypr/modules/binds.lua";
+    extraLuaFiles = {
+      "modules/binds.lua" = builtins.toPath (if isRias then "${source}/support/hypr/modules/binds.lua" else if isChest then "${chestBinds}" else "${nonRiasBinds}");
       "modules/json.lua" = builtins.toPath "${source}/support/hypr/modules/json.lua";
+      "modules/specials.lua" = {
+        content = builtins.toPath "${source}/support/hypr/modules/specials.lua";
+        autoLoad = false;
+      };
+    } // lib.optionalAttrs isRias {
       "modules/decorations.lua" = builtins.toPath "${source}/support/hypr/modules/decorations.lua";
       "modules/gestures.lua" = builtins.toPath "${source}/support/hypr/modules/gestures.lua";
       "modules/input.lua" = builtins.toPath "${source}/support/hypr/modules/input.lua";
@@ -520,20 +782,19 @@ in {
       "modules/misc.lua" = builtins.toPath "${source}/support/hypr/modules/misc.lua";
       "modules/plugins.lua" = builtins.toPath "${source}/support/hypr/modules/plugins.lua";
       "modules/windowrules.lua" = builtins.toPath "${source}/support/hypr/modules/windowrules.lua";
+    } // lib.optionalAttrs isChest {
+      "modules/decorations.lua" = builtins.toPath "${chestBorders}";
+    } // lib.optionalAttrs (isRias || isChest) {
       "modules/glass.lua" = {
         content = builtins.toPath "${source}/support/hypr/modules/glass.lua";
         autoLoad = false;
       };
       "modules/monitors.lua" = {
-        content = builtins.toPath "${source}/support/hypr/modules/monitors.lua";
+        content = builtins.toPath (if isChest then "${chestMonitors}" else "${source}/support/hypr/modules/monitors.lua");
         autoLoad = false;
       };
       "modules/settings.lua" = {
         content = builtins.toPath "${source}/support/hypr/modules/settings.lua";
-        autoLoad = false;
-      };
-      "modules/specials.lua" = {
-        content = builtins.toPath "${source}/support/hypr/modules/specials.lua";
         autoLoad = false;
       };
       "modules/startup.lua" = {
@@ -543,11 +804,14 @@ in {
     };
     # Nix owns session startup and environment exports; don't load Lucid's
     # generic autostart/env defaults on top of the existing host setup.
-    extraConfig = lib.mkIf isRias ''
+    extraConfig = ''
       local config_home = os.getenv("XDG_CONFIG_HOME") or ${builtins.toJSON config.xdg.configHome}
       package.path = config_home .. "/hypr/?.lua;" .. config_home .. "/hypr/?/init.lua;" .. package.path
       require("modules.specials")
+      LucidSpecials.apply()
+    '' + lib.optionalString (isRias || isChest) ''
       require("modules.monitors")
+    '' + lib.optionalString isRias ''
       local lucid_monitor_apply = LucidMonitors.apply
       LucidMonitors.apply = function(...)
         lucid_monitor_apply(...)
@@ -560,6 +824,7 @@ in {
       for _, workspace in ipairs({ "3", "4", "5", "6" }) do
         hl.workspace_rule({ workspace = workspace, persistent = false })
       end
+    '' + lib.optionalString (isRias || isChest) ''
       require("modules.settings")
       require("modules.glass")
       require("modules.startup")

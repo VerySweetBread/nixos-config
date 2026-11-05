@@ -13,6 +13,7 @@ ShellRoot {
     id: root
 
     Component.onCompleted: {
+        void Specials.moduleProbed;
         void Clip.probed;
         void Capture.state;
     }
