@@ -708,6 +708,47 @@ in {
       fi
     done
 
+    ${lib.optionalString (isChest && host == "Impreza") ''
+    # Import Eclipse's appearance once. Keep later Lucid edits and back up
+    # existing laptop settings before changing them; monitor state is untouched.
+    appearance_marker="$lucid_dir/impreza-appearance-v1"
+    if [ -z "''${DRY_RUN_CMD:-}" ] && [ ! -e "$appearance_marker" ]; then
+      mkdir -p "${config.home.homeDirectory}/.cache" "${config.home.homeDirectory}/.config/hypr"
+      prefs="$target/lucidprefs/prefs.json"
+      prefs_tmp=$(${pkgs.coreutils}/bin/mktemp "$prefs.XXXXXX")
+      if ${pkgs.jq}/bin/jq --slurpfile appearance ${./lucid-prefs-impreza.json} \
+        '. + $appearance[0]' "$prefs" > "$prefs_tmp"; then
+        cp --backup=numbered "$prefs" "$prefs.before-impreza-appearance"
+        chmod 644 "$prefs_tmp"
+        mv "$prefs_tmp" "$prefs"
+      else
+        rm -f "$prefs_tmp"
+        exit 1
+      fi
+      for pair in \
+        '${./lucid-widgets-impreza.json} lucidwidgets/widgets.json' \
+        '${./lucid-pinned-impreza.json} luciddocks/pinned.json'; do
+        set -- $pair
+        [ ! -e "$target/$2" ] || cp --backup=numbered "$target/$2" "$target/$2.before-impreza-appearance"
+        install -m644 "$1" "$target/$2"
+      done
+      for pair in \
+        '${./lucid-settings-impreza.lua} lucid-settings.lua' \
+        '${./lucid-glass-impreza.lua} lucid-glass.lua'; do
+        set -- $pair
+        file="${config.home.homeDirectory}/.config/hypr/$2"
+        [ ! -e "$file" ] || cp --backup=numbered "$file" "$file.before-impreza-appearance"
+        install -m644 "$1" "$file"
+      done
+      if [ -e "${config.home.homeDirectory}/.cache/current_theme" ]; then
+        cp --backup=numbered "${config.home.homeDirectory}/.cache/current_theme" \
+          "${config.home.homeDirectory}/.cache/current_theme.before-impreza-appearance"
+      fi
+      install -m644 ${themeName} "${config.home.homeDirectory}/.cache/current_theme"
+      touch "$appearance_marker"
+    fi
+    ''}
+
     $DRY_RUN_CMD mkdir -p "${config.home.homeDirectory}/.config/lucid/themes/stylix" \
       "${config.home.homeDirectory}/.cache/quickshell"
     $DRY_RUN_CMD install -m644 ${paletteFile} \
