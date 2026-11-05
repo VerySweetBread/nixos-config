@@ -25,9 +25,6 @@
   ];
 
   programs.gamemode.enable = true;
-  programs.kdeconnect.enable = true;
-  home-manager.users.sweetbread.services.kdeconnect.enable = true;
-
   services.printing.enable = true;
   hardware.opentabletdriver.enable = true;
 

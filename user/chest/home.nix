@@ -1,6 +1,7 @@
 { pkgs, pkgs-pinned, host, ... }: {
   imports = [
     ../../modules/user/packages/cs_utils.nix
+    ../../modules/user/lucid
   ];
   disabledModules = [
     ../../modules/user/packages/art.nix

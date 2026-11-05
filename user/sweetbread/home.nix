@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  imports = [ ./modules/lucid.nix ];
+  imports = [ ../../modules/user/lucid ];
 
   programs.hyprlock.enable = true;
   home.packages = with pkgs; [

@@ -1,6 +1,7 @@
 { config, lib, osConfig, pkgs, ... }:
 let
   host = osConfig.networking.hostName;
+  isChest = config.home.username == "chest";
   isRias = host == "Rias";
   liveDecoder = if builtins.elem osConfig.networking.hostName [ "Rias" "Eclipse" ] then "cuda" else "vaapi";
   source = pkgs.applyPatches {
@@ -65,10 +66,10 @@ let
   wallpaperDir = "${config.home.homeDirectory}/Wallpapers";
   wallpaperScript = "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper/set-wallpaper.sh";
   widgetLayout = if osConfig.networking.hostName == "Rias"
-    then ../../../modules/user/lucid/lucid-widgets-rias.json
-    else ../../../modules/user/lucid/lucid-widgets.json;
+    then ./lucid-widgets-rias.json
+    else ./lucid-widgets.json;
   defaultWallpaper = "${wallpaperDir}/bluehour.jpg";
-  hyprLua = import ../../../modules/user/hyprland/lua.nix { inherit lib; };
+  hyprLua = import ../hyprland/lua.nix { inherit lib; };
   colors = config.lib.stylix.colors.withHashtag;
   paletteFile = pkgs.runCommand "lucid-stylix-palette.json" {
     nativeBuildInputs = [ pkgs.python3 ];
@@ -132,6 +133,29 @@ PY
     user = true;
   });
   themeName = pkgs.writeText "lucid-current-theme" "stylix\n";
+  chestOsdPatch = pkgs.writeText "lucid-chest-osd.patch" ''
+    --- a/lucidosd/Osd.qml
+    +++ b/lucidosd/Osd.qml
+    @@ -26 +26 @@
+    -    readonly property int brightnessPercent: osdWindow.maxBrightness > 0 ? Math.round((parseInt(brightnessFile.text()) / osdWindow.maxBrightness) * 100) : 0
+    +    property int brightnessPercent: 0
+    @@ -378,2 +378,15 @@
+             onFileChanged: reload()
+    +        onLoaded: {
+    +            const value = parseInt(brightnessFile.text());
+    +            if (osdWindow.maxBrightness > 0 && !isNaN(value))
+    +                osdWindow.brightnessPercent = Math.round(value / osdWindow.maxBrightness * 100);
+    +        }
+         }
+    +
+    +    Timer {
+    +        id: chestBrightnessPoll
+    +        interval: 500
+    +        repeat: true
+    +        running: osdWindow.backlightDevice !== ""
+    +        onTriggered: brightnessFile.reload()
+    +    }
+  '';
   themeAutoPatch = pkgs.writeText "lucid-theme-auto.patch" ''
     --- a/Prefs.qml
     +++ b/Prefs.qml
@@ -237,10 +261,27 @@ PY
   '';
   qmlPackages = with pkgs.qt6; [ qt5compat qtmultimedia ];
   tesseract = pkgs.tesseract4.override { enableLanguages = [ "eng" "rus" ]; };
+  shellFile = if isChest then pkgs.writeText "lucid-chest-shell.qml" (builtins.replaceStrings [
+    ''import "./lucidlock"''
+    "    WidgetLayer {\n    }\n"
+    "    WidgetIpc {\n    }\n"
+    "    Lock {\n    }\n"
+    "        void Clip.probed;"
+  ] [
+    ""
+    ""
+    ""
+    ""
+    "        void Notifs.count;\n        void KdeConnect.installed;\n        void Clip.probed;"
+  ] (builtins.readFile ./lucid-shell.qml)) else ./lucid-shell.qml;
+  prefsFilter = if isChest then
+    ''.barEnabled = true | .fontFamily = $font | .liveWallpapers = false | .idleLock = false | .idleLockBeforeSleep = false | .launcherPowerButtons = "suspend,reboot,shutdown" | .powerModuleActions = "suspend,hibernate,logout,reboot,shutdown"''
+  else
+    ''.barEnabled = true | .widgetOnTop = false | .widgetHideFullscreen = true | .fontFamily = $font | .wallpaperFolder = $wallpaperDir | .liveDecoder = $decoder'';
   lucid = pkgs.writeShellScript "lucid" ''
     export NIXPKGS_QT6_QML_IMPORT_PATH="${lib.makeSearchPath "lib/qt-6/qml" qmlPackages}:''${NIXPKGS_QT6_QML_IMPORT_PATH:-}"
     export QT_PLUGIN_PATH="${lib.makeSearchPath "lib/qt-6/plugins" qmlPackages}:''${QT_PLUGIN_PATH:-}"
-    export PATH="${lib.makeBinPath (with pkgs; [ bash cliphist coreutils curl ffmpeg grim imagemagick jq libnotify pulseaudio kdeConnectBridgePython pywal16 wf-recorder wl-clipboard xdg-utils ])}:${tesseract}/bin:$PATH"
+    export PATH="${lib.makeBinPath (with pkgs; [ bash brightnessctl cliphist coreutils curl ffmpeg grim imagemagick jq libnotify pulseaudio kdeConnectBridgePython pywal16 wf-recorder wl-clipboard xdg-utils ])}:${tesseract}/bin:$PATH"
     exec ${pkgs.quickshell}/bin/qs --no-duplicate --path "${config.home.homeDirectory}/.config/quickshell"
   '';
   startWallpaper = pkgs.writeShellScript "lucid-wallpaper-start" ''
@@ -287,7 +328,27 @@ in {
       --exclude='/lucidkeys/state.json' \
       --exclude='/lucidwidgets/widgets.json' \
       "${source}/" "$target/"
-    $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch -p1 -d "$target" < ${../../../modules/user/lucid/idle-work.patch}
+    ${lib.optionalString isChest ''
+    # Notifs refers to Lockscreen even without a lock surface. Keep its
+    # singleton from taking over logind lock signals or its LockedHint.
+    lock_qml="$target/Lockscreen.qml"
+    if ! grep -Fq 'return; // Lucid lock disabled for chest' "$lock_qml"; then
+      grep -Fq 'function lock(settle) {' "$lock_qml" && \
+        grep -Fq 'function pushLockedHint() {' "$lock_qml" && \
+        grep -Fq 'id: logindWatch' "$lock_qml" || {
+          echo "Lucid lock integration changed; refusing to leave it active for chest" >&2
+          exit 1
+        }
+      $DRY_RUN_CMD sed -i \
+        -e '/function lock(settle) {/a\        return; // Lucid lock disabled for chest' \
+        -e '/function pushLockedHint() {/a\        return; // Lucid lock disabled for chest' \
+        -e '/id: logindWatch/{n;n;s/running: true/running: false/;}' "$lock_qml"
+    fi
+    if ! grep -Fq 'id: chestBrightnessPoll' "$target/lucidosd/Osd.qml"; then
+      $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch --forward -p1 -d "$target" < ${chestOsdPatch}
+    fi
+    ''}
+    $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch -p1 -d "$target" < ${./idle-work.patch}
     if ! grep -Fq 'mode === "auto"' "$target/Prefs.qml"; then
       $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch --forward -p1 -d "$target" < ${themeAutoPatch}
     fi
@@ -326,14 +387,17 @@ in {
         // Nix focus workaround for Hyprland 0.57: detach pointer and keyboard focus while menus are open.\
         Quickshell.execDetached(["hyprctl", "eval", "hl.config({ input = { follow_mouse = " + (dockWindow.menuOpen ? 2 : 1) + " } })"]);' "$dock_qml"
     fi
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-shell.qml} "$target/shell.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/LucidBar.qml} "$target/LucidBar.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/Agenda.qml} "$target/Agenda.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/CalendarSource.qml} "$target/CalendarSource.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/ClockCalendar.qml} "$target/lucidbar/ClockCalendar.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/thunderbird-calendar.py} "$target/thunderbird-calendar.py"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/WidgetLayer.qml} "$target/lucidwidgets/WidgetLayer.qml"
-    $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/WidgetsPage.qml} "$target/lucidprefs/WidgetsPage.qml"
+    $DRY_RUN_CMD install -m644 ${shellFile} "$target/shell.qml"
+    $DRY_RUN_CMD install -m644 ${./LucidBar.qml} "$target/LucidBar.qml"
+    ${lib.optionalString (!isChest) ''
+    $DRY_RUN_CMD install -m644 ${./Agenda.qml} "$target/Agenda.qml"
+    $DRY_RUN_CMD install -m644 ${./CalendarSource.qml} "$target/CalendarSource.qml"
+    $DRY_RUN_CMD install -m644 ${./ClockCalendar.qml} "$target/lucidbar/ClockCalendar.qml"
+    $DRY_RUN_CMD install -m644 ${./thunderbird-calendar.py} "$target/thunderbird-calendar.py"
+    ''}
+    $DRY_RUN_CMD install -m644 ${./WidgetLayer.qml} "$target/lucidwidgets/WidgetLayer.qml"
+    $DRY_RUN_CMD install -m644 ${./WidgetsPage.qml} "$target/lucidprefs/WidgetsPage.qml"
+    ${lib.optionalString (!isChest) ''
     $DRY_RUN_CMD mkdir -p "${wallpaperDir}" \
       "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper"
     $DRY_RUN_CMD install -m755 "${source}/support/wallpaper/set-wallpaper.sh" \
@@ -341,16 +405,17 @@ in {
     if ! grep -Fq 'CURRENT_THEME" == matugen' "${wallpaperScript}"; then
       $DRY_RUN_CMD ${pkgs.patch}/bin/patch --batch --forward -p1 -d "$(dirname ${lib.escapeShellArg wallpaperScript})" < ${wallpaperAutoPatch}
     fi
+    ''}
 
     lucid_dir="${config.home.homeDirectory}/.config/lucid"
     $DRY_RUN_CMD mkdir -p "$lucid_dir/themes"
     if [ "${host}" = Rias ] && [ ! -s "$lucid_dir/keybinds.json" ]; then
-      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-keybinds-rias.json} "$lucid_dir/keybinds.json"
+      $DRY_RUN_CMD install -m644 ${./lucid-keybinds-rias.json} "$lucid_dir/keybinds.json"
     fi
     monitor_file="${config.home.homeDirectory}/.config/hypr/lucid-monitors.lua"
     if [ "${host}" = Rias ] && { [ ! -s "$monitor_file" ] || ! grep -qE 'output[[:space:]]*=' "$monitor_file"; } && \
        ! grep -qE 'workspace[[:space:]]*=' "$monitor_file" 2>/dev/null; then
-      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-monitors-rias.lua} "$monitor_file"
+      $DRY_RUN_CMD install -m644 ${./lucid-monitors-rias.lua} "$monitor_file"
     fi
     $DRY_RUN_CMD ${pkgs.rsync}/bin/rsync -rltp --chmod=Du+rwx,Fu+rw --ignore-existing \
       "${source}/support/lucid/themes/" "$lucid_dir/themes/"
@@ -366,14 +431,14 @@ in {
       "$lucid_dir/apply-theme.sh"
 
     if [ ! -e "$target/lucidprefs/prefs.json" ]; then
-      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-prefs.json} "$target/lucidprefs/prefs.json"
+      $DRY_RUN_CMD install -m644 ${if isChest then "${source}/defaults/prefs.json" else ./lucid-prefs.json} "$target/lucidprefs/prefs.json"
     fi
     if [ -z "''${DRY_RUN_CMD:-}" ] && [ -f "$target/lucidprefs/prefs.json" ]; then
       prefs_tmp=$(${pkgs.coreutils}/bin/mktemp "$target/lucidprefs/prefs.json.XXXXXX")
       if ${pkgs.jq}/bin/jq --arg font ${lib.escapeShellArg config.stylix.fonts.sansSerif.name} \
         --arg wallpaperDir ${lib.escapeShellArg wallpaperDir} \
         --arg decoder ${lib.escapeShellArg liveDecoder} \
-        '.barEnabled = true | .widgetOnTop = false | .widgetHideFullscreen = true | .fontFamily = $font | .wallpaperFolder = $wallpaperDir | .liveDecoder = $decoder' \
+        ${lib.escapeShellArg prefsFilter} \
         "$target/lucidprefs/prefs.json" > "$prefs_tmp"; then
         ${pkgs.coreutils}/bin/chmod 644 "$prefs_tmp"
         ${pkgs.coreutils}/bin/mv "$prefs_tmp" "$target/lucidprefs/prefs.json"
@@ -383,9 +448,9 @@ in {
       fi
     fi
     if [ ! -e "$target/luciddocks/pinned.json" ]; then
-      $DRY_RUN_CMD install -m644 ${../../../modules/user/lucid/lucid-pinned.json} "$target/luciddocks/pinned.json"
+      $DRY_RUN_CMD install -m644 ${./lucid-pinned.json} "$target/luciddocks/pinned.json"
     fi
-    if [ ! -e "$target/lucidwidgets/widgets.json" ]; then
+    if [ "${if isChest then "false" else "true"}" = true ] && [ ! -e "$target/lucidwidgets/widgets.json" ]; then
       $DRY_RUN_CMD install -m644 ${widgetLayout} "$target/lucidwidgets/widgets.json"
     fi
 
@@ -428,11 +493,10 @@ in {
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
-      ExecStartPre = "${startWallpaper}";
       ExecStart = "${lucid}";
       Restart = "on-failure";
       RestartSec = 2;
-    };
+    } // lib.optionalAttrs (!isChest) { ExecStartPre = "${startWallpaper}"; };
     Install.WantedBy = [ "hyprland-session.target" ];
   };
 
