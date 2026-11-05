@@ -15,7 +15,8 @@ let
       ];
       nonConeMode = true;
     };
-    patches = [ (pkgs.writeText "lucid-scratchpad-target.patch" ''
+    patches = [
+      (pkgs.writeText "lucid-scratchpad-target.patch" ''
       diff --git a/support/hypr/modules/specials.lua b/support/hypr/modules/specials.lua
       --- a/support/hypr/modules/specials.lua
       +++ b/support/hypr/modules/specials.lua
@@ -34,7 +35,32 @@ let
       +        end
            end
        end
-    '') ];
+      '')
+      (pkgs.writeText "lucid-lair-search.patch" ''
+        --- a/luciddocks/Dock.qml
+        +++ b/luciddocks/Dock.qml
+        @@ -683,4 +683,8 @@
+             readonly property var searchEngines: ({
+        +        "lair": {
+        +            "name": "Lair",
+        +            "url": "https://s.lair.moe/web?s="
+        +        },
+                 "duckduckgo": {
+                     "name": "DuckDuckGo",
+                     "url": "https://duckduckgo.com/?q="
+        --- a/lucidprefs/LauncherPage.qml
+        +++ b/lucidprefs/LauncherPage.qml
+        @@ -386,5 +386,8 @@
+                         current: Prefs.launcherSearchEngine
+                         options: [{
+        +                    "key": "lair",
+        +                    "label": "Lair"
+        +                }, {
+                             "key": "duckduckgo",
+                             "label": "DuckDuckGo"
+                         }, {
+      '')
+    ];
   };
   wallpaperDir = "${config.home.homeDirectory}/Wallpapers";
   wallpaperScript = "${config.home.homeDirectory}/.config/hypr/scripts/wallpaper/set-wallpaper.sh";

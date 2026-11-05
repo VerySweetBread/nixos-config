@@ -1,5 +1,6 @@
 import "./luciddocks"
 import "./lucidedit"
+import "./lucidlock"
 import "./lucidosd"
 import "./lucidprefs"
 import "./lucidshot"
@@ -125,6 +126,9 @@ ShellRoot {
     }
 
     WidgetIpc {
+    }
+
+    Lock {
     }
 
     EditLayer {

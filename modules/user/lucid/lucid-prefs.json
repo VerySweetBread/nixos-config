@@ -144,7 +144,7 @@
     "launcherPowerButtons": "lock,suspend,reboot,shutdown",
     "launcherPowerChips": false,
     "launcherPowerSearch": true,
-    "launcherSearchEngine": "duckduckgo",
+    "launcherSearchEngine": "lair",
     "launcherSearchPosition": "bottom",
     "launcherSettingsResults": true,
     "launcherWebRow": true,
