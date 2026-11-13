@@ -19,7 +19,6 @@ lib.mkIf config.services.printing.enable {
   };
 
   environment.systemPackages = with pkgs; [
-    sane-frontends
     simple-scan
   ];
 }

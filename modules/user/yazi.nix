@@ -3,6 +3,10 @@
 
   yaziPkg = inputs.yazi.packages.${hostSystem}.default.override {
     _7zz = pkgs._7zz-rar;
+    yazi-unwrapped = inputs.yazi.packages.${hostSystem}.yazi-unwrapped.overrideAttrs (old: {
+      nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ pkgs.pkg-config ];
+      buildInputs = (old.buildInputs or []) ++ [ pkgs.oniguruma ];
+    });
   };
 
   yaziOpen = pkgs.writeShellScriptBin "yazi-open" ''

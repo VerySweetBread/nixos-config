@@ -1,4 +1,4 @@
-{ pkgs, inputs, lib, config, ... }: {
+{ pkgs, inputs, ... }: {
   imports = [
     ./host/bluetooth.nix
     ./host/bootloader.nix
@@ -27,9 +27,6 @@
   environment.systemPackages = [
     inputs.hyprland.inputs.hyprland-guiutils.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
-
-  security.wrappers.Hyprland.source = lib.mkForce
-    "${config.programs.hyprland.package}/bin/.Hyprland-wrapped";
 
   xdg.portal = {
     enable = true;
