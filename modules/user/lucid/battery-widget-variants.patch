@@ -1,0 +1,167 @@
+diff --git a/lucidwidgets/BatteryWidget.qml b/lucidwidgets/BatteryWidget.qml
+--- a/lucidwidgets/BatteryWidget.qml
++++ b/lucidwidgets/BatteryWidget.qml
+@@ -585,9 +585,162 @@
+ 
+     }
+ 
++    // Separate packs keep the character of each variant instead of collapsing
++    // every variant into the Devices list.
++    Row {
++        visible: w.variant === "ring" && w.separateBatteries
++        anchors.fill: parent
++        anchors.margins: Theme.dp(14)
++        spacing: Theme.dp(10)
++
++        Repeater {
++            model: w.batteries
++
++            Item {
++                required property var modelData
++                width: (parent.width - parent.spacing * Math.max(0, w.batteries.length - 1)) / Math.max(1, w.batteries.length)
++                height: parent.height
++
++                CircularProgress {
++                    id: packRing
++                    anchors.horizontalCenter: parent.horizontalCenter
++                    anchors.top: parent.top
++                    width: Math.min(parent.width, parent.height - Theme.dp(34))
++                    height: width
++                    thickness: Theme.dp(7)
++                    value: modelData.capacity / 100
++                    color: modelData.capacity <= 20 ? Theme.error : w.inkAccent
++                    trackColor: Theme.alpha(w.ink, 0.1)
++                }
++
++                Column {
++                    anchors.centerIn: packRing
++                    spacing: -Theme.dp(2)
++
++                    LText {
++                        anchors.horizontalCenter: parent.horizontalCenter
++                        role: "labelSmall"
++                        color: w.inkDim
++                        text: modelData.name
++                    }
++                    LText {
++                        anchors.horizontalCenter: parent.horizontalCenter
++                        role: "titleLarge"
++                        weight: 700
++                        tabular: true
++                        color: w.ink
++                        text: modelData.capacity + "%"
++                    }
++                }
++
++                LText {
++                    anchors.horizontalCenter: parent.horizontalCenter
++                    anchors.bottom: parent.bottom
++                    role: "labelSmall"
++                    color: w.inkDim
++                    text: modelData.start !== "" && modelData.end !== "" ? modelData.start + "–" + modelData.end + "%" : ""
++                }
++            }
++        }
++    }
++
++    Column {
++        visible: w.variant === "bar" && w.separateBatteries
++        anchors.fill: parent
++        anchors.margins: Theme.dp(14)
++        spacing: Theme.dp(7)
++
++        Repeater {
++            model: w.batteries
++
++            Column {
++                required property var modelData
++                width: parent.width
++                spacing: Theme.dp(2)
++
++                Row {
++                    width: parent.width
++                    LText {
++                        role: "labelSmall"
++                        color: w.inkDim
++                        text: modelData.name + (modelData.start !== "" && modelData.end !== "" ? " · " + modelData.start + "–" + modelData.end + "%" : "")
++                    }
++                    LText {
++                        anchors.right: parent.right
++                        role: "labelLarge"
++                        weight: 680
++                        tabular: true
++                        color: w.ink
++                        text: modelData.capacity + "%"
++                    }
++                }
++
++                Rectangle {
++                    width: parent.width
++                    height: Theme.dp(14)
++                    radius: height / 2
++                    color: Theme.alpha(w.ink, 0.1)
++
++                    Rectangle {
++                        width: parent.width * modelData.capacity / 100
++                        height: parent.height
++                        radius: parent.radius
++                        color: modelData.capacity <= 20 ? Theme.error : w.inkAccent
++                    }
++                }
++            }
++        }
++    }
++
++    Column {
++        visible: w.variant === "detail" && w.separateBatteries
++        anchors.fill: parent
++        anchors.margins: Theme.dp(14)
++        spacing: Theme.dp(5)
++
++        Repeater {
++            model: w.batteries
++
++            Rectangle {
++                required property var modelData
++                width: parent.width
++                height: (parent.height - parent.spacing * Math.max(0, w.batteries.length - 1)) / Math.max(1, w.batteries.length)
++                radius: Theme.rad(14)
++                color: Theme.alpha(w.ink, 0.07)
++
++                LText {
++                    anchors.left: parent.left
++                    anchors.leftMargin: Theme.dp(12)
++                    anchors.verticalCenter: parent.verticalCenter
++                    role: "titleSmall"
++                    weight: 650
++                    color: w.ink
++                    text: modelData.name
++                }
++                LText {
++                    anchors.horizontalCenter: parent.horizontalCenter
++                    anchors.verticalCenter: parent.verticalCenter
++                    role: "labelMedium"
++                    color: w.inkDim
++                    text: modelData.start !== "" && modelData.end !== "" ? "Charge " + modelData.start + "–" + modelData.end + "%" : ""
++                }
++                LText {
++                    anchors.right: parent.right
++                    anchors.rightMargin: Theme.dp(12)
++                    anchors.verticalCenter: parent.verticalCenter
++                    role: "headlineSmall"
++                    weight: 700
++                    tabular: true
++                    color: modelData.capacity <= 20 ? Theme.error : w.inkAccent
++                    text: modelData.capacity + "%"
++                }
++            }
++        }
++    }
++
+     // devices: this machine first, then whatever else is reporting a battery
+     Column {
+-        visible: w.variant === "devices" || w.separateBatteries
++        visible: w.variant === "devices"
+         anchors.fill: parent
+         anchors.margins: Theme.dp(14)
+         spacing: Theme.dp(4)

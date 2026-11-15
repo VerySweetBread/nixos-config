@@ -1,0 +1,186 @@
+diff --git a/lucidwidgets/BatteryWidget.qml b/lucidwidgets/BatteryWidget.qml
+index 253bb3d..f35f8bf 100644
+--- a/lucidwidgets/BatteryWidget.qml
++++ b/lucidwidgets/BatteryWidget.qml
+@@ -1,5 +1,6 @@
+ import QtQuick
+ import Quickshell.Services.UPower
++import Quickshell.Io
+ import qs
+ import qs.lucidui
+ 
+@@ -19,5 +20,43 @@ WidgetBody {
+     readonly property bool full: w.state === UPowerDeviceState.FullyCharged
+     readonly property bool low: w.opt("warnLow") !== false && !w.charging && !w.held && w.level <= 0.2
+     readonly property real rate: w.dev ? Math.abs(w.dev.changeRate) : 0
++    property var batteries: []
++    readonly property bool separateBatteries: w.opt("separateBatteries") === true && w.batteries.length > 0
++    readonly property int batteryPollMs: 5000
++    readonly property var deviceRows: {
++        var out = [];
++        if (w.separateBatteries) {
++            for (var i = 0; i < w.batteries.length; i++) {
++                var b = w.batteries[i];
++                var thresholds = b.start !== "" && b.end !== "" ? " · " + b.start + "–" + b.end + "%" : "";
++                out.push({
++                    "glyph": "battery_full",
++                    "label": b.name + thresholds,
++                    "value": b.capacity / 100,
++                    "plugged": b.status === "Charging" || b.status === "Full" || b.status === "Not charging"
++                });
++            }
++        } else if (w.present) {
++            out.push({
++                "glyph": "laptop_chromebook",
++                "label": "This computer",
++                "value": w.level,
++                "plugged": w.charging || w.held || w.full
++            });
++        }
++        if (w.separateBatteries)
++            return out;
++
++        for (var j = 0; j < w.others.length && out.length < 4; j++) {
++            var d = w.others[j];
++            out.push({
++                "glyph": w.glyphFor(d),
++                "label": d.model || "Device",
++                "value": d.percentage,
++                "plugged": d.state === UPowerDeviceState.Charging
++            });
++        }
++        return out;
++    }
+     readonly property real health: (w.dev && w.dev.healthSupported) ? w.dev.healthPercentage : -1
+     readonly property color tint: w.low ? Theme.error : w.inkAccent
+@@ -144,6 +181,44 @@ WidgetBody {
+         return steps[Math.max(0, Math.min(7, Math.floor(w.level * 8)))];
+     }
+ 
++    function takeBatteries(text) {
++        var out = [];
++        var lines = text.trim().split("\n");
++        for (var i = 0; i < lines.length; i++) {
++            var fields = lines[i].split("|");
++            if (fields.length !== 5)
++                continue;
++
++            var capacity = Number(fields[1]);
++            if (!isNaN(capacity))
++                out.push({
++                    "name": fields[0],
++                    "capacity": capacity,
++                    "start": fields[2],
++                    "end": fields[3],
++                    "status": fields[4]
++                });
++        }
++        w.batteries = out;
++    }
++
++    Timer {
++        interval: w.batteryPollMs
++        repeat: true
++        running: w.visible && !w.preview
++        triggeredOnStart: true
++        onTriggered: batteryProbe.running = true
++    }
++
++    Process {
++        id: batteryProbe
++        command: ["sh", "-c", "for d in /sys/class/power_supply/*; do [ \"$(cat \"$d/type\" 2>/dev/null)\" = Battery ] || continue; [ -r \"$d/capacity\" ] || continue; n=${d##*/}; c=$(cat \"$d/capacity\"); s=$(cat \"$d/charge_control_start_threshold\" 2>/dev/null || true); e=$(cat \"$d/charge_control_end_threshold\" 2>/dev/null || true); st=$(cat \"$d/status\" 2>/dev/null || true); printf '%s|%s|%s|%s|%s\\n' \"$n\" \"$c\" \"$s\" \"$e\" \"$st\"; done"]
++
++        stdout: StdioCollector {
++            onStreamFinished: w.takeBatteries(this.text)
++        }
++    }
++
+     component DeviceRow: Rectangle {
+         id: dr
+ 
+@@ -159,3 +236,5 @@ WidgetBody {
+        width: parent ? parent.width : 0
+-        height: Theme.dp(48)
++        height: w.separateBatteries
++            ? Math.max(Theme.dp(24), (parent.height - Theme.dp(4) * Math.max(0, w.deviceRows.length - 1)) / Math.max(1, w.deviceRows.length))
++            : Theme.dp(48)
+        topLeftRadius: dr.first ? Theme.rad(18) : Theme.dp(6)
+@@ -241,1 +320,1 @@ WidgetBody {
+-        visible: w.variant === "ring"
++        visible: w.variant === "ring" && !w.separateBatteries
+@@ -318,1 +397,1 @@ WidgetBody {
+-        visible: w.variant === "bar"
++        visible: w.variant === "bar" && !w.separateBatteries
+@@ -410,1 +489,1 @@ WidgetBody {
+-        visible: w.variant === "detail"
++        visible: w.variant === "detail" && !w.separateBatteries
+@@ -511,1 +590,1 @@ WidgetBody {
+-        visible: w.variant === "devices"
++        visible: w.variant === "devices" || w.separateBatteries
+@@ -513,34 +592,24 @@ WidgetBody {
+         spacing: Theme.dp(4)
+ 
+-        DeviceRow {
+-            visible: w.present
+-            first: true
+-            last: w.others.length === 0
+-            glyph: "laptop_chromebook"
+-            label: "This computer"
+-            value: w.level
+-            plugged: w.charging || w.held || w.full
+-        }
+-
+         Repeater {
+-            model: w.others.slice(0, 3)
++            model: w.deviceRows
+ 
+             DeviceRow {
+                 required property var modelData
+                 required property int index
+ 
+-                first: !w.present && index === 0
+-                last: index === Math.min(3, w.others.length) - 1
+-                glyph: w.glyphFor(modelData)
+-                label: modelData.model || "Device"
+-                value: modelData.percentage
+-                plugged: modelData.state === UPowerDeviceState.Charging
++                first: index === 0
++                last: index === w.deviceRows.length - 1
++                glyph: modelData.glyph
++                label: modelData.label
++                value: modelData.value
++                plugged: modelData.plugged
+             }
+ 
+         }
+ 
+         LText {
+-            visible: w.others.length === 0
++            visible: w.deviceRows.length === 0
+             width: parent.width
+             topPadding: Theme.dp(6)
+             horizontalAlignment: Text.AlignHCenter
+@@ -542,6 +601,6 @@ WidgetBody {
+             role: "labelMedium"
+             color: w.inkFaint
+-            text: "Wireless devices show up here when they report a charge"
++            text: "No batteries or wireless devices are reporting a charge"
+             wrapMode: Text.Wrap
+         }
+ 
+diff --git a/Widgets.qml b/Widgets.qml
+index 8ca755b..a42d4d8 100644
+--- a/Widgets.qml
++++ b/Widgets.qml
+@@ -510,6 +510,11 @@ Item {
+             "key": "warnLow",
+             "label": "Turn red under 20%",
+             "type": "bool",
+             "def": true
++        }, {
++            "key": "separateBatteries",
++            "label": "Show each battery separately",
++            "type": "bool",
++            "def": false
+         }]
+     }, {

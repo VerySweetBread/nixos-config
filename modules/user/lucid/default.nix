@@ -259,6 +259,8 @@ dock_path.write_text(dock)
         -                "special": special !== 0 && c.workspace.id === special,
         +                "special": !!special && c.workspace.name === special,
       '')
+      ./battery-widget.patch
+      ./battery-widget-variants.patch
     ];
   };
   source = pkgs.runCommand "lucid-vaultwarden-launcher-source" {
