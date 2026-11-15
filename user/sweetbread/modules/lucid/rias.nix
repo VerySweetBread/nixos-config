@@ -6,6 +6,7 @@
     }
   )));
   lucid.extraHyprlandConfig = ''
+    require("modules.monitors")
     require("modules.settings")
     require("modules.glass")
     require("modules.startup")
