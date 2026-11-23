@@ -17,6 +17,33 @@ in {
   lucid.startWallpaper = true;
   lucid.installWallpaperSupport = true;
 
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        ignore_dbus_inhibit = false;
+        before_sleep_cmd = "${lib.getExe' pkgs.quickshell "qs"} ipc call lock lock; ${pkgs.coreutils}/bin/sleep 1";
+        after_sleep_cmd = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+      };
+      listener = [
+        {
+          timeout = 120;
+          on-timeout = "${lib.getExe pkgs.brightnessctl} -s set 10%";
+          on-resume = "${lib.getExe pkgs.brightnessctl} -r";
+        }
+        {
+          timeout = 600;
+          on-timeout = "${lib.getExe' pkgs.quickshell "qs"} ipc call lock lock";
+        }
+        {
+          timeout = 900;
+          on-timeout = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
+          on-resume = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+        }
+      ];
+    };
+  };
+
   lucid.managedFiles = {
     "${config.home.homeDirectory}/.config/quickshell/Agenda.qml" = ./Agenda.qml;
     "${config.home.homeDirectory}/.config/quickshell/CalendarSource.qml" = ./CalendarSource.qml;
