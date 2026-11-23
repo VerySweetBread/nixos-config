@@ -152,6 +152,15 @@
     done
   '';
 
+  resumeFprintd = pkgs.writeShellScript "resume-fprintd" ''
+    # The T480 reader can disconnect during suspend. Give USB time to return,
+    # then reopen its stale python-validity handle before asking open-fprintd
+    # to resume the backend.
+    ${pkgs.coreutils}/bin/sleep 2
+    ${pkgs.systemd}/bin/systemctl restart python3-validity.service
+    exec ${pkgs.open-fprintd}/lib/open-fprintd/resume.py
+  '';
+
   sleepTargets = [
     "suspend.target"
     "hibernate.target"
@@ -206,6 +215,11 @@ in {
       package = pkgs.fprintd;
     };
 
+    # Recover the T480 reader when its USB device re-enumerates after suspend.
+    udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="06cb", ATTR{idProduct}=="009a", TAG+="systemd", ENV{SYSTEMD_WANTS}+="python-validity-recover.service"
+    '';
+
     dbus.packages = [
       pkgs.open-fprintd
       python-validity
@@ -237,13 +251,26 @@ in {
     };
   };
 
+  systemd.services.python-validity-recover = {
+    description = "Reopen the T480 fingerprint reader after USB re-enumeration";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.systemd}/bin/systemctl restart python3-validity.service";
+    };
+  };
+
   security.pam.services = lib.genAttrs [
     "greetd"
     "hyprlock"
     "login"
     "polkit-1"
     "sudo"
-  ] (_: { fprintAuth = true; });
+  ] (service: {
+    # Lucid runs fingerprint PAM independently from its password PAM context.
+    # Keeping pam_fprintd in `login` starts two competing fingerprint checks;
+    # let Lucid's dedicated `pam/fingerprint` service handle that path.
+    fprintAuth = service != "login";
+  });
 
   systemd.services = {
     open-fprintd = {
@@ -291,7 +318,7 @@ in {
       after = sleepTargets;
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = "${pkgs.open-fprintd}/lib/open-fprintd/resume.py";
+        ExecStart = "${resumeFprintd}";
       };
     };
   };

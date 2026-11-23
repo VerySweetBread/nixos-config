@@ -261,6 +261,7 @@ dock_path.write_text(dock)
       '')
       ./battery-widget.patch
       ./battery-widget-variants.patch
+      fingerprintPamPatch
     ];
   };
   source = pkgs.runCommand "lucid-vaultwarden-launcher-source" {
@@ -431,6 +432,13 @@ PY
     +    if [[ "$CURRENT_THEME" == matugen || "$CURRENT_THEME" == pywal ]] && \
     +        grep -qE '"autoColorMode"[[:space:]]*:[[:space:]]*true' "$HOME/.config/quickshell/lucidprefs/prefs.json" 2>/dev/null; then
              MODE=auto
+  '';
+  fingerprintPamPatch = pkgs.writeText "lucid-fingerprint-pam.patch" ''
+    --- a/pam/fingerprint
+    +++ b/pam/fingerprint
+    @@ -1 +1 @@
+    -auth required pam_fprintd.so max-tries=1 timeout=60
+    +auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so max-tries=1 timeout=60
   '';
   kdeConnectBridgePython = pkgs.python3.withPackages (ps: [ ps.pygobject3 ]);
   applyTheme = pkgs.writeShellScript "lucid-apply-theme" ''
