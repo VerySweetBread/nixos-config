@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, osConfig, ... }:
 {
   lucid.prefsSeed = lib.mkForce (builtins.toFile "sweetbread-rias-lucid-prefs.json" (builtins.toJSON (
     (builtins.fromJSON (builtins.readFile ./lucid-prefs.json)) // {

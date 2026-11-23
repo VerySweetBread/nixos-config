@@ -17,6 +17,9 @@ in {
   ] ++ lib.optionals (osConfig.networking.hostName == "Rias") [
     ../../host/Rias/modules/lucid
     ./modules/lucid/rias.nix
+  ] ++ lib.optionals (osConfig.networking.hostName == "Inaho") [
+    ../../host/Inaho/modules/lucid
+    ./modules/lucid/rias.nix
   ];
 
   programs.hyprlock.enable = true;
