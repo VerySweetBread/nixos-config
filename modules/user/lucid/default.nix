@@ -453,6 +453,7 @@ PY
   lucid = pkgs.writeShellScript "lucid" ''
     export NIXPKGS_QT6_QML_IMPORT_PATH="${lib.makeSearchPath "lib/qt-6/qml" qmlPackages}:''${NIXPKGS_QT6_QML_IMPORT_PATH:-}"
     export QT_PLUGIN_PATH="${lib.makeSearchPath "lib/qt-6/plugins" qmlPackages}:''${QT_PLUGIN_PATH:-}"
+    export GI_TYPELIB_PATH="${pkgs.gdk-pixbuf}/lib/girepository-1.0:''${GI_TYPELIB_PATH:-}"
     export PATH="${lib.makeBinPath (with pkgs; [ bash brightnessctl cliphist coreutils curl ffmpeg grim imagemagick jq libnotify pulseaudio kdeConnectBridgePython pywal16 wf-recorder wl-clipboard xdg-utils ])}:${tesseract}/bin:$PATH"
     exec ${pkgs.quickshell}/bin/qs --no-duplicate --path "${config.home.homeDirectory}/.config/quickshell"
   '';

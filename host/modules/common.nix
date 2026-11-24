@@ -27,6 +27,7 @@
   };
 
   config = {
+    services.accounts-daemon.enable = true;
     nix.settings = {
       keep-going = true;
       extra-substituters = [ "https://nix.lair.moe/main" ];
