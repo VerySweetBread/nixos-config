@@ -44,6 +44,29 @@ in {
     };
   };
 
+  systemd.user.services.lucid-lock-on-login = {
+    Unit = {
+      Description = "Lock Sweetbread's session after Lucid starts";
+      Requires = [ "lucid.service" ];
+      After = [ "lucid.service" ];
+      PartOf = [ "hyprland-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "lucid-lock-on-login" ''
+        for attempt in $(${pkgs.coreutils}/bin/seq 1 20); do
+          if ${lib.getExe' pkgs.quickshell "qs"} ipc call lock lock; then
+            exit 0
+          fi
+          ${pkgs.coreutils}/bin/sleep 0.5
+        done
+        echo "Lucid lock IPC did not become ready after session start" >&2
+        exit 1
+      '';
+    };
+    Install.WantedBy = [ "hyprland-session.target" ];
+  };
+
   lucid.managedFiles = {
     "${config.home.homeDirectory}/.config/quickshell/Agenda.qml" = ./Agenda.qml;
     "${config.home.homeDirectory}/.config/quickshell/CalendarSource.qml" = ./CalendarSource.qml;
